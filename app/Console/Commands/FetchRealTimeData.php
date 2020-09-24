@@ -44,7 +44,6 @@ class FetchRealTimeData extends Command
     public function handle()
     {
         $data = $this->fetchData();
-        dd($data->count());
 
         $this->storeData($data);
 
