@@ -6,24 +6,25 @@ use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use League\Csv\Reader as CsvReader;
 
-class FetchRealTimeJson extends Command
+class FetchRealTimeData extends Command
 {
-    const JSON_URL = 'https://temporeal.pbh.gov.br/?param=D';
+    const DATA_URL = 'https://temporeal.pbh.gov.br/?param=C';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'fetch:realtime:json';
+    protected $signature = 'fetch:realtime:data';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fetch the real time public transit data in JSON format';
+    protected $description = 'Fetch the real time public transit data';
 
     /**
      * Create a new command instance.
@@ -43,6 +44,7 @@ class FetchRealTimeJson extends Command
     public function handle()
     {
         $data = $this->fetchData();
+        dd($data->count());
 
         $this->storeData($data);
 
@@ -51,9 +53,17 @@ class FetchRealTimeJson extends Command
 
     protected function fetchData()
     {
-        $response = Http::get(self::JSON_URL);
+        $response = Http::get(self::DATA_URL);
 
-        return collect($response->json())
+        $csv = CsvReader::createFromString($response->body());
+        $csv->setDelimiter(';')
+            ->setHeaderOffset(0);
+
+        $headers = array_map('trim', $csv->getHeader());
+
+        $records = iterator_to_array($csv->getRecords($headers));
+
+        return collect($records)
             ->where('EV', 105)
             ->whereIn('SV', [1, 2]);
     }

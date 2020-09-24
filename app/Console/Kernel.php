@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('fetch:realtime:routes')
                  ->daily();
 
-        $schedule->command('fetch:realtime:json')
-                 ->everyTenMinutes();
+        $schedule->command('fetch:realtime:data')
+                 ->everyMinute();
     }
 
     /**
