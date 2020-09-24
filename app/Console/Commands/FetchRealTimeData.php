@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\RouteVehicleInstant;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -70,9 +71,10 @@ class FetchRealTimeData extends Command
     protected function storeData(Collection $data)
     {
         $data->each(function ($item) {
-            Vehicle::updateOrCreate(
-                ['json_id' => $item['NV']]
-            );
+            RouteVehicleInstant::create([
+                'route_json_id' => $item['NL'],
+                'vehicle_json_id' => $item['NV'],
+            ]);
         });
     }
 }
