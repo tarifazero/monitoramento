@@ -18,4 +18,9 @@ class Route extends Model
      * @var array
      */
     protected $guarded = ['id'];
+
+    public function vehicles()
+    {
+        return $this->belongsToMany(Vehicle::class);
+    }
 }

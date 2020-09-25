@@ -7,8 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
+    /** * The Artisan commands provided by your application.
      *
      * @var array
      */
@@ -24,11 +23,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('fetch:realtime:routes')
-                 ->daily();
-
         $schedule->command('fetch:realtime:data')
                  ->everyMinute();
+
+        $schedule->command('aggregate:realtime:data')
+                 ->hourly();
+
+        $schedule->command('fetch:realtime:routes')
+                 ->daily();
     }
 
     /**
