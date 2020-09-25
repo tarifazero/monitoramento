@@ -26,4 +26,13 @@ class RealTimeEntry extends Model
     {
         return null;
     }
+
+    public function scopeWhereRoute($query, $route)
+    {
+        if ($route instanceof Route) {
+            $route = $route->json_id;
+        }
+
+        return $query->where('route_json_id', $route);
+    }
 }
