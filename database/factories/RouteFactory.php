@@ -6,7 +6,7 @@ use App\Models\Route;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class ROuteFactory extends Factory
+class RouteFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.

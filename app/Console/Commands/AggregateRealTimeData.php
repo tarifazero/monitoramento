@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Route;
 use App\Models\RouteVehicle;
-use App\Models\RouteVehicleInstant;
+use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 
@@ -41,7 +41,7 @@ class AggregateRealTimeData extends Command
      */
     public function handle()
     {
-        $aggregatables = RouteVehicleInstant::where('created_at', '<=', now()->subHour())
+        $aggregatables = RealTimeEntry::where('created_at', '<=', now()->subHour())
             ->get();
 
         if (! $aggregatables) {

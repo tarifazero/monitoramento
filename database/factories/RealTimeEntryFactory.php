@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\RouteVehicleInstant;
+use App\Models\RealTimeEntry;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class RouteVehicleInstantFactory extends Factory
+class RealTimeEntryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = RouteVehicleInstant::class;
+    protected $model = RealTimeEntry::class;
 
     /**
      * Define the model's default state.

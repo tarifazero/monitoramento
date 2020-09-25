@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Commands;
 
-use App\Models\RouteVehicleInstant;
+use App\Models\RealTimeEntry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
@@ -28,6 +28,6 @@ class FetchRealTimeDataTest extends TestCase
         $this->artisan('fetch:realtime:data')
             ->assertExitCode(0);
 
-        $this->assertCount(2, RouteVehicleInstant::all());
+        $this->assertCount(2, RealTimeEntry::all());
     }
 }

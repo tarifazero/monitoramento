@@ -4,7 +4,7 @@ namespace Tests\Feature\Commands;
 
 use App\Models\Route;
 use App\Models\RouteVehicle;
-use App\Models\RouteVehicleInstant;
+use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,7 +20,7 @@ class AggregateRealTimeDataTest extends TestCase
         $route = Route::factory()->create();
         $vehicle = Vehicle::factory()->create();
 
-        RouteVehicleInstant::factory()
+        RealTimeEntry::factory()
             ->count(10)
             ->create([
                 'route_json_id' => $route->json_id,
@@ -31,7 +31,7 @@ class AggregateRealTimeDataTest extends TestCase
                 ),
             ]);
 
-        RouteVehicleInstant::factory()
+        RealTimeEntry::factory()
             ->count(10)
             ->create([
                 'route_json_id' => $route->json_id,
@@ -46,7 +46,7 @@ class AggregateRealTimeDataTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertEquals(2, RouteVehicle::count());
-        $this->assertEquals(0, RouteVehicleInstant::count());
+        $this->assertEquals(0, RealTimeEntry::count());
     }
 
     /** @test */
@@ -56,12 +56,12 @@ class AggregateRealTimeDataTest extends TestCase
          * No Routes or Vehicles exist, so this entry is invalid
          * and sould be kept
          */
-        RouteVehicleInstant::factory()
+        RealTimeEntry::factory()
             ->create();
 
         $this->artisan('aggregate:realtime:data')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, RouteVehicleInstant::count());
+        $this->assertEquals(1, RealTimeEntry::count());
     }
 }

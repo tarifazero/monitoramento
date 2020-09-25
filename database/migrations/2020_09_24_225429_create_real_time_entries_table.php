@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRouteVehicleInstantsTable extends Migration
+class CreateRealTimeEntriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRouteVehicleInstantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('route_vehicle_instants', function (Blueprint $table) {
+        Schema::create('real_time_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('route_json_id');
             $table->string('vehicle_json_id');
@@ -28,6 +28,6 @@ class CreateRouteVehicleInstantsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('route_vehicle_instants');
+        Schema::dropIfExists('real_time_entries');
     }
 }

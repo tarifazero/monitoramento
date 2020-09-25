@@ -6,7 +6,7 @@ use App\Models\Concerns\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RouteVehicleInstant extends Model
+class RealTimeEntry extends Model
 {
     use HasFactory, HasUuid;
 
