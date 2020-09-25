@@ -5,8 +5,10 @@ namespace App\Console\Commands;
 use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use League\Csv\Reader as CsvReader;
 
 class FetchRealTimeData extends Command
@@ -63,17 +65,37 @@ class FetchRealTimeData extends Command
 
         $records = iterator_to_array($csv->getRecords($headers));
 
-        return collect($records)
-            ->where('EV', 105)
-            ->whereIn('SV', [1, 2]);
+        return collect($records);
     }
 
     protected function storeData(Collection $data)
     {
         $data->each(function ($item) {
+            // The realtime data timestamp comes in a YYYYMMDDHHmmSS format
+            $timestamp = Carbon::create(
+                Str::substr($item['HR'], 0, 4), // Year
+                Str::substr($item['HR'], 4, 2), // Month
+                Str::substr($item['HR'], 6, 2), // Day
+                Str::substr($item['HR'], 8, 2), // Hour
+                Str::substr($item['HR'], 10, 2), // Minute
+                Str::substr($item['HR'], 12, 2) // Second
+            );
+
+            // The realtime data uses commas as decimal separators
+            $latitude = str_replace(',', '.', $item['LT']);
+            $longitude = str_replace(',', '.', $item['LT']);
+
             RealTimeEntry::create([
                 'route_json_id' => $item['NL'],
                 'vehicle_json_id' => $item['NV'],
+                'event' => $item['EV'],
+                'timestamp' => $timestamp,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'speed' => $item['VL'],
+                'cardinal_direction' => $item['DG'],
+                'travel_direction' => $item['SV'],
+                'distance' => $item['DT'],
             ]);
         });
     }

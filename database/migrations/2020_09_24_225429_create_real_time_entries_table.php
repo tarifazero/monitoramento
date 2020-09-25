@@ -17,6 +17,14 @@ class CreateRealTimeEntriesTable extends Migration
             $table->uuid('id')->primary();
             $table->string('route_json_id');
             $table->string('vehicle_json_id');
+            $table->integer('event');
+            $table->dateTime('timestamp');
+            $table->double('latitude');
+            $table->double('longitude');
+            $table->integer('speed');
+            $table->integer('cardinal_direction')->nullable();
+            $table->integer('travel_direction')->nullable();
+            $table->integer('distance')->nullable();
             $table->dateTime('created_at');
         });
     }

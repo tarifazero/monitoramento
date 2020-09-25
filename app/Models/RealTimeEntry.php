@@ -18,13 +18,19 @@ class RealTimeEntry extends Model
     protected $guarded = ['id'];
 
     /**
-     * Get the name of the "updated at" column.
+     * The "booted" method of the model.
      *
-     * @return string
+     * @return void
      */
-    public function getUpdatedAtColumn()
+    protected static function booted()
     {
-        return null;
+        static::addGlobalScope('validEvents', function ($builder) {
+            $builder->where('event', 105);
+        });
+
+        static::addGlobalScope('validTravelDirections', function ($builder) {
+            $builder->whereIn('travel_direction', [1, 2]);
+        });
     }
 
     public function scopeWhereRoute($query, $route)
@@ -34,5 +40,15 @@ class RealTimeEntry extends Model
         }
 
         return $query->where('route_json_id', $route);
+    }
+
+    /**
+     * Get the name of the "updated at" column.
+     *
+     * @return string
+     */
+    public function getUpdatedAtColumn()
+    {
+        return null;
     }
 }

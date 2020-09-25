@@ -25,6 +25,14 @@ class RealTimeEntryFactory extends Factory
         return [
             'route_json_id' => $this->faker->randomNumber,
             'vehicle_json_id' => $this->faker->randomNumber,
+            'event' => '105',
+            'timestamp' => $this->faker->dateTimeBetween(now()->subDay(), now()),
+            'latitude' => $this->faker->latitude,
+            'longitude' => $this->faker->longitude,
+            'speed' => $this->faker->numberBetween(0, 60),
+            'cardinal_direction' => $this->faker->numberBetween(0, 360),
+            'travel_direction' => $this->faker->numberBetween(1, 2),
+            'distance' => $this->faker->numberBetween(0, 100),
             'created_at' => $this->faker->dateTimeBetween(now()->subDay(), now()),
         ];
     }
