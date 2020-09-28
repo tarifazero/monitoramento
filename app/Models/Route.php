@@ -26,12 +26,30 @@ class Route extends Model
 
     public function parent()
     {
-
         return $this->belongsTo(Route::class, 'parent_id');
+    }
+
+    public function realTimeEntries()
+    {
+        return $this->hasMany(RealTimeEntry::class, 'route_json_id', 'json_id');
     }
 
     public function vehicles()
     {
-        return $this->belongsToMany(Vehicle::class);
+        return $this->belongsToMany(Vehicle::class, 'route_vehicles');
+    }
+
+    public function scopeMain($query)
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    public function scopeWithData($query)
+    {
+        return $query->whereHas('vehicles')
+                     ->orWhereHas('realTimeEntries')
+                     ->orWhereHas('children', function ($query) {
+                         $query->whereHas('realTimeEntries');
+                     });
     }
 }

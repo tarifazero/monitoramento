@@ -33,13 +33,11 @@ class RealTimeEntry extends Model
         });
     }
 
-    public function scopeWhereRoute($query, $route)
+    public function scopeWhereRouteWithChildren($query, Route $route)
     {
-        if ($route instanceof Route) {
-            $route = $route->json_id;
-        }
+        $children = Route::where('parent_id', $route->id)->pluck('json_id');
 
-        return $query->where('route_json_id', $route);
+        return $query->whereIn('route_json_id', [$route->json_id, ...$children]);
     }
 
     /**

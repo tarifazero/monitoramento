@@ -15,10 +15,11 @@ class RouteSearch extends Component
             return null;
         }
 
-        return Route::when($this->search, function ($query, $search) {
-            $query->where('short_name', 'LIKE', "%{$search}%")
-                ->orWhere('long_name', 'LIKE', "%{$search}%");
-        })->get();
+        return Route::main()
+            ->withData()
+            ->where('short_name', 'LIKE', "%{$this->search}%")
+            ->orWhere('long_name', 'LIKE', "%{$this->search}%")
+            ->get();
     }
 
     public function selectRoute($routeId)

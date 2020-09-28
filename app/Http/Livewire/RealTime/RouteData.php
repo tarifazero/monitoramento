@@ -14,7 +14,7 @@ class RouteData extends Component
 
     public function getVehicleCountProperty()
     {
-        $entries = RealTimeEntry::whereRoute($this->route)
+        $entries = RealTimeEntry::whereRouteWithChildren($this->route)
             ->where('created_at', '>=', now()->subMinutes(5))
             ->get();
 
