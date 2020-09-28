@@ -1,5 +1,9 @@
 <div>
-    <input wire:model.debounce.500ms="search" type="search" placeholder="Procure sua linha">
+    <input wire:model.debounce.300ms="search" type="search" placeholder="Procure sua linha">
+
+    <div wire:loading>
+        Carregando...
+    </div>
 
     @if ($this->routes)
         <ul>
