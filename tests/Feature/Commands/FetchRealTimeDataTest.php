@@ -5,6 +5,7 @@ namespace Tests\Feature\Commands;
 use App\Models\RealTimeEntry;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -29,5 +30,17 @@ class FetchRealTimeDataTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertCount(2, RealTimeEntry::all());
+    }
+
+    /** @test */
+    function throws_http_exceptions()
+    {
+        Http::fake([
+            'temporeal.pbh.gov.br/*' => Http::response('Bad request', 400),
+        ]);
+
+        $this->expectException(RequestException::class);
+
+        $this->artisan('fetch:realtime:data');
     }
 }

@@ -55,7 +55,8 @@ class FetchRealTimeData extends Command
 
     protected function fetchData()
     {
-        $response = Http::get(self::DATA_URL);
+        $response = Http::get(self::DATA_URL)
+            ->throw();
 
         $csv = CsvReader::createFromString($response->body());
         $csv->setDelimiter(';')

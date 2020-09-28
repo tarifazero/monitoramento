@@ -55,7 +55,8 @@ class FetchRealTimeRoutes extends Command
 
     protected function fetchRoutes()
     {
-        $response = Http::get(self::DICTIONARY_URL);
+        $response = Http::get(self::DICTIONARY_URL)
+            ->throw();
 
         $csv = CsvReader::createFromString($response->body());
         $csv->setDelimiter(';')

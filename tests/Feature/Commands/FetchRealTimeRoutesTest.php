@@ -5,6 +5,7 @@ namespace Tests\Feature\Commands;
 use App\Models\Route;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -56,5 +57,17 @@ class FetchRealTimeRoutesTest extends TestCase
 
         $this->assertEquals('100', $existingRoute->short_name);
         $this->assertEquals('BARREIRO', $existingRoute->long_name);
+    }
+
+    /** @test */
+    function throws_http_exceptions()
+    {
+        Http::fake([
+            'servicosbhtrans.pbh.gov.br/*' => Http::response('Bad request', 400),
+        ]);
+
+        $this->expectException(RequestException::class);
+
+        $this->artisan('fetch:realtime:routes');
     }
 }
