@@ -47,9 +47,8 @@ class Route extends Model
     public function scopeWithData($query)
     {
         return $query->whereHas('vehicles')
-                     ->orWhereHas('realTimeEntries')
                      ->orWhereHas('children', function ($query) {
-                         $query->whereHas('realTimeEntries');
+                         $query->whereHas('vehicles');
                      });
     }
 }
