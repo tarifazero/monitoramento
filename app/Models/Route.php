@@ -36,7 +36,7 @@ class Route extends Model
 
     public function vehicles()
     {
-        return $this->belongsToMany(Vehicle::class, 'route_vehicles');
+        return $this->belongsToMany(Vehicle::class);
     }
 
     public function scopeMain($query)

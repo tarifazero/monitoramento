@@ -19,6 +19,6 @@ class Vehicle extends Model
 
     public function routes()
     {
-        return $this->belongsToMany(Route::class, 'route_vehicles');
+        return $this->belongsToMany(Route::class);
     }
 }
