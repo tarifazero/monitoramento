@@ -1,45 +1,47 @@
 <div>
-    @if ($route)
-        <h2>
+    <h2>
+        @if ($route)
             Dados para a rota: {{ $route->short_name }} - {{ $route->long_name }}
-        </h2>
+        @else
+            Dados globais
+        @endif
+    </h2>
 
-        <p>
-            Veículos rodando: {{ $this->currentVehicleCount }}
-        </p>
+    <p>
+        Veículos rodando: {{ $this->currentVehicleCount }}
+    </p>
 
-        <table>
+    <table>
 
-            <thead>
+        <thead>
+            <tr>
+
+                <th>
+                    Hora
+                </th>
+
+                <th>
+                    Número de veículos
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach ($this->vehicleCountByHour as $hour => $count)
                 <tr>
 
-                    <th>
-                        Hora
-                    </th>
+                    <td>
+                        {{ $hour }}
+                    </td>
 
-                    <th>
-                        Número de veículos
-                    </th>
+                    <td>
+                        {{ $count }}
+                    </td>
 
                 </tr>
-            </thead>
+            @endforeach
+        </tbody>
 
-            <tbody>
-                @foreach ($this->vehicleCountByHour as $hour => $count)
-                    <tr>
-
-                        <td>
-                            {{ $hour }}
-                        </td>
-
-                        <td>
-                            {{ $count }}
-                        </td>
-
-                    </tr>
-                @endforeach
-            </tbody>
-
-        </table>
-    @endif
+    </table>
 </div>

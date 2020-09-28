@@ -15,8 +15,10 @@ class RouteData extends Component
 
     public function getCurrentVehicleCountProperty()
     {
-        $entries = RealTimeEntry::whereRouteWithChildren($this->route)
-            ->where('created_at', '>=', now()->subMinutes(5))
+        $entries = RealTimeEntry::where('created_at', '>=', now()->subMinutes(5))
+            ->when($this->route, function ($query, $route) {
+                $query->whereRouteWithChildren($this->route);
+            })
             ->get();
 
         return $entries->unique('vehicle_json_id')
@@ -30,8 +32,10 @@ class RouteData extends Component
         foreach (range(0, 23) as $hour) {
             $countByHour->put(
                 $hour,
-                RouteVehicle::whereRouteWithChildren($this->route)
-                    ->where('created_at', today()->hour($hour))
+                RouteVehicle::where('created_at', today()->hour($hour))
+                    ->when($this->route, function ($query, $route) {
+                        $query->whereRouteWithChildren($this->route);
+                    })
                     ->count()
             );
         }
