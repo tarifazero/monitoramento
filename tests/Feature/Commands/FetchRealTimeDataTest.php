@@ -33,7 +33,7 @@ class FetchRealTimeDataTest extends TestCase
     }
 
     /** @test */
-    function throws_http_exceptions()
+    function throws_exceptions_on_http_errors()
     {
         Http::fake([
             'temporeal.pbh.gov.br/*' => Http::response('Bad request', 400),

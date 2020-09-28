@@ -60,7 +60,7 @@ class FetchRealTimeRoutesTest extends TestCase
     }
 
     /** @test */
-    function throws_http_exceptions()
+    function throws_exceptions_on_http_errors()
     {
         Http::fake([
             'servicosbhtrans.pbh.gov.br/*' => Http::response('Bad request', 400),
