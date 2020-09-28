@@ -5,6 +5,7 @@ namespace App\Http\Livewire\RealTime;
 use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\RouteVehicle;
+use DateTimeZone;
 use Livewire\Component;
 
 class RouteData extends Component
@@ -32,7 +33,12 @@ class RouteData extends Component
         foreach (range(0, 23) as $hour) {
             $countByHour->put(
                 $hour,
-                RouteVehicle::where('created_at', today()->hour($hour))
+                RouteVehicle::where(
+                    'created_at',
+                    today(new DateTimeZone(config('app.display_timezone')))
+                        ->hour($hour)
+                        ->setTimezone(config('app.timezone'))
+                )
                     ->when($this->route, function ($query, $route) {
                         $query->whereRouteWithChildren($this->route);
                     })
