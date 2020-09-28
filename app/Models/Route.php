@@ -19,6 +19,17 @@ class Route extends Model
      */
     protected $guarded = ['id'];
 
+    public function children()
+    {
+        return $this->hasMany(Route::class, 'parent_id');
+    }
+
+    public function parent()
+    {
+
+        return $this->belongsTo(Route::class, 'parent_id');
+    }
+
     public function vehicles()
     {
         return $this->belongsToMany(Vehicle::class);

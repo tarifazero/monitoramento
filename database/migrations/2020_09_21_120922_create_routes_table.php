@@ -15,6 +15,10 @@ class CreateRoutesTable extends Migration
     {
         Schema::create('routes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('parent_id')
+                  ->nullable()
+                  ->constrained('routes')
+                  ->onDelete('cascade');
             $table->string('json_id')
                 ->unique();
             $table->string('short_name');

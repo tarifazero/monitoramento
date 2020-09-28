@@ -33,6 +33,23 @@ class FetchRealTimeRoutesTest extends TestCase
     }
 
     /** @test */
+    function trims_leading_zeroes_from_route_short_names()
+    {
+        $header = 'NumeroLinha;Linha;Nome';
+        $row1 = '2;0100-01;BARREIRO';
+
+        $csv = implode("\r\n", [$header, $row1]);
+
+        Http::fake([
+            'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
+        ]);
+
+        $this->artisan('fetch:realtime:routes');
+
+        $this->assertEquals('100-01', Route::find(1)->short_name);
+    }
+
+    /** @test */
     function updates_existing_routes()
     {
         $existingRoute = Route::factory()->create([
@@ -57,6 +74,26 @@ class FetchRealTimeRoutesTest extends TestCase
 
         $this->assertEquals('100', $existingRoute->short_name);
         $this->assertEquals('BARREIRO', $existingRoute->long_name);
+    }
+
+    /** @test */
+    function sets_route_parent_id_for_child_routes()
+    {
+        $header = 'NumeroLinha;Linha;Nome';
+        $row1 = '1;100;BARREIRO';
+        $row2 = '2;0100-01;BARREIRO';
+
+        $csv = implode("\r\n", [$header, $row1, $row2]);
+
+        Http::fake([
+            'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
+        ]);
+
+        $this->artisan('fetch:realtime:routes')
+            ->assertExitCode(0);
+
+        $this->assertNull(Route::find(1)->parent_id);
+        $this->assertEquals(1, Route::find(2)->parent_id);
     }
 
     /** @test */

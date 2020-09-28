@@ -6,6 +6,7 @@ use App\Models\Route;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use League\Csv\CharsetConverter as CsvCharsetConverter;
 use League\Csv\Reader as CsvReader;
 
@@ -50,6 +51,8 @@ class FetchRealTimeRoutes extends Command
 
         $this->storeRoutes($routes);
 
+        $this->setParentRoutes();
+
         return 0;
     }
 
@@ -75,11 +78,30 @@ class FetchRealTimeRoutes extends Command
             Route::updateOrCreate(
                 ['json_id' => $route['NumeroLinha']],
                 [
-                    'short_name' => $route['Linha'],
+                    'short_name' => ltrim($route['Linha'], '0'),
                     'long_name' => $route['Nome'],
                     'type' => Route::TYPE_BUS,
                 ],
             );
+        });
+    }
+
+    protected function setParentRoutes()
+    {
+        Route::cursor()->each(function ($route) {
+            $baseRoute = Str::before($route->short_name, '-');
+
+            if ($baseRoute === $route->short_name) {
+                return;
+            }
+
+            $parentRoute = Route::where('short_name', $baseRoute)->first();
+
+            if (! $parentRoute) {
+                return;
+            }
+
+            $route->update(['parent_id' => $parentRoute->id]);
         });
     }
 }
