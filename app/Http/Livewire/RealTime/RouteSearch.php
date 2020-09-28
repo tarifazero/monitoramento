@@ -17,8 +17,10 @@ class RouteSearch extends Component
 
         return Route::main()
             ->withData()
-            ->where('short_name', 'ILIKE', "%{$this->search}%")
-            ->orWhere('long_name', 'ILIKE', "%{$this->search}%")
+            ->where(function ($query) {
+                $query->where('short_name', 'ILIKE', "%{$this->search}%")
+                      ->orWhere('long_name', 'ILIKE', "%{$this->search}%");
+            })
             ->get();
     }
 
