@@ -4,6 +4,7 @@ namespace App\Http\Livewire\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
+use App\Models\RouteVehicle;
 use Livewire\Component;
 
 class RouteData extends Component
@@ -12,7 +13,7 @@ class RouteData extends Component
 
     protected $listeners = ['routeSelected'];
 
-    public function getVehicleCountProperty()
+    public function getCurrentVehicleCountProperty()
     {
         $entries = RealTimeEntry::whereRouteWithChildren($this->route)
             ->where('created_at', '>=', now()->subMinutes(5))
@@ -20,6 +21,20 @@ class RouteData extends Component
 
         return $entries->unique('vehicle_json_id')
             ->count();
+    }
+
+    public function getVehicleCountByHourProperty()
+    {
+        $countByHour = collect();
+
+        foreach (range(0, 23) as $hour) {
+            $countByHour->put(
+                $hour,
+                RouteVehicle::where('created_at', today()->hour($hour))->count()
+            );
+        }
+
+        return $countByHour;
     }
 
     public function routeSelected(Route $route)

@@ -5,8 +5,41 @@
         </h2>
 
         <p>
-            Veículos rodando: {{ $this->vehicleCount }}
+            Veículos rodando: {{ $this->currentVehicleCount }}
         </p>
-    @endif
 
+        <table>
+
+            <thead>
+                <tr>
+
+                    <th>
+                        Hora
+                    </th>
+
+                    <th>
+                        Número de veículos
+                    </th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach ($this->vehicleCountByHour as $hour => $count)
+                    <tr>
+
+                        <td>
+                            {{ $hour }}
+                        </td>
+
+                        <td>
+                            {{ $count }}
+                        </td>
+
+                    </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+    @endif
 </div>

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Route;
+use App\Models\RouteVehicle;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // User::factory(10)->create();
+        RouteVehicle::factory()
+            ->for(Route::factory()->state([
+                'short_name' => '9502',
+                'long_name' => 'SAO GERALDO/SAO FRANCISCO VIA ESPLANADA',
+            ]))
+            ->count(10)
+            ->create();
     }
 }
