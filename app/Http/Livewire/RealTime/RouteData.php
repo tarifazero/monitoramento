@@ -30,7 +30,9 @@ class RouteData extends Component
         foreach (range(0, 23) as $hour) {
             $countByHour->put(
                 $hour,
-                RouteVehicle::where('created_at', today()->hour($hour))->count()
+                RouteVehicle::whereRouteWithChildren($this->route)
+                    ->where('created_at', today()->hour($hour))
+                    ->count()
             );
         }
 

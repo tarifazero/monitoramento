@@ -40,4 +40,11 @@ class RouteVehicle extends Model
     {
         return $this->belongsTo(Vehicle::class);
     }
+
+    public function scopeWhereRouteWithChildren($query, Route $route)
+    {
+        $children = Route::where('parent_id', $route->id)->pluck('id');
+
+        return $query->whereIn('route_id', [$route->id, ...$children]);
+    }
 }
