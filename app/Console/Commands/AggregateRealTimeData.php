@@ -42,12 +42,7 @@ class AggregateRealTimeData extends Command
     public function handle()
     {
         $aggregatables = RealTimeEntry::where('created_at', '<=', now()->subHour())
-            ->get();
-
-        if (! $aggregatables) {
-            // TODO: Log this as info
-            return 0;
-        }
+            ->cursor();
 
         foreach ($aggregatables as $aggregatable) {
             $route = Route::where('json_id', $aggregatable->route_json_id)
@@ -58,13 +53,9 @@ class AggregateRealTimeData extends Command
                 continue;
             }
 
-            $vehicle = Vehicle::where('json_id', $aggregatable->vehicle_json_id)
-                ->first();
-
-            if (! $vehicle) {
-                // TODO: Log this as warning
-                continue;
-            }
+            $vehicle = Vehicle::firstOrCreate([
+                'json_id' => $aggregatable->vehicle_json_id,
+            ]);
 
             RouteVehicle::firstOrCreate([
                 'route_id' => $route->id,

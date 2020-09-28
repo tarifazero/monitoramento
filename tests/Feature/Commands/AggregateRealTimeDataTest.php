@@ -50,6 +50,29 @@ class AggregateRealTimeDataTest extends TestCase
     }
 
     /** @test */
+    function creates_missing_vehicles()
+    {
+        $route = Route::factory()->create();
+
+        RealTimeEntry::factory()
+            ->create([
+                'route_json_id' => $route->json_id,
+                'created_at' => $this->faker->dateTimeBetween(
+                    now()->startOfHour()->subHours(2),
+                    now()->startOfHour()->subHour()
+                ),
+            ]);
+
+        $this->artisan('aggregate:realtime:data')
+            ->assertExitCode(0);
+
+        $this->assertEquals(1, RouteVehicle::count());
+        $this->assertEquals(1, Vehicle::count());
+        $this->assertEquals(0, RealTimeEntry::count());
+
+    }
+
+    /** @test */
     function keeps_real_time_data_if_unsuccessful_aggregation()
     {
         /**
