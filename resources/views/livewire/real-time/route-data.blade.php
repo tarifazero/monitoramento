@@ -7,41 +7,43 @@
         @endif
     </h2>
 
-    <p>
-        Veículos rodando: {{ $this->currentVehicleCount }}
-    </p>
+    <div wire:poll.60s>
+        <p>
+            Veículos rodando: {{ $this->currentVehicleCount }}
+        </p>
 
-    <table>
+        <table>
 
-        <thead>
-            <tr>
-
-                <th>
-                    Hora
-                </th>
-
-                <th>
-                    Número de veículos
-                </th>
-
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach ($this->vehicleCountByHour as $hour => $count)
+            <thead>
                 <tr>
 
-                    <td>
-                        {{ $hour }}
-                    </td>
+                    <th>
+                        Hora
+                    </th>
 
-                    <td>
-                        {{ $count }}
-                    </td>
+                    <th>
+                        Número de veículos
+                    </th>
 
                 </tr>
-            @endforeach
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+                @foreach ($this->vehicleCountByHour as $hour => $count)
+                    <tr>
+
+                        <td>
+                            {{ $hour }}
+                        </td>
+
+                        <td>
+                            {{ $count }}
+                        </td>
+
+                    </tr>
+                @endforeach
+            </tbody>
+
+        </table>
+    </div>
 </div>
