@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\RouteVehicle;
-use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class AggregateRealTimeData extends Command
 {
@@ -49,7 +50,9 @@ class AggregateRealTimeData extends Command
                 ->first();
 
             if (! $route) {
-                // TODO: Log this as warning
+                Log::warning('Cannot aggregate missing route.', ['json_id' => $aggregatable->route_json_id]);
+                $aggregatable->delete();
+
                 continue;
             }
 
