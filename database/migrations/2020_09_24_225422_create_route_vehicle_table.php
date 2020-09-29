@@ -19,7 +19,8 @@ class CreateRouteVehicleTable extends Migration
                 ->constrained();
             $table->foreignId('vehicle_id')
                 ->constrained();
-            $table->dateTime('created_at');
+            $table->dateTime('created_at')
+                  ->index();
         });
     }
 
