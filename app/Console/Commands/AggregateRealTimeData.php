@@ -42,7 +42,7 @@ class AggregateRealTimeData extends Command
      */
     public function handle()
     {
-        $aggregatables = RealTimeEntry::where('created_at', '<=', now()->subHour())
+        $aggregatables = RealTimeEntry::where('created_at', '<', now()->startOfHour())
             ->cursor();
 
         foreach ($aggregatables as $aggregatable) {
