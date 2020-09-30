@@ -74,21 +74,48 @@ class AggregateRealTimeDataTest extends TestCase
     }
 
     /** @test */
-    function logs_real_time_data_if_unsuccessful_aggregation()
+    function logs_and_deletes_real_time_data_if_unsuccessful_aggregation()
     {
         /**
          * No Routes exist, so this entry is invalid
          * and sould be logged
          */
         $entry = RealTimeEntry::factory()
-            ->create();
+            ->create([
+                'created_at' => $this->faker->dateTimeBetween(
+                    now()->startOfHour()->subHours(2),
+                    now()->startOfHour()->subHour()
+                ),
+            ]);
 
         Log::shouldReceive('warning')
             ->with('Cannot aggregate missing route.', ['json_id' => $entry->route_json_id]);
+
+        $this->assertEquals(1, RealTimeEntry::count());
 
         $this->artisan('aggregate:realtime:data')
             ->assertExitCode(0);
 
         $this->assertEquals(0, RealTimeEntry::count());
+    }
+
+    /** @test */
+    function deletes_invalid_events()
+    {
+        RealTimeEntry::factory()
+            ->create([
+                'event' => 'foo',
+                'created_at' => $this->faker->dateTimeBetween(
+                    now()->startOfHour()->subHours(2),
+                    now()->startOfHour()->subHour()
+                ),
+            ]);
+
+        $this->assertEquals(1, RealTimeEntry::withoutGlobalScopes()->count());
+
+        $this->artisan('aggregate:realtime:data')
+            ->assertExitCode(0);
+
+        $this->assertEquals(0, RealTimeEntry::withoutGlobalScopes()->count());
     }
 }

@@ -42,7 +42,8 @@ class AggregateRealTimeData extends Command
      */
     public function handle()
     {
-        $aggregatables = RealTimeEntry::where('created_at', '<', now()->startOfHour())
+        $currentHour = now()->startOfHour();
+        $aggregatables = RealTimeEntry::where('created_at', '<', $currentHour)
             ->cursor();
 
         foreach ($aggregatables as $aggregatable) {
@@ -68,6 +69,14 @@ class AggregateRealTimeData extends Command
 
             $aggregatable->delete();
         }
+
+        RealTimeEntry::withoutGlobalScopes()
+            ->where('created_at', '<', $currentHour)
+            ->where(function ($query) {
+                $query->whereNotIn('event', RealTimeEntry::VALID_EVENTS)
+                      ->orWhereNotIn('travel_direction', RealTimeEntry::VALID_TRAVEL_DIRECTIONS);
+            })
+            ->delete();
 
         return 0;
     }

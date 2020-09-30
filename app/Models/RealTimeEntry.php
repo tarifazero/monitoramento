@@ -10,6 +10,10 @@ class RealTimeEntry extends Model
 {
     use HasFactory, HasUuid;
 
+    const VALID_EVENTS = [105];
+
+    const VALID_TRAVEL_DIRECTIONS = [1, 2];
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -25,11 +29,11 @@ class RealTimeEntry extends Model
     protected static function booted()
     {
         static::addGlobalScope('validEvents', function ($builder) {
-            $builder->where('event', 105);
+            $builder->whereIn('event', self::VALID_EVENTS);
         });
 
         static::addGlobalScope('validTravelDirections', function ($builder) {
-            $builder->whereIn('travel_direction', [1, 2]);
+            $builder->whereIn('travel_direction', self::VALID_TRAVEL_DIRECTIONS);
         });
     }
 
