@@ -2,12 +2,13 @@
 
 namespace Tests\Feature\Commands;
 
+use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\RouteVehicle;
-use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class AggregateRealTimeDataTest extends TestCase
@@ -73,18 +74,21 @@ class AggregateRealTimeDataTest extends TestCase
     }
 
     /** @test */
-    function keeps_real_time_data_if_unsuccessful_aggregation()
+    function logs_real_time_data_if_unsuccessful_aggregation()
     {
         /**
-         * No Routes or Vehicles exist, so this entry is invalid
-         * and sould be kept
+         * No Routes exist, so this entry is invalid
+         * and sould be logged
          */
-        RealTimeEntry::factory()
+        $entry = RealTimeEntry::factory()
             ->create();
+
+        Log::shouldReceive('warning')
+            ->with('Cannot aggregate missing route.', ['json_id' => $entry->route_json_id]);
 
         $this->artisan('aggregate:realtime:data')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, RealTimeEntry::count());
+        $this->assertEquals(0, RealTimeEntry::count());
     }
 }
