@@ -85,6 +85,7 @@ class AggregateRealTimeData extends Command
             ->where('created_at', '<', now()->startOfHour())
             ->where(function ($query) {
                 $query->whereNotIn('event', RealTimeEntry::VALID_EVENTS)
+                      ->orWhereNull('travel_direction')
                       ->orWhereNotIn('travel_direction', RealTimeEntry::VALID_TRAVEL_DIRECTIONS);
             })
             ->delete();
