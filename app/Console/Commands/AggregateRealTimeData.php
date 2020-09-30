@@ -42,42 +42,51 @@ class AggregateRealTimeData extends Command
      */
     public function handle()
     {
-        $currentHour = now()->startOfHour();
-        $aggregatables = RealTimeEntry::where('created_at', '<', $currentHour)
+        $entries = RealTimeEntry::where('created_at', '<', now()->startOfHour())
             ->cursor();
 
-        foreach ($aggregatables as $aggregatable) {
-            $route = Route::where('json_id', $aggregatable->route_json_id)
+        foreach ($entries as $entry) {
+            $route = Route::where('json_id', $entry->route_json_id)
                 ->first();
 
             if (! $route) {
-                Log::warning('Cannot aggregate missing route.', ['json_id' => $aggregatable->route_json_id]);
-                $aggregatable->delete();
+                $this->handleMissingRoute($entry);
 
                 continue;
             }
 
             $vehicle = Vehicle::firstOrCreate([
-                'json_id' => $aggregatable->vehicle_json_id,
+                'json_id' => $entry->vehicle_json_id,
             ]);
 
             RouteVehicle::firstOrCreate([
                 'route_id' => $route->id,
                 'vehicle_id' => $vehicle->id,
-                'created_at' => $aggregatable->created_at->startOfHour(),
+                'created_at' => $entry->created_at->startOfHour(),
             ]);
 
-            $aggregatable->delete();
+            $entry->delete();
         }
 
+        $this->cleanupInvalidEntries();
+
+        return 0;
+    }
+
+    protected function handleMissingRoute($entry)
+    {
+        Log::warning('Cannot aggregate missing route.', ['json_id' => $entry->route_json_id]);
+        $entry->delete();
+    }
+
+    public function cleanupInvalidEntries()
+    {
         RealTimeEntry::withoutGlobalScopes()
-            ->where('created_at', '<', $currentHour)
+            ->where('created_at', '<', now()->startOfHour())
             ->where(function ($query) {
                 $query->whereNotIn('event', RealTimeEntry::VALID_EVENTS)
                       ->orWhereNotIn('travel_direction', RealTimeEntry::VALID_TRAVEL_DIRECTIONS);
             })
             ->delete();
-
-        return 0;
     }
 }
