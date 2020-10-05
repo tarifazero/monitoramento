@@ -1,27 +1,29 @@
-<div>
-    <h2>
+<div class="mt-12">
+
+    <h2 class="text-center text-2xl font-bold leading-tight">
         @if ($route)
-            Dados para a rota: {{ $route->short_name }} - {{ $route->long_name }}
+            {{ $route->short_name }} - {{ $route->long_name }}
         @else
             Dados globais
         @endif
     </h2>
 
-    <div wire:poll.60s>
-        <p>
+    <div wire:poll.60s class="mt-6">
+
+        <p class="text-center">
             Veículos rodando: {{ $this->currentVehicleCount }}
         </p>
 
-        <table>
+        <table class="mx-auto mt-4">
 
             <thead>
                 <tr>
 
-                    <th>
+                    <th class="text-center px-4 py-1">
                         Hora
                     </th>
 
-                    <th>
+                    <th class="text-center px-4 py-1">
                         Número de veículos
                     </th>
 
@@ -32,11 +34,11 @@
                 @foreach ($this->vehicleCountByHour as $hour => $count)
                     <tr>
 
-                        <td>
+                        <td class="text-center px-4 py-1">
                             {{ $hour }}
                         </td>
 
-                        <td>
+                        <td class="text-center px-4 py-1">
                             {{ $count }}
                         </td>
 

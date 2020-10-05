@@ -20,8 +20,6 @@ class DatabaseSeeder extends Seeder
                 'short_name' => '9502',
                 'long_name' => 'SAO GERALDO/SAO FRANCISCO VIA ESPLANADA',
             ]))
-            ->for(
-            )
             ->count(10)
             ->create();
     }

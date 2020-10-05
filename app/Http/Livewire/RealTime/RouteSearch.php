@@ -24,11 +24,6 @@ class RouteSearch extends Component
             ->get();
     }
 
-    public function selectRoute($routeId)
-    {
-        $this->emit('routeSelected', $routeId);
-    }
-
     public function render()
     {
         return view('livewire.real-time.route-search');
