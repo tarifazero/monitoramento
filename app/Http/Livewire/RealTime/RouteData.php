@@ -8,7 +8,6 @@ use App\Models\TimeSeries\VehicleCount;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class RouteData extends Component
@@ -42,7 +41,7 @@ class RouteData extends Component
             ->endOfDay()
             ->setTimezone(config('app.timezone'));
 
-        $vehicleCounts = DB::table((new VehicleCount)->getTable())
+        $vehicleCounts = VehicleCount::query()
             ->whereBetween('time', [$startOfDay, $endOfDay]);
 
         if ($this->route) {
@@ -78,7 +77,7 @@ class RouteData extends Component
 
         $daysInWindow = $startOfWindow->diffInDays($endOfWindow);
 
-        $vehicleCounts = DB::table((new VehicleCount)->getTable())
+        $vehicleCounts = VehicleCount::query()
             ->whereBetween('time', [$startOfWindow, $endOfWindow]);
 
         if ($this->route) {
