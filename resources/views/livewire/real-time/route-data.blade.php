@@ -27,11 +27,16 @@
                         <th class="text-center px-4 py-1">
                             Número de veículos
                         </th>
+
                     @else
                         <th class="text-center px-4 py-1">
                             Percentual da frota
                         </th>
                     @endif
+
+                    <th class="text-center px-4 py-1">
+                        Média móvel (mensal)
+                    </th>
 
                 </tr>
             </thead>
@@ -48,9 +53,17 @@
                             <td class="text-center px-4 py-1">
                                 {{ $stats['vehicle_count'] }}
                             </td>
+
+                            <td class="text-center px-4 py-1">
+                                {{ $stats['average_vehicle_count'] }}
+                            </td>
                         @else
                             <td class="text-center px-4 py-1">
                                 {{ $stats['vehicle_percentage'] }}%
+                            </td>
+
+                            <td class="text-center px-4 py-1">
+                                {{ $stats['average_vehicle_percentage'] }}%
                             </td>
                         @endif
 

@@ -64,18 +64,57 @@ class RouteData extends Component
             });
     }
 
+    public function getAverageVehicleCountsByHourProperty()
+    {
+        $startOfWindow = today(new DateTimeZone(config('app.display_timezone')))
+            ->subMonth()
+            ->startOfDay()
+            ->setTimezone(config('app.timezone'));
+
+        $endOfWindow = today(new DateTimeZone(config('app.display_timezone')))
+            ->subDay()
+            ->endOfDay()
+            ->setTimezone(config('app.timezone'));
+
+        $daysInWindow = $startOfWindow->diffInDays($endOfWindow);
+
+        $vehicleCounts = DB::table((new VehicleCount)->getTable())
+            ->whereBetween('time', [$startOfWindow, $endOfWindow]);
+
+        if ($this->route) {
+            $vehicleCounts = $vehicleCounts->selectRaw('time, count')
+                                           ->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
+        } else {
+            $vehicleCounts = $vehicleCounts->selectRaw('time, sum(count) as count')
+                                           ->groupBy('time');
+        }
+
+        return $vehicleCounts
+            ->get()
+            ->mapWithKeys(function ($vehicleCount) use ($daysInWindow) {
+                $hour = Carbon::parse($vehicleCount->time)
+                    ->setTimezone(config('app.display_timezone'))
+                    ->hour;
+
+                return [$hour => $vehicleCount->count / $daysInWindow];
+            });
+    }
+
     public function getStatsByHourProperty()
     {
         $statsByHour = collect();
 
         foreach (range(0, 23) as $hour) {
             $vehicleCount = $this->vehicleCountsByHour->get($hour, 0);
+            $averageVehicleCount = $this->averageVehicleCountsByHour->get($hour, 0);
 
             $statsByHour->put(
                 $hour,
                 [
                     'vehicle_count' => $vehicleCount,
+                    'average_vehicle_count' => $averageVehicleCount,
                     'vehicle_percentage' => 100 * $vehicleCount / $this->totalVehicleCount,
+                    'average_vehicle_percentage' => 100 * $averageVehicleCount / $this->totalVehicleCount,
                 ]
             );
         }
