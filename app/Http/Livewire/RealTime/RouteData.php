@@ -19,13 +19,11 @@ class RouteData extends Component
 
     public function getCurrentVehicleCountProperty()
     {
-        $entries = RealTimeEntry::where('created_at', '>=', now()->subMinutes(5))
+        return RealTimeEntry::where('created_at', '>=', now()->subMinutes(5))
             ->when($this->route, function ($query, $route) {
                 $query->whereRouteWithChildren($this->route);
             })
-            ->get();
-
-        return $entries->unique('vehicle_real_time_id')
+            ->distinct('vehicle_real_time_id')
             ->count();
     }
 
@@ -57,12 +55,13 @@ class RouteData extends Component
 
         return $vehicleCounts
             ->get()
-            ->keyBy(function ($vehicleCount) {
-                return Carbon::parse($vehicleCount->time)
+            ->mapWithKeys(function ($vehicleCount) {
+                $hour = Carbon::parse($vehicleCount->time)
                     ->setTimezone(config('app.display_timezone'))
                     ->hour;
-            })
-            ->pluck('count');
+
+                return [$hour => $vehicleCount->count];
+            });
     }
 
     public function getStatsByHourProperty()
