@@ -45,7 +45,20 @@ class AggregateData extends Command
     {
         $cutOffTime = now()->startOfHour();
 
-        $entries = RealTimeEntry::where('created_at', '<', $cutOffTime)
+        $this->aggregateRouteVehicleCounts($cutOffTime);
+
+        $this->cleanupProcessedEntries($cutOffTime);
+
+        return 0;
+    }
+
+    protected function aggregateRouteVehicleCounts($cutOffTime)
+    {
+        $entries = RealTimeEntry::query()
+            ->select('route_real_time_id', 'vehicle_real_time_id')
+            ->selectRaw('date_trunc(\'hour\', created_at) as hour')
+            ->distinct()
+            ->where('created_at', '<', $cutOffTime)
             ->cursor();
 
         foreach ($entries as $entry) {
@@ -63,16 +76,12 @@ class AggregateData extends Command
             ]);
 
             VehicleCount::firstOrCreate([
-                'time' => $entry->created_at->startOfHour(),
+                'time' => $entry->hour,
                 'route_id' => $route->id,
             ])->increment('count');
 
             $entry->delete();
         }
-
-        $this->cleanupInvalidEntries($cutOffTime);
-
-        return 0;
     }
 
     protected function handleMissingRoute($entry)
@@ -81,7 +90,7 @@ class AggregateData extends Command
         $entry->delete();
     }
 
-    public function cleanupInvalidEntries($cutOffTime)
+    protected function cleanupProcessedEntries($cutOffTime)
     {
         RealTimeEntry::withoutGlobalScopes()
             ->where('created_at', '<', $cutOffTime)

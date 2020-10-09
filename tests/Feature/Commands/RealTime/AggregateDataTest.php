@@ -19,13 +19,12 @@ class AggregateDataTest extends TestCase
     function aggregates_real_time_data()
     {
         $route = Route::factory()->create();
-        $vehicle = Vehicle::factory()->create();
 
         RealTimeEntry::factory()
             ->count(10)
             ->create([
                 'route_real_time_id' => $route->real_time_id,
-                'vehicle_real_time_id' => $vehicle->real_time_id,
+                'vehicle_real_time_id' => 1,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()
@@ -36,7 +35,18 @@ class AggregateDataTest extends TestCase
             ->count(15)
             ->create([
                 'route_real_time_id' => $route->real_time_id,
-                'vehicle_real_time_id' => $vehicle->real_time_id,
+                'vehicle_real_time_id' => 2,
+                'created_at' => $this->faker->dateTimeBetween(
+                    now()->startOfHour()->subHours(3),
+                    now()->startOfHour()->subHours(2)
+                ),
+            ]);
+
+        RealTimeEntry::factory()
+            ->count(15)
+            ->create([
+                'route_real_time_id' => $route->real_time_id,
+                'vehicle_real_time_id' => 3,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(3),
                     now()->startOfHour()->subHours(2)
@@ -50,8 +60,8 @@ class AggregateDataTest extends TestCase
         $this->assertEquals(2, VehicleCount::count());
 
         $counts = VehicleCount::all();
-        $this->assertEquals(10, $counts->first()->count);
-        $this->assertEquals(15, $counts->last()->count);
+        $this->assertEquals(1, $counts->first()->count);
+        $this->assertEquals(2, $counts->last()->count);
     }
 
     /** @test */
@@ -107,7 +117,7 @@ class AggregateDataTest extends TestCase
     {
         RealTimeEntry::factory()
             ->create([
-                'event' => 'foo',
+                'event' => 302,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()

@@ -46,7 +46,7 @@ class FetchRoutesTest extends TestCase
 
         $this->artisan('real-time:fetch-routes');
 
-        $this->assertEquals('100-01', Route::find(1)->short_name);
+        $this->assertEquals('100-01', Route::first()->short_name);
     }
 
     /** @test */
@@ -92,8 +92,11 @@ class FetchRoutesTest extends TestCase
         $this->artisan('real-time:fetch-routes')
             ->assertExitCode(0);
 
-        $this->assertNull(Route::find(1)->parent_id);
-        $this->assertEquals(1, Route::find(2)->parent_id);
+        $parentRoute = Route::where('short_name', '100')->first();
+        $childRoute = Route::where('short_name', '100-01')->first();
+
+        $this->assertNull($parentRoute->parent_id);
+        $this->assertEquals($parentRoute->id, $childRoute->parent_id);
     }
 
     /** @test */
