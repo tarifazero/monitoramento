@@ -18,7 +18,8 @@ class CreateVehicleCountsTable extends Migration
             $table->dateTime('time')
                   ->index();
             $table->foreignId('route_id')
-                ->constrained();
+                  ->constrained()
+                  ->onDelete('cascade');
             $table->integer('count')
                   ->default(0);
         });
