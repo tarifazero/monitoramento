@@ -23,7 +23,7 @@ class VehicleFactory extends Factory
     public function definition()
     {
         return [
-            'real_time_id' => $this->faker->randomNumber,
+            'real_time_id' => $this->faker->unique()->randomNumber,
         ];
     }
 }

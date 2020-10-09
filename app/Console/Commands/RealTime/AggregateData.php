@@ -4,9 +4,10 @@ namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
-use App\Models\RouteVehicle;
+use App\Models\TimeSeries\VehicleCount;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AggregateData extends Command
@@ -23,7 +24,7 @@ class AggregateData extends Command
      *
      * @var string
      */
-    protected $description = 'Aggregate real time data (hourly resolution)';
+    protected $description = 'Aggregate real time data';
 
     /**
      * Create a new command instance.
@@ -42,7 +43,9 @@ class AggregateData extends Command
      */
     public function handle()
     {
-        $entries = RealTimeEntry::where('created_at', '<', now()->startOfHour())
+        $cutOffTime = now()->startOfHour();
+
+        $entries = RealTimeEntry::where('created_at', '<', $cutOffTime)
             ->cursor();
 
         foreach ($entries as $entry) {
@@ -59,16 +62,15 @@ class AggregateData extends Command
                 'real_time_id' => $entry->vehicle_real_time_id,
             ]);
 
-            RouteVehicle::firstOrCreate([
+            VehicleCount::firstOrCreate([
+                'time' => $entry->created_at->startOfHour(),
                 'route_id' => $route->id,
-                'vehicle_id' => $vehicle->id,
-                'created_at' => $entry->created_at->startOfHour(),
-            ]);
+            ])->increment('count');
 
             $entry->delete();
         }
 
-        $this->cleanupInvalidEntries();
+        $this->cleanupInvalidEntries($cutOffTime);
 
         return 0;
     }
@@ -79,15 +81,10 @@ class AggregateData extends Command
         $entry->delete();
     }
 
-    public function cleanupInvalidEntries()
+    public function cleanupInvalidEntries($cutOffTime)
     {
         RealTimeEntry::withoutGlobalScopes()
-            ->where('created_at', '<', now()->startOfHour())
-            ->where(function ($query) {
-                $query->whereNotIn('event', RealTimeEntry::VALID_EVENTS)
-                      ->orWhereNull('travel_direction')
-                      ->orWhereNotIn('travel_direction', RealTimeEntry::VALID_TRAVEL_DIRECTIONS);
-            })
+            ->where('created_at', '<', $cutOffTime)
             ->delete();
     }
 }

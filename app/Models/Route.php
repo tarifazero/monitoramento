@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\TimeSeries\VehicleCount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,9 +35,9 @@ class Route extends Model
         return $this->hasMany(RealTimeEntry::class, 'route_real_time_id', 'real_time_id');
     }
 
-    public function vehicles()
+    public function vehicleCounts()
     {
-        return $this->belongsToMany(Vehicle::class);
+        return $this->hasMany(VehicleCount::class);
     }
 
     public function scopeMain($query)
@@ -44,11 +45,8 @@ class Route extends Model
         return $query->whereNull('parent_id');
     }
 
-    public function scopeWithData($query)
+    public function toFlatTree()
     {
-        return $query->whereHas('vehicles')
-                     ->orWhereHas('children', function ($query) {
-                         $query->whereHas('vehicles');
-                     });
+        return collect([$this, ...$this->children]);
     }
 }

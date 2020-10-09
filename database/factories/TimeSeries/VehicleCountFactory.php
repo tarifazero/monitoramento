@@ -1,20 +1,19 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\TimeSeries;
 
 use App\Models\Route;
-use App\Models\RouteVehicle;
-use App\Models\Vehicle;
+use App\Models\TimeSeries\VehicleCount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class RouteVehicleFactory extends Factory
+class VehicleCountFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = RouteVehicle::class;
+    protected $model = VehicleCount::class;
 
     /**
      * Define the model's default state.
@@ -24,9 +23,9 @@ class RouteVehicleFactory extends Factory
     public function definition()
     {
         return [
+            'time' => today()->hour($this->faker->numberBetween(0, 23)),
             'route_id' => Route::factory(),
-            'vehicle_id' => Vehicle::factory(),
-            'created_at' => today()->hour($this->faker->numberBetween(0, 23)),
+            'count' => $this->faker->numberBetween(0, 30),
         ];
     }
 }

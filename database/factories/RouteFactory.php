@@ -23,7 +23,7 @@ class RouteFactory extends Factory
     public function definition()
     {
         return [
-            'real_time_id' => $this->faker->randomNumber,
+            'real_time_id' => $this->faker->unique()->randomNumber,
             'short_name' => $this->faker->randomNumber,
             'long_name' => $this->faker->streetName,
             'type' => Route::TYPE_BUS,

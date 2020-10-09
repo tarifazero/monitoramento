@@ -4,7 +4,7 @@ namespace Tests\Feature\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
-use App\Models\RouteVehicle;
+use App\Models\TimeSeries\VehicleCount;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -33,7 +33,7 @@ class AggregateDataTest extends TestCase
             ]);
 
         RealTimeEntry::factory()
-            ->count(10)
+            ->count(15)
             ->create([
                 'route_real_time_id' => $route->real_time_id,
                 'vehicle_real_time_id' => $vehicle->real_time_id,
@@ -46,8 +46,12 @@ class AggregateDataTest extends TestCase
         $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
-        $this->assertEquals(2, RouteVehicle::count());
         $this->assertEquals(0, RealTimeEntry::count());
+        $this->assertEquals(2, VehicleCount::count());
+
+        $counts = VehicleCount::all();
+        $this->assertEquals(10, $counts->first()->count);
+        $this->assertEquals(15, $counts->last()->count);
     }
 
     /** @test */
@@ -67,10 +71,9 @@ class AggregateDataTest extends TestCase
         $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, RouteVehicle::count());
-        $this->assertEquals(1, Vehicle::count());
         $this->assertEquals(0, RealTimeEntry::count());
-
+        $this->assertEquals(1, VehicleCount::count());
+        $this->assertEquals(1, Vehicle::count());
     }
 
     /** @test */
