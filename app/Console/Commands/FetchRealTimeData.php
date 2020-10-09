@@ -87,8 +87,8 @@ class FetchRealTimeData extends Command
             $longitude = str_replace(',', '.', $item['LT']);
 
             RealTimeEntry::create([
-                'route_json_id' => $item['NL'],
-                'vehicle_json_id' => $item['NV'],
+                'route_realtime_id' => $item['NL'],
+                'vehicle_realtime_id' => $item['NV'],
                 'event' => $item['EV'],
                 'timestamp' => $timestamp,
                 'latitude' => $latitude,

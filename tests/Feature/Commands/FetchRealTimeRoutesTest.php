@@ -53,7 +53,7 @@ class FetchRealTimeRoutesTest extends TestCase
     function updates_existing_routes()
     {
         $existingRoute = Route::factory()->create([
-            'json_id' => '1',
+            'realtime_id' => '1',
             'short_name' => '101',
             'long_name' => 'NOVO BARREIRO',
         ]);

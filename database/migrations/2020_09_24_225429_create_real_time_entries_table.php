@@ -15,8 +15,8 @@ class CreateRealTimeEntriesTable extends Migration
     {
         Schema::create('real_time_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('route_json_id');
-            $table->string('vehicle_json_id');
+            $table->integer('route_realtime_id');
+            $table->integer('vehicle_realtime_id');
             $table->integer('event');
             $table->dateTime('timestamp');
             $table->double('latitude');

@@ -24,8 +24,8 @@ class AggregateRealTimeDataTest extends TestCase
         RealTimeEntry::factory()
             ->count(10)
             ->create([
-                'route_json_id' => $route->json_id,
-                'vehicle_json_id' => $vehicle->json_id,
+                'route_realtime_id' => $route->realtime_id,
+                'vehicle_realtime_id' => $vehicle->realtime_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()
@@ -35,8 +35,8 @@ class AggregateRealTimeDataTest extends TestCase
         RealTimeEntry::factory()
             ->count(10)
             ->create([
-                'route_json_id' => $route->json_id,
-                'vehicle_json_id' => $vehicle->json_id,
+                'route_realtime_id' => $route->realtime_id,
+                'vehicle_realtime_id' => $vehicle->realtime_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(3),
                     now()->startOfHour()->subHours(2)
@@ -57,7 +57,7 @@ class AggregateRealTimeDataTest extends TestCase
 
         RealTimeEntry::factory()
             ->create([
-                'route_json_id' => $route->json_id,
+                'route_realtime_id' => $route->realtime_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()
@@ -89,7 +89,7 @@ class AggregateRealTimeDataTest extends TestCase
             ]);
 
         Log::shouldReceive('warning')
-            ->with('Cannot aggregate missing route.', ['json_id' => $entry->route_json_id]);
+            ->with('Cannot aggregate missing route.', ['realtime_id' => $entry->route_realtime_id]);
 
         $this->assertEquals(1, RealTimeEntry::count());
 

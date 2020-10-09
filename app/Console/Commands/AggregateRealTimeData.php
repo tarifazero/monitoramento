@@ -46,7 +46,7 @@ class AggregateRealTimeData extends Command
             ->cursor();
 
         foreach ($entries as $entry) {
-            $route = Route::where('json_id', $entry->route_json_id)
+            $route = Route::where('realtime_id', $entry->route_realtime_id)
                 ->first();
 
             if (! $route) {
@@ -56,7 +56,7 @@ class AggregateRealTimeData extends Command
             }
 
             $vehicle = Vehicle::firstOrCreate([
-                'json_id' => $entry->vehicle_json_id,
+                'realtime_id' => $entry->vehicle_realtime_id,
             ]);
 
             RouteVehicle::firstOrCreate([
@@ -75,7 +75,7 @@ class AggregateRealTimeData extends Command
 
     protected function handleMissingRoute($entry)
     {
-        Log::warning('Cannot aggregate missing route.', ['json_id' => $entry->route_json_id]);
+        Log::warning('Cannot aggregate missing route.', ['realtime_id' => $entry->route_realtime_id]);
         $entry->delete();
     }
 

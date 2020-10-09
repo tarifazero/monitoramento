@@ -19,7 +19,7 @@ class CreateRoutesTable extends Migration
                   ->nullable()
                   ->constrained('routes')
                   ->onDelete('cascade');
-            $table->string('json_id')
+            $table->integer('realtime_id')
                 ->unique();
             $table->string('short_name');
             $table->string('long_name');

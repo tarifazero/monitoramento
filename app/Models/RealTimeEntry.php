@@ -39,9 +39,9 @@ class RealTimeEntry extends Model
 
     public function scopeWhereRouteWithChildren($query, Route $route)
     {
-        $children = Route::where('parent_id', $route->id)->pluck('json_id');
+        $children = Route::where('parent_id', $route->id)->pluck('realtime_id');
 
-        return $query->whereIn('route_json_id', [$route->json_id, ...$children]);
+        return $query->whereIn('route_realtime_id', [$route->realtime_id, ...$children]);
     }
 
     /**

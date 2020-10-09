@@ -76,7 +76,7 @@ class FetchRealTimeRoutes extends Command
     {
         $routes->each(function ($route) {
             Route::updateOrCreate(
-                ['json_id' => $route['NumeroLinha']],
+                ['realtime_id' => $route['NumeroLinha']],
                 [
                     'short_name' => ltrim($route['Linha'], '0'),
                     'long_name' => $route['Nome'],
