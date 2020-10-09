@@ -16,7 +16,7 @@ class AggregateData extends Command
      *
      * @var string
      */
-    protected $signature = 'realtime:aggregate-data';
+    protected $signature = 'real-time:aggregate-data';
 
     /**
      * The console command description.
@@ -46,7 +46,7 @@ class AggregateData extends Command
             ->cursor();
 
         foreach ($entries as $entry) {
-            $route = Route::where('realtime_id', $entry->route_realtime_id)
+            $route = Route::where('real_time_id', $entry->route_real_time_id)
                 ->first();
 
             if (! $route) {
@@ -56,7 +56,7 @@ class AggregateData extends Command
             }
 
             $vehicle = Vehicle::firstOrCreate([
-                'realtime_id' => $entry->vehicle_realtime_id,
+                'real_time_id' => $entry->vehicle_real_time_id,
             ]);
 
             RouteVehicle::firstOrCreate([
@@ -75,7 +75,7 @@ class AggregateData extends Command
 
     protected function handleMissingRoute($entry)
     {
-        Log::warning('Cannot aggregate missing route.', ['realtime_id' => $entry->route_realtime_id]);
+        Log::warning('Cannot aggregate missing route.', ['real_time_id' => $entry->route_real_time_id]);
         $entry->delete();
     }
 

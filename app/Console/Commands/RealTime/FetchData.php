@@ -20,7 +20,7 @@ class FetchData extends Command
      *
      * @var string
      */
-    protected $signature = 'realtime:fetch-data';
+    protected $signature = 'real-time:fetch-data';
 
     /**
      * The console command description.
@@ -87,8 +87,8 @@ class FetchData extends Command
             $longitude = str_replace(',', '.', $item['LT']);
 
             RealTimeEntry::create([
-                'route_realtime_id' => $item['NL'],
-                'vehicle_realtime_id' => $item['NV'],
+                'route_real_time_id' => $item['NL'],
+                'vehicle_real_time_id' => $item['NV'],
                 'event' => $item['EV'],
                 'timestamp' => $timestamp,
                 'latitude' => $latitude,

@@ -15,7 +15,7 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->integer('realtime_id')
+            $table->integer('real_time_id')
                 ->unique();
             $table->timestamps();
             $table->softDeletes();

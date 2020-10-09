@@ -23,8 +23,8 @@ class RealTimeEntryFactory extends Factory
     public function definition()
     {
         return [
-            'route_realtime_id' => $this->faker->randomNumber,
-            'vehicle_realtime_id' => $this->faker->randomNumber,
+            'route_real_time_id' => $this->faker->randomNumber,
+            'vehicle_real_time_id' => $this->faker->randomNumber,
             'event' => 105,
             'timestamp' => $this->faker->dateTimeBetween(now()->subDay(), now()),
             'latitude' => $this->faker->latitude,

@@ -26,7 +26,7 @@ class FetchDataTest extends TestCase
             'temporeal.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('realtime:fetch-data')
+        $this->artisan('real-time:fetch-data')
             ->assertExitCode(0);
 
         $this->assertCount(2, RealTimeEntry::all());
@@ -41,6 +41,6 @@ class FetchDataTest extends TestCase
 
         $this->expectException(RequestException::class);
 
-        $this->artisan('realtime:fetch-data');
+        $this->artisan('real-time:fetch-data');
     }
 }

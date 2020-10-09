@@ -31,7 +31,7 @@ class Route extends Model
 
     public function realTimeEntries()
     {
-        return $this->hasMany(RealTimeEntry::class, 'route_realtime_id', 'realtime_id');
+        return $this->hasMany(RealTimeEntry::class, 'route_real_time_id', 'real_time_id');
     }
 
     public function vehicles()

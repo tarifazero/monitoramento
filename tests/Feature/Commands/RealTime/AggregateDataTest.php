@@ -24,8 +24,8 @@ class AggregateDataTest extends TestCase
         RealTimeEntry::factory()
             ->count(10)
             ->create([
-                'route_realtime_id' => $route->realtime_id,
-                'vehicle_realtime_id' => $vehicle->realtime_id,
+                'route_real_time_id' => $route->real_time_id,
+                'vehicle_real_time_id' => $vehicle->real_time_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()
@@ -35,15 +35,15 @@ class AggregateDataTest extends TestCase
         RealTimeEntry::factory()
             ->count(10)
             ->create([
-                'route_realtime_id' => $route->realtime_id,
-                'vehicle_realtime_id' => $vehicle->realtime_id,
+                'route_real_time_id' => $route->real_time_id,
+                'vehicle_real_time_id' => $vehicle->real_time_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(3),
                     now()->startOfHour()->subHours(2)
                 ),
             ]);
 
-        $this->artisan('realtime:aggregate-data')
+        $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(2, RouteVehicle::count());
@@ -57,14 +57,14 @@ class AggregateDataTest extends TestCase
 
         RealTimeEntry::factory()
             ->create([
-                'route_realtime_id' => $route->realtime_id,
+                'route_real_time_id' => $route->real_time_id,
                 'created_at' => $this->faker->dateTimeBetween(
                     now()->startOfHour()->subHours(2),
                     now()->startOfHour()->subHour()
                 ),
             ]);
 
-        $this->artisan('realtime:aggregate-data')
+        $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(1, RouteVehicle::count());
@@ -89,11 +89,11 @@ class AggregateDataTest extends TestCase
             ]);
 
         Log::shouldReceive('warning')
-            ->with('Cannot aggregate missing route.', ['realtime_id' => $entry->route_realtime_id]);
+            ->with('Cannot aggregate missing route.', ['real_time_id' => $entry->route_real_time_id]);
 
         $this->assertEquals(1, RealTimeEntry::count());
 
-        $this->artisan('realtime:aggregate-data')
+        $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(0, RealTimeEntry::count());
@@ -113,7 +113,7 @@ class AggregateDataTest extends TestCase
 
         $this->assertEquals(1, RealTimeEntry::withoutGlobalScopes()->count());
 
-        $this->artisan('realtime:aggregate-data')
+        $this->artisan('real-time:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(0, RealTimeEntry::withoutGlobalScopes()->count());

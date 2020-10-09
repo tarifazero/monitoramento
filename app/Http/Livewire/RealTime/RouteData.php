@@ -24,7 +24,7 @@ class RouteData extends Component
             })
             ->get();
 
-        return $entries->unique('vehicle_realtime_id')
+        return $entries->unique('vehicle_real_time_id')
             ->count();
     }
 

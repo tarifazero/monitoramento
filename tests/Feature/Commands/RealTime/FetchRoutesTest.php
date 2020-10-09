@@ -26,7 +26,7 @@ class FetchRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('realtime:fetch-routes')
+        $this->artisan('real-time:fetch-routes')
             ->assertExitCode(0);
 
         $this->assertCount(2, Route::all());
@@ -44,7 +44,7 @@ class FetchRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('realtime:fetch-routes');
+        $this->artisan('real-time:fetch-routes');
 
         $this->assertEquals('100-01', Route::find(1)->short_name);
     }
@@ -53,7 +53,7 @@ class FetchRoutesTest extends TestCase
     function updates_existing_routes()
     {
         $existingRoute = Route::factory()->create([
-            'realtime_id' => '1',
+            'real_time_id' => '1',
             'short_name' => '101',
             'long_name' => 'NOVO BARREIRO',
         ]);
@@ -67,7 +67,7 @@ class FetchRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('realtime:fetch-routes')
+        $this->artisan('real-time:fetch-routes')
             ->assertExitCode(0);
 
         $existingRoute->refresh();
@@ -89,7 +89,7 @@ class FetchRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('realtime:fetch-routes')
+        $this->artisan('real-time:fetch-routes')
             ->assertExitCode(0);
 
         $this->assertNull(Route::find(1)->parent_id);
@@ -105,6 +105,6 @@ class FetchRoutesTest extends TestCase
 
         $this->expectException(RequestException::class);
 
-        $this->artisan('realtime:fetch-routes');
+        $this->artisan('real-time:fetch-routes');
     }
 }

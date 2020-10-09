@@ -21,7 +21,7 @@ class FetchRoutes extends Command
      *
      * @var string
      */
-    protected $signature = 'realtime:fetch-routes';
+    protected $signature = 'real-time:fetch-routes';
 
     /**
      * The console command description.
@@ -76,7 +76,7 @@ class FetchRoutes extends Command
     {
         $routes->each(function ($route) {
             Route::updateOrCreate(
-                ['realtime_id' => $route['NumeroLinha']],
+                ['real_time_id' => $route['NumeroLinha']],
                 [
                     'short_name' => ltrim($route['Linha'], '0'),
                     'long_name' => $route['Nome'],
