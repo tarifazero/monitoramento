@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\RealTime;
 
 use App\Models\Route;
 use Illuminate\Console\Command;
@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use League\Csv\CharsetConverter as CsvCharsetConverter;
 use League\Csv\Reader as CsvReader;
 
-class FetchRealTimeRoutes extends Command
+class FetchRoutes extends Command
 {
     const DICTIONARY_URL = 'http://servicosbhtrans.pbh.gov.br/bhtrans/webserviceGPS/bhtrans_bdlinha.csv';
 
@@ -21,7 +21,7 @@ class FetchRealTimeRoutes extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:realtime:routes';
+    protected $signature = 'realtime:fetch-routes';
 
     /**
      * The console command description.

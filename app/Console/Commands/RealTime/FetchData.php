@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Vehicle;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use League\Csv\Reader as CsvReader;
 
-class FetchRealTimeData extends Command
+class FetchData extends Command
 {
     const DATA_URL = 'https://temporeal.pbh.gov.br/?param=C';
 
@@ -20,7 +20,7 @@ class FetchRealTimeData extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:realtime:data';
+    protected $signature = 'realtime:fetch-data';
 
     /**
      * The console command description.

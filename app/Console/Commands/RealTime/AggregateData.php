@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
@@ -9,14 +9,14 @@ use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class AggregateRealTimeData extends Command
+class AggregateData extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'aggregate:realtime:data';
+    protected $signature = 'realtime:aggregate-data';
 
     /**
      * The console command description.

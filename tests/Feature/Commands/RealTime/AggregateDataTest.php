@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Commands;
+namespace Tests\Feature\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class AggregateRealTimeDataTest extends TestCase
+class AggregateDataTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -43,7 +43,7 @@ class AggregateRealTimeDataTest extends TestCase
                 ),
             ]);
 
-        $this->artisan('aggregate:realtime:data')
+        $this->artisan('realtime:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(2, RouteVehicle::count());
@@ -64,7 +64,7 @@ class AggregateRealTimeDataTest extends TestCase
                 ),
             ]);
 
-        $this->artisan('aggregate:realtime:data')
+        $this->artisan('realtime:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(1, RouteVehicle::count());
@@ -93,7 +93,7 @@ class AggregateRealTimeDataTest extends TestCase
 
         $this->assertEquals(1, RealTimeEntry::count());
 
-        $this->artisan('aggregate:realtime:data')
+        $this->artisan('realtime:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(0, RealTimeEntry::count());
@@ -113,7 +113,7 @@ class AggregateRealTimeDataTest extends TestCase
 
         $this->assertEquals(1, RealTimeEntry::withoutGlobalScopes()->count());
 
-        $this->artisan('aggregate:realtime:data')
+        $this->artisan('realtime:aggregate-data')
             ->assertExitCode(0);
 
         $this->assertEquals(0, RealTimeEntry::withoutGlobalScopes()->count());

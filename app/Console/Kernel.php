@@ -23,14 +23,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('fetch:realtime:data')
+        $schedule->command('realtime:fetch-data')
                  ->everyMinute()
                  ->withoutOverlapping();
 
-        $schedule->command('aggregate:realtime:data')
+        $schedule->command('realtime:aggregate-data')
                  ->hourly();
 
-        $schedule->command('fetch:realtime:routes')
+        $schedule->command('realtime:fetch-routes')
                  ->daily();
     }
 

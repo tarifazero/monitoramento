@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Commands;
+namespace Tests\Feature\Commands\RealTime;
 
 use App\Models\Route;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -9,7 +9,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
-class FetchRealTimeRoutesTest extends TestCase
+class FetchRoutesTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -26,7 +26,7 @@ class FetchRealTimeRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('fetch:realtime:routes')
+        $this->artisan('realtime:fetch-routes')
             ->assertExitCode(0);
 
         $this->assertCount(2, Route::all());
@@ -44,7 +44,7 @@ class FetchRealTimeRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('fetch:realtime:routes');
+        $this->artisan('realtime:fetch-routes');
 
         $this->assertEquals('100-01', Route::find(1)->short_name);
     }
@@ -67,7 +67,7 @@ class FetchRealTimeRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('fetch:realtime:routes')
+        $this->artisan('realtime:fetch-routes')
             ->assertExitCode(0);
 
         $existingRoute->refresh();
@@ -89,7 +89,7 @@ class FetchRealTimeRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('fetch:realtime:routes')
+        $this->artisan('realtime:fetch-routes')
             ->assertExitCode(0);
 
         $this->assertNull(Route::find(1)->parent_id);
@@ -105,6 +105,6 @@ class FetchRealTimeRoutesTest extends TestCase
 
         $this->expectException(RequestException::class);
 
-        $this->artisan('fetch:realtime:routes');
+        $this->artisan('realtime:fetch-routes');
     }
 }
