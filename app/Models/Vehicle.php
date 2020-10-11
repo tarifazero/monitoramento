@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasActivityStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicle extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasActivityStatus, SoftDeletes;
 
     /**
      * The attributes that aren't mass assignable.
@@ -21,15 +22,5 @@ class Vehicle extends Model
     {
         return $this->belongsToMany(Route::class)
             ->withTimestamps();
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('updated_at', '>=', today()->subMonth()->startOfDay());
-    }
-
-    public function scopeInactive($query)
-    {
-        return $query->where('updated_at', '<', today()->subMonth()->startOfDay());
     }
 }

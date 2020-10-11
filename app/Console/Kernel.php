@@ -31,16 +31,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('real-time:process:entries')
                  ->hourly()
                  ->after(function () {
+                     Artisan::call('time-series:count:active-vehicles hour');
                      Artisan::call('time-series:count:vehicles-by-route');
                  });
 
         $schedule->command('real-time:fetch:routes')
                  ->daily();
 
-        $schedule->command('real-time:count:active-routes')
+        $schedule->command('real-time:count:active-vehicles day')
                  ->daily();
 
-        $schedule->command('time-series:count:active-vehicles')
+        $schedule->command('real-time:count:active-routes')
                  ->daily();
     }
 

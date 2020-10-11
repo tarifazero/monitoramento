@@ -41,6 +41,7 @@ class CountVehiclesByRoute extends Command
      */
     public function handle()
     {
+        // TODO: implement resolution argument for this command
         $cutOffTime = now()->subHour()->startOfHour();
 
         $routes = Route::cursor();
@@ -53,6 +54,7 @@ class CountVehiclesByRoute extends Command
 
             VehiclesByRouteCount::updateOrCreate([
                 'route_id' => $route->id,
+                'resolution' => 'hour',
                 'time' => $cutOffTime,
             ], [
                 'count' => $vehicleCount,

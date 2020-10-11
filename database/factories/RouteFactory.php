@@ -3,11 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Route;
+use Database\Factories\Concerns\HasActivityStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 class RouteFactory extends Factory
 {
+    use HasActivityStatus;
+
     /**
      * The name of the factory's corresponding model.
      *

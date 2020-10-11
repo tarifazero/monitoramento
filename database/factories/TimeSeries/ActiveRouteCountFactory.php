@@ -23,6 +23,7 @@ class ActiveRouteCountFactory extends Factory
     public function definition()
     {
         return [
+            'resolution' => 'day',
             'time' => today()->startOfDay(),
             'count' => $this->faker->numberBetween(0, 300),
         ];

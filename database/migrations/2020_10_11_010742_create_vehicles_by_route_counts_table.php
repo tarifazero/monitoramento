@@ -18,6 +18,11 @@ class CreateVehiclesByRouteCountsTable extends Migration
             $table->foreignId('route_id')
                   ->constrained()
                   ->onDelete('cascade');
+            $table->enum('resolution', [
+                'hour',
+                'day',
+                'month',
+            ]);
             $table->dateTime('time')
                   ->index();
             $table->integer('count')

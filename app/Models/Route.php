@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasActivityStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Route extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasActivityStatus, SoftDeletes;
 
     const TYPE_BUS = 3;
 

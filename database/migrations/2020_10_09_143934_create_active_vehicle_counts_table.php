@@ -15,6 +15,11 @@ class CreateActiveVehicleCountsTable extends Migration
     {
         Schema::create('active_vehicle_counts', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->enum('resolution', [
+                'hour',
+                'day',
+                'month',
+            ]);
             $table->dateTime('time')
                   ->index();
             $table->integer('count')

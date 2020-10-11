@@ -23,6 +23,7 @@ class ActiveVehicleCountFactory extends Factory
     public function definition()
     {
         return [
+            'resolution' => 'hour',
             'time' => today()->startOfDay(),
             'count' => $this->faker->numberBetween(0, 3000),
         ];

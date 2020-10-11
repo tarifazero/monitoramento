@@ -3,11 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Vehicle;
+use Database\Factories\Concerns\HasActivityStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 class VehicleFactory extends Factory
 {
+    use HasActivityStatus;
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -25,23 +28,5 @@ class VehicleFactory extends Factory
         return [
             'real_time_id' => $this->faker->unique()->randomNumber,
         ];
-    }
-
-    public function active()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subMonth(), now()),
-            ];
-        });
-    }
-
-    public function inactive()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subMonth()),
-            ];
-        });
     }
 }

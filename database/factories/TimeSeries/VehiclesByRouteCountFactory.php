@@ -24,6 +24,7 @@ class VehiclesByRouteCountFactory extends Factory
     {
         return [
             'route_id' => Route::factory(),
+            'resolution' => 'hour',
             'time' => today()->startOfDay(),
             'count' => $this->faker->numberBetween(0, 30),
         ];
