@@ -27,6 +27,7 @@ class CountActiveVehiclesTest extends TestCase
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(1, ActiveVehicleCount::first()->count);
         $this->assertEquals('hour', ActiveVehicleCount::first()->resolution);
+        $this->assertEquals(now()->subHour()->startOfHour(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */
@@ -44,6 +45,7 @@ class CountActiveVehiclesTest extends TestCase
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(1, ActiveVehicleCount::first()->count);
         $this->assertEquals('day', ActiveVehicleCount::first()->resolution);
+        $this->assertEquals(now()->subDay()->startOfDay(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */
@@ -61,6 +63,7 @@ class CountActiveVehiclesTest extends TestCase
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(1, ActiveVehicleCount::first()->count);
         $this->assertEquals('month', ActiveVehicleCount::first()->resolution);
+        $this->assertEquals(now()->subMonth()->startOfMonth(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */
@@ -77,6 +80,7 @@ class CountActiveVehiclesTest extends TestCase
 
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(0, ActiveVehicleCount::first()->count);
+        $this->assertEquals(now()->subHour()->startOfHour(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */
@@ -93,6 +97,7 @@ class CountActiveVehiclesTest extends TestCase
 
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(0, ActiveVehicleCount::first()->count);
+        $this->assertEquals(now()->subDay()->startOfDay(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */
@@ -109,6 +114,7 @@ class CountActiveVehiclesTest extends TestCase
 
         $this->assertEquals(1, ActiveVehicleCount::count());
         $this->assertEquals(0, ActiveVehicleCount::first()->count);
+        $this->assertEquals(now()->subMonth()->startOfMonth(), ActiveVehicleCount::first()->time);
     }
 
     /** @test */

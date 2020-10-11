@@ -27,6 +27,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(1, ActiveRouteCount::first()->count);
         $this->assertEquals('hour', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subHour()->startOfHour(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
@@ -44,6 +45,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(1, ActiveRouteCount::first()->count);
         $this->assertEquals('day', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subDay()->startOfDay(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
@@ -61,6 +63,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(1, ActiveRouteCount::first()->count);
         $this->assertEquals('month', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subMonth()->startOfMonth(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
@@ -78,6 +81,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(0, ActiveRouteCount::first()->count);
         $this->assertEquals('hour', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subHour()->startOfHour(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
@@ -95,6 +99,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(0, ActiveRouteCount::first()->count);
         $this->assertEquals('day', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subDay()->startOfDay(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
@@ -112,6 +117,7 @@ class CountActiveRoutesTest extends TestCase
         $this->assertEquals(1, ActiveRouteCount::count());
         $this->assertEquals(0, ActiveRouteCount::first()->count);
         $this->assertEquals('month', ActiveRouteCount::first()->resolution);
+        $this->assertEquals(now()->subMonth()->startOfMonth(), ActiveRouteCount::first()->time);
     }
 
     /** @test */
