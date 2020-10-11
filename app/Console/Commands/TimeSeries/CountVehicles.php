@@ -39,7 +39,7 @@ class CountVehicles extends Command
      */
     public function handle()
     {
-        $cutOffTime = today()->subDay()->startOfDay();
+        $cutOffTime = today()->subHour()->startOfHour();
 
         $vehicleCount = Vehicle::where('updated_at', '>=', $cutOffTime)
             ->count();
