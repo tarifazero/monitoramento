@@ -83,7 +83,7 @@ class RouteData extends Component
 
         foreach (range(0, 23) as $hour) {
             $vehicleCount = $this->route
-                ? $this->vehiclesByRouteCounts->get($hour, 0)
+                ? $this->hourlyVehiclesByRouteCounts->get($hour, 0)
                 : $this->hourlyActiveVehicleCounts->get($hour, 0);
 
             $statsByHour->put(
