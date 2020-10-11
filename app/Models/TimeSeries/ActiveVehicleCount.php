@@ -3,13 +3,14 @@
 namespace App\Models\TimeSeries;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\IsTimeSeries;
 use App\Models\Route;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ActiveVehicleCount extends Model
 {
-    use HasFactory, HasUuid;
+    use HasFactory, HasUuid, IsTimeSeries;
 
     /**
      * The attributes that aren't mass assignable.
@@ -17,13 +18,6 @@ class ActiveVehicleCount extends Model
      * @var array
      */
     protected $guarded = ['id'];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
 
     public function route()
     {
