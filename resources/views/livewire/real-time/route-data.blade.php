@@ -51,7 +51,7 @@
                             </td>
                         @else
                             <td class="text-center px-4 py-1">
-                                {{ $stats['vehicle_percentage'] }}%
+                                @percentage($stats['vehicle_percentage'])
                             </td>
                         @endif
 
