@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\TimeSeries\VehicleCount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -41,11 +40,6 @@ class Route extends Model
             ->withTimestamps();
     }
 
-    public function vehicleCounts()
-    {
-        return $this->hasMany(VehicleCount::class);
-    }
-
     public function scopeMain($query)
     {
         return $query->whereNull('parent_id');
@@ -54,5 +48,15 @@ class Route extends Model
     public function toFlatTree()
     {
         return collect([$this, ...$this->children]);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('updated_at', '>=', today()->subWeek()->startOfDay());
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('updated_at', '<', today()->subWeek()->startOfDay());
     }
 }

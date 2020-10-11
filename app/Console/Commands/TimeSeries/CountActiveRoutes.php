@@ -3,17 +3,17 @@
 namespace App\Console\Commands\TimeSeries;
 
 use App\Models\Route;
-use App\Models\TimeSeries\RouteCount;
+use App\Models\TimeSeries\ActiveRouteCount;
 use Illuminate\Console\Command;
 
-class CountRoutes extends Command
+class CountActiveRoutes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'time-series:count:routes';
+    protected $signature = 'time-series:count:active-routes';
 
     /**
      * The console command description.
@@ -39,15 +39,10 @@ class CountRoutes extends Command
      */
     public function handle()
     {
-        $cutOffTime = today()->subDay()->startOfDay();
-
-        $routeCount = Route::where('updated_at', '>=', $cutOffTime)
-            ->count();
-
-        RouteCount::updateOrCreate([
-            'time' => $cutOffTime,
+        ActiveRouteCount::updateOrCreate([
+            'time' => today()->startOfDay(),
         ], [
-            'count' => $routeCount,
+            'count' => Route::active()->count(),
         ]);
     }
 }

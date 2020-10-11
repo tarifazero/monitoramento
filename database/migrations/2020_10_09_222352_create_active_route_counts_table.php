@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRouteCountsTable extends Migration
+class CreateActiveRouteCountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRouteCountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('route_counts', function (Blueprint $table) {
+        Schema::create('active_route_counts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->dateTime('time')
                   ->index();
@@ -29,6 +29,6 @@ class CreateRouteCountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('route_counts');
+        Schema::dropIfExists('active_route_counts');
     }
 }

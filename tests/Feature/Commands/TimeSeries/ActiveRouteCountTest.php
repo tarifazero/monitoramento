@@ -3,12 +3,12 @@
 namespace Tests\Feature\Commands\TimeSeries;
 
 use App\Models\Route;
-use App\Models\TimeSeries\RouteCount;
+use App\Models\TimeSeries\ActiveRouteCount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RouteCountTest extends TestCase
+class ActiveRouteCountTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,13 +19,13 @@ class RouteCountTest extends TestCase
             ->active()
             ->create();
 
-        $this->assertEquals(0, RouteCount::count());
+        $this->assertEquals(0, ActiveRouteCount::count());
 
-        $this->artisan('time-series:count:routes')
+        $this->artisan('time-series:count:active-routes')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, RouteCount::count());
-        $this->assertEquals(1, RouteCount::first()->count);
+        $this->assertEquals(1, ActiveRouteCount::count());
+        $this->assertEquals(1, ActiveRouteCount::first()->count);
     }
 
     /** @test */
@@ -35,12 +35,12 @@ class RouteCountTest extends TestCase
             ->inactive()
             ->create();
 
-        $this->assertEquals(0, RouteCount::count());
+        $this->assertEquals(0, ActiveRouteCount::count());
 
-        $this->artisan('time-series:count:routes')
+        $this->artisan('time-series:count:active-routes')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, RouteCount::count());
-        $this->assertEquals(0, RouteCount::first()->count);
+        $this->assertEquals(1, ActiveRouteCount::count());
+        $this->assertEquals(0, ActiveRouteCount::first()->count);
     }
 }
