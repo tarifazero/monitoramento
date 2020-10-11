@@ -34,8 +34,8 @@ class DatabaseSeeder extends Seeder
 
         ActiveVehicleCount::factory()
             ->create([
-                'resolution' => 'day',
-                'count' => 2300,
+                'resolution' => 'month',
+                'count' => 3000,
             ]);
 
         foreach (range(0, 23) as $hour) {

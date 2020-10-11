@@ -40,11 +40,11 @@ class Kernel extends ConsoleKernel
         $schedule->command('real-time:fetch:routes')
                  ->daily();
 
-        $schedule->command('real-time:count:active-vehicles day')
-                 ->daily();
-
         $schedule->command('real-time:count:active-routes')
                  ->daily();
+
+        $schedule->command('real-time:count:active-vehicles month')
+                 ->monthly();
     }
 
     /**

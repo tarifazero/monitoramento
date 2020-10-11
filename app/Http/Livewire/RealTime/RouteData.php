@@ -27,9 +27,9 @@ class RouteData extends Component
             ->count();
     }
 
-    public function getDailyActiveVehicleCountProperty()
+    public function getMonthlyActiveVehicleCountProperty()
     {
-        return ActiveVehicleCount::resolution('day')
+        return ActiveVehicleCount::resolution('month')
             ->first()
             ->count;
     }
@@ -90,7 +90,7 @@ class RouteData extends Component
                 $hour,
                 [
                     'vehicle_count' => $vehicleCount,
-                    'vehicle_percentage' => $vehicleCount / $this->dailyActiveVehicleCount,
+                    'vehicle_percentage' => $vehicleCount / $this->monthlyActiveVehicleCount,
                 ]
             );
         }
