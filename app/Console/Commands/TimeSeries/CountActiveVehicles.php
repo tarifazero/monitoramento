@@ -2,18 +2,18 @@
 
 namespace App\Console\Commands\TimeSeries;
 
-use App\Models\TimeSeries\VehicleCount;
+use App\Models\TimeSeries\ActiveVehicleCount;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 
-class CountVehicles extends Command
+class CountActiveVehicles extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'time-series:count:vehicles';
+    protected $signature = 'time-series:count:active-vehicles';
 
     /**
      * The console command description.
@@ -39,15 +39,10 @@ class CountVehicles extends Command
      */
     public function handle()
     {
-        $cutOffTime = today()->subHour()->startOfHour();
-
-        $vehicleCount = Vehicle::where('updated_at', '>=', $cutOffTime)
-            ->count();
-
-        VehicleCount::updateOrCreate([
-            'time' => $cutOffTime,
+        ActiveVehicleCount::updateOrCreate([
+            'time' => today()->startOfDay(),
         ], [
-            'count' => $vehicleCount,
+            'count' => Vehicle::active()->count(),
         ]);
     }
 }

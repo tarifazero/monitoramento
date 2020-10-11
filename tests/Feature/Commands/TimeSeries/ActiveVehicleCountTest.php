@@ -3,12 +3,12 @@
 namespace Tests\Feature\Commands\TimeSeries;
 
 use App\Models\Vehicle;
-use App\Models\TimeSeries\VehicleCount;
+use App\Models\TimeSeries\ActiveVehicleCount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class VehicleCountTest extends TestCase
+class ActiveVehicleCountTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,13 +19,13 @@ class VehicleCountTest extends TestCase
             ->active()
             ->create();
 
-        $this->assertEquals(0, VehicleCount::count());
+        $this->assertEquals(0, ActiveVehicleCount::count());
 
-        $this->artisan('time-series:count:vehicles')
+        $this->artisan('time-series:count:active-vehicles')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, VehicleCount::count());
-        $this->assertEquals(1, VehicleCount::first()->count);
+        $this->assertEquals(1, ActiveVehicleCount::count());
+        $this->assertEquals(1, ActiveVehicleCount::first()->count);
     }
 
     /** @test */
@@ -35,12 +35,12 @@ class VehicleCountTest extends TestCase
             ->inactive()
             ->create();
 
-        $this->assertEquals(0, VehicleCount::count());
+        $this->assertEquals(0, ActiveVehicleCount::count());
 
-        $this->artisan('time-series:count:vehicles')
+        $this->artisan('time-series:count:active-vehicles')
             ->assertExitCode(0);
 
-        $this->assertEquals(1, VehicleCount::count());
-        $this->assertEquals(0, VehicleCount::first()->count);
+        $this->assertEquals(1, ActiveVehicleCount::count());
+        $this->assertEquals(0, ActiveVehicleCount::first()->count);
     }
 }

@@ -31,7 +31,7 @@ class VehicleFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subDay(), now()),
+                'updated_at' => $this->faker->dateTimeBetween(now()->subMonth(), now()),
             ];
         });
     }
@@ -40,7 +40,7 @@ class VehicleFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subDay()),
+                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subMonth()),
             ];
         });
     }

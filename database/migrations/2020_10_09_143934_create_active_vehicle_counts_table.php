@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVehicleCountsTable extends Migration
+class CreateActiveVehicleCountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateVehicleCountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicle_counts', function (Blueprint $table) {
+        Schema::create('active_vehicle_counts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->dateTime('time')
                   ->index();
@@ -29,6 +29,6 @@ class CreateVehicleCountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicle_counts');
+        Schema::dropIfExists('active_vehicle_counts');
     }
 }

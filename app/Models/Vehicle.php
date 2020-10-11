@@ -22,4 +22,14 @@ class Vehicle extends Model
         return $this->belongsToMany(Route::class)
             ->withTimestamps();
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('updated_at', '>=', today()->subMonth()->startOfDay());
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('updated_at', '<', today()->subMonth()->startOfDay());
+    }
 }

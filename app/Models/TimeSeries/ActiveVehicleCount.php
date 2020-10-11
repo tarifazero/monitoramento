@@ -7,7 +7,7 @@ use App\Models\Route;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VehicleCount extends Model
+class ActiveVehicleCount extends Model
 {
     use HasFactory, HasUuid;
 
