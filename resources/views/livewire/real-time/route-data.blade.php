@@ -11,7 +11,7 @@
     <div wire:poll.60s class="mt-6">
 
         <p class="text-center">
-            Veículos rodando: {{ $this->currentVehicleCount }}
+            Veículos rodando: {{ $this->currentActiveVehicleCount }}
         </p>
 
         <table class="mx-auto mt-4">
@@ -34,10 +34,6 @@
                         </th>
                     @endif
 
-                    <th class="text-center px-4 py-1">
-                        Média móvel (mensal)
-                    </th>
-
                 </tr>
             </thead>
 
@@ -53,17 +49,9 @@
                             <td class="text-center px-4 py-1">
                                 {{ $stats['vehicle_count'] }}
                             </td>
-
-                            <td class="text-center px-4 py-1">
-                                {{ $stats['average_vehicle_count'] }}
-                            </td>
                         @else
                             <td class="text-center px-4 py-1">
                                 {{ $stats['vehicle_percentage'] }}%
-                            </td>
-
-                            <td class="text-center px-4 py-1">
-                                {{ $stats['average_vehicle_percentage'] }}%
                             </td>
                         @endif
 

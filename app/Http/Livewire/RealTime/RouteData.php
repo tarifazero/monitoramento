@@ -4,7 +4,8 @@ namespace App\Http\Livewire\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
-use App\Models\TimeSeries\VehicleCount;
+use App\Models\TimeSeries\ActiveVehicleCount;
+use App\Models\TimeSeries\VehiclesByRouteCount;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -16,7 +17,7 @@ class RouteData extends Component
 
     protected $listeners = ['routeSelected'];
 
-    public function getCurrentVehicleCountProperty()
+    public function getCurrentActiveVehicleCountProperty()
     {
         return RealTimeEntry::where('created_at', '>=', now()->subMinutes(5))
             ->when($this->route, function ($query, $route) {
@@ -26,9 +27,9 @@ class RouteData extends Component
             ->count();
     }
 
-    public function getTotalVehicleCountProperty()
+    public function getTotalActiveVehicleCountProperty()
     {
-        return Vehicle::count();
+        return ActiveVehicleCount::first()->count;
     }
 
     public function getVehicleCountsByHourProperty()
@@ -41,62 +42,22 @@ class RouteData extends Component
             ->endOfDay()
             ->setTimezone(config('app.timezone'));
 
-        $vehicleCounts = VehicleCount::query()
-            ->whereBetween('time', [$startOfDay, $endOfDay]);
+            return VehiclesByRouteCount::query()
+                ->selectRaw('date_trunc(\'hour\', time) as time')
+                ->selectRaw('sum(count) as count')
+                ->whereBetween('time', [$startOfDay, $endOfDay])
+                ->when($this->route, function ($query, $route) {
+                    $query->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
+                })
+                ->groupBy('time')
+                ->get()
+                ->mapWithKeys(function ($vehicleCount) {
+                    $hour = Carbon::parse($vehicleCount->time)
+                        ->setTimezone(config('app.display_timezone'))
+                        ->hour;
 
-        if ($this->route) {
-            $vehicleCounts = $vehicleCounts->selectRaw('time, count')
-                                           ->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
-        } else {
-            $vehicleCounts = $vehicleCounts->selectRaw('time, sum(count) as count')
-                                           ->groupBy('time');
-        }
-
-        return $vehicleCounts
-            ->get()
-            ->mapWithKeys(function ($vehicleCount) {
-                $hour = Carbon::parse($vehicleCount->time)
-                    ->setTimezone(config('app.display_timezone'))
-                    ->hour;
-
-                return [$hour => $vehicleCount->count];
-            });
-    }
-
-    public function getAverageVehicleCountsByHourProperty()
-    {
-        $startOfWindow = today(new DateTimeZone(config('app.display_timezone')))
-            ->subMonth()
-            ->startOfDay()
-            ->setTimezone(config('app.timezone'));
-
-        $endOfWindow = today(new DateTimeZone(config('app.display_timezone')))
-            ->subDay()
-            ->endOfDay()
-            ->setTimezone(config('app.timezone'));
-
-        $daysInWindow = $startOfWindow->diffInDays($endOfWindow);
-
-        $vehicleCounts = VehicleCount::query()
-            ->whereBetween('time', [$startOfWindow, $endOfWindow]);
-
-        if ($this->route) {
-            $vehicleCounts = $vehicleCounts->selectRaw('time, count')
-                                           ->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
-        } else {
-            $vehicleCounts = $vehicleCounts->selectRaw('time, sum(count) as count')
-                                           ->groupBy('time');
-        }
-
-        return $vehicleCounts
-            ->get()
-            ->mapWithKeys(function ($vehicleCount) use ($daysInWindow) {
-                $hour = Carbon::parse($vehicleCount->time)
-                    ->setTimezone(config('app.display_timezone'))
-                    ->hour;
-
-                return [$hour => $vehicleCount->count / $daysInWindow];
-            });
+                    return [$hour => $vehicleCount->count];
+                });
     }
 
     public function getStatsByHourProperty()
@@ -105,15 +66,12 @@ class RouteData extends Component
 
         foreach (range(0, 23) as $hour) {
             $vehicleCount = $this->vehicleCountsByHour->get($hour, 0);
-            $averageVehicleCount = $this->averageVehicleCountsByHour->get($hour, 0);
 
             $statsByHour->put(
                 $hour,
                 [
                     'vehicle_count' => $vehicleCount,
-                    'average_vehicle_count' => $averageVehicleCount,
-                    'vehicle_percentage' => 100 * $vehicleCount / $this->totalVehicleCount,
-                    'average_vehicle_percentage' => 100 * $averageVehicleCount / $this->totalVehicleCount,
+                    'vehicle_percentage' => 100 * $vehicleCount / $this->totalActiveVehicleCount,
                 ]
             );
         }
