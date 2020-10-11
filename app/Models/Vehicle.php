@@ -16,4 +16,10 @@ class Vehicle extends Model
      * @var array
      */
     protected $guarded = ['id'];
+
+    public function routes()
+    {
+        return $this->belongsToMany(Route::class)
+            ->withTimestamps();
+    }
 }

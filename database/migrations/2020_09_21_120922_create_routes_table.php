@@ -21,8 +21,10 @@ class CreateRoutesTable extends Migration
                   ->onDelete('cascade');
             $table->integer('real_time_id')
                 ->unique();
-            $table->string('short_name');
-            $table->string('long_name');
+            $table->string('short_name')
+                ->nullable();
+            $table->string('long_name')
+                ->nullable();
             $table->integer('type');
             $table->timestamps();
             $table->softDeletes();

@@ -34,6 +34,26 @@ class RealTimeEntryFactory extends Factory
             'travel_direction' => $this->faker->numberBetween(1, 2),
             'distance' => $this->faker->numberBetween(0, 100),
             'created_at' => $this->faker->dateTimeBetween(now()->subDay(), now()),
+            'processed' => false,
         ];
+    }
+
+    public function invalid()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'event' => 98475,
+                'travel_direction' => 90182,
+            ];
+        });
+    }
+
+    public function processed()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'processed' => true,
+            ];
+        });
     }
 }

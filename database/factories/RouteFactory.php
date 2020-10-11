@@ -29,4 +29,22 @@ class RouteFactory extends Factory
             'type' => Route::TYPE_BUS,
         ];
     }
+
+    public function active()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'updated_at' => $this->faker->dateTimeBetween(now()->subDay(), now()),
+            ];
+        });
+    }
+
+    public function inactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subDay()),
+            ];
+        });
+    }
 }

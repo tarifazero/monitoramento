@@ -20,7 +20,7 @@ class RouteData extends Component
     {
         return RealTimeEntry::where('created_at', '>=', now()->subMinutes(5))
             ->when($this->route, function ($query, $route) {
-                $query->whereRouteWithChildren($this->route);
+                $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
             })
             ->distinct('vehicle_real_time_id')
             ->count();

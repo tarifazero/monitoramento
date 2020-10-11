@@ -3,17 +3,17 @@
 namespace Database\Factories\TimeSeries;
 
 use App\Models\Route;
-use App\Models\TimeSeries\VehicleCount;
+use App\Models\TimeSeries\RouteCount;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class VehicleCountFactory extends Factory
+class RouteCountFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = VehicleCount::class;
+    protected $model = RouteCount::class;
 
     /**
      * Define the model's default state.
@@ -24,7 +24,7 @@ class VehicleCountFactory extends Factory
     {
         return [
             'time' => today()->startOfDay(),
-            'count' => $this->faker->numberBetween(0, 3000),
+            'count' => $this->faker->numberBetween(0, 300),
         ];
     }
 }

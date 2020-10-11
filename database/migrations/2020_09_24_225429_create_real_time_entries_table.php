@@ -26,6 +26,7 @@ class CreateRealTimeEntriesTable extends Migration
             $table->integer('travel_direction')->nullable();
             $table->integer('distance')->nullable();
             $table->dateTime('created_at');
+            $table->boolean('processed')->default(false);
         });
     }
 

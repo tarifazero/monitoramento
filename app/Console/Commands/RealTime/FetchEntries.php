@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use League\Csv\Reader as CsvReader;
 
-class FetchData extends Command
+class FetchEntries extends Command
 {
     const DATA_URL = 'https://temporeal.pbh.gov.br/?param=C';
 
@@ -20,7 +20,7 @@ class FetchData extends Command
      *
      * @var string
      */
-    protected $signature = 'real-time:fetch-data';
+    protected $signature = 'real-time:fetch:entries';
 
     /**
      * The console command description.

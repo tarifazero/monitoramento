@@ -37,13 +37,6 @@ class RealTimeEntry extends Model
         });
     }
 
-    public function scopeWhereRouteWithChildren($query, Route $route)
-    {
-        $children = Route::where('parent_id', $route->id)->pluck('real_time_id');
-
-        return $query->whereIn('route_real_time_id', [$route->real_time_id, ...$children]);
-    }
-
     /**
      * Get the name of the "updated at" column.
      *
@@ -52,5 +45,16 @@ class RealTimeEntry extends Model
     public function getUpdatedAtColumn()
     {
         return null;
+    }
+
+    public function scopeInvalid($query)
+    {
+        $query->whereNotIn('event', self::VALID_EVENTS)
+            ->orWhereNotIn('travel_direction', self::VALID_TRAVEL_DIRECTIONS);
+    }
+
+    public function scopeProcessed($query)
+    {
+        return $query->where('processed', true);
     }
 }

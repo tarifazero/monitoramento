@@ -9,12 +9,12 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
-class FetchDataTest extends TestCase
+class FetchEntriesTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    function stores_data_in_database()
+    function stores_entries_in_database()
     {
         $header = 'EV; HR; LT; LG; NV; VL; NL; DG; SV; DT';
         $row1 = '105;20200924151103;-19,976116;-44,003806;40861;32;7419;38;1;4138';
@@ -26,7 +26,7 @@ class FetchDataTest extends TestCase
             'temporeal.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->artisan('real-time:fetch-data')
+        $this->artisan('real-time:fetch:entries')
             ->assertExitCode(0);
 
         $this->assertCount(2, RealTimeEntry::all());
@@ -41,6 +41,6 @@ class FetchDataTest extends TestCase
 
         $this->expectException(RequestException::class);
 
-        $this->artisan('real-time:fetch-data');
+        $this->artisan('real-time:fetch:entries');
     }
 }

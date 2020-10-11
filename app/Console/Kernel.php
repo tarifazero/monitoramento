@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Artisan;
 
 class Kernel extends ConsoleKernel
 {
@@ -23,14 +24,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('real-time:fetch-data')
+        $schedule->command('real-time:fetch:entries')
                  ->everyMinute()
                  ->withoutOverlapping();
 
-        $schedule->command('real-time:aggregate-data')
-                 ->hourly();
+        $schedule->command('real-time:process:entries')
+                 ->hourly()
+                 ->after(function () {
+                     Artisan::call('time-series:count:routes');
+                     Artisan::call('time-series:count:vehicles');
+                     Artisan::call('time-series:count:route-vehicles');
+                 });
 
-        $schedule->command('real-time:fetch-routes')
+        $schedule->command('real-time:fetch:routes')
                  ->daily();
     }
 

@@ -26,4 +26,22 @@ class VehicleFactory extends Factory
             'real_time_id' => $this->faker->unique()->randomNumber,
         ];
     }
+
+    public function active()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'updated_at' => $this->faker->dateTimeBetween(now()->subDay(), now()),
+            ];
+        });
+    }
+
+    public function inactive()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subDay()),
+            ];
+        });
+    }
 }
