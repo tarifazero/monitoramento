@@ -29,9 +29,11 @@ class RouteData extends Component
 
     public function getMonthlyActiveVehicleCountProperty()
     {
-        return ActiveVehicleCount::resolution('month')
-            ->first()
-            ->count;
+        $count = ActiveVehicleCount::resolution('month')->first();
+
+        return $count
+            ? $count->count
+            : 2500; // TODO: remove this hardcoded value
     }
 
     public function getLocalizedTimeConstraintsProperty()
