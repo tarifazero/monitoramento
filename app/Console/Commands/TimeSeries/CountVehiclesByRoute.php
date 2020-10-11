@@ -3,19 +3,19 @@
 namespace App\Console\Commands\TimeSeries;
 
 use App\Models\Route;
-use App\Models\TimeSeries\RouteVehicleCount;
+use App\Models\TimeSeries\VehiclesByRouteCount;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class CountRouteVehicles extends Command
+class CountVehiclesByRoute extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'time-series:count:route-vehicles';
+    protected $signature = 'time-series:count:vehicles-by-route';
 
     /**
      * The console command description.
@@ -51,7 +51,7 @@ class CountRouteVehicles extends Command
                 ->where('updated_at', '>=', $cutOffTime)
                 ->count();
 
-            RouteVehicleCount::updateOrCreate([
+            VehiclesByRouteCount::updateOrCreate([
                 'route_id' => $route->id,
                 'time' => $cutOffTime,
             ], [
