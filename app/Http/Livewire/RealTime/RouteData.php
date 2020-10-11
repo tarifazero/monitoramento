@@ -71,7 +71,7 @@ class RouteData extends Component
                 $hour,
                 [
                     'vehicle_count' => $vehicleCount,
-                    'vehicle_percentage' => 100 * $vehicleCount / $this->totalActiveVehicleCount,
+                    'vehicle_percentage' => $vehicleCount / $this->totalActiveVehicleCount,
                 ]
             );
         }
