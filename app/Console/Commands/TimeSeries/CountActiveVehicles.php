@@ -51,9 +51,10 @@ class CountActiveVehicles extends Command
         }
 
         $scope = 'activeInPast' . Str::title($resolution);
+        $timeTransform = 'startOf' . Str::title($resolution);
 
         ActiveVehicleCount::updateOrCreate([
-            'time' => today()->startOfDay(),
+            'time' => today()->{$timeTransform}(),
             'resolution' => $resolution,
         ], [
             'count' => Vehicle::{$scope}()->count(),

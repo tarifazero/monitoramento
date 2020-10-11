@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class ActiveVehicleCountTest extends TestCase
+class CountActiveVehiclesTest extends TestCase
 {
     use RefreshDatabase;
 

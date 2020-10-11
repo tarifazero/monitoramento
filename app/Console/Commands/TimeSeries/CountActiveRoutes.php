@@ -51,9 +51,10 @@ class CountActiveRoutes extends Command
         }
 
         $scope = 'activeInPast' . Str::title($resolution);
+        $timeTransform = 'startOf' . Str::title($resolution);
 
         ActiveRouteCount::updateOrCreate([
-            'time' => today()->startOfDay(),
+            'time' => today()->{$timeTransform}(),
             'resolution' => $resolution,
         ], [
             'count' => Route::{$scope}()->count(),

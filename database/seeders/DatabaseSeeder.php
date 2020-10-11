@@ -28,16 +28,27 @@ class DatabaseSeeder extends Seeder
         ])->create();
 
         ActiveRouteCount::factory()
-            ->create();
+            ->create([
+                'resolution' => 'day',
+            ]);
 
         ActiveVehicleCount::factory()
             ->create([
+                'resolution' => 'day',
                 'count' => 2300,
             ]);
 
         foreach (range(0, 23) as $hour) {
+
+            ActiveVehicleCount::factory()
+                ->create([
+                    'resolution' => 'hour',
+                    'time' => today()->hour($hour),
+                ]);
+
             VehiclesByRouteCount::factory()
                 ->create([
+                    'resolution' => 'hour',
                     'route_id' => $route->id,
                     'time' => today()->hour($hour),
                 ]);

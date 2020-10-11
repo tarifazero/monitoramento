@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class VehiclesByRouteCountTest extends TestCase
+class CountVehiclesByRouteTest extends TestCase
 {
     use RefreshDatabase;
 
