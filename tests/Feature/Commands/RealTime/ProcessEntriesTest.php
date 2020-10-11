@@ -134,7 +134,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(1, $route->vehicles()->count());
 
-        $this->travel(1)->seconds();
+        $this->travel(2)->seconds();
 
         $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
             ->assertExitCode(0);
