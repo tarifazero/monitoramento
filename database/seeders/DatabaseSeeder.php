@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Route;
-use App\Models\TimeSeries\VehicleCount;
+use App\Models\TimeSeries\ActiveRouteCount;
+use App\Models\TimeSeries\ActiveVehicleCount;
+use App\Models\TimeSeries\VehiclesByRouteCount;
 use App\Models\Vehicle;
 use Illuminate\Database\Seeder;
 
@@ -25,9 +27,16 @@ class DatabaseSeeder extends Seeder
             'long_name' => 'SAO GERALDO/SAO FRANCISCO VIA ESPLANADA',
         ])->create();
 
+        ActiveRouteCount::factory()
+            ->create();
+
+        ActiveVehicleCount::factory()
+            ->create([
+                'count' => 2300,
+            ]);
+
         foreach (range(0, 23) as $hour) {
-            VehicleCount::factory()
-                ->count(10)
+            VehiclesByRouteCount::factory()
                 ->create([
                     'route_id' => $route->id,
                     'time' => today()->hour($hour),
