@@ -31,7 +31,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('real-time:process:entries')
                  ->hourly()
                  ->after(function () {
-                     Artisan::call('time-series:count:active-vehicles hour');
+                     Artisan::call('time-series:count:active-vehicles', [
+                         'resolution' => 'hour',
+                     ]);
                      Artisan::call('time-series:count:vehicles-by-route');
                  });
 
