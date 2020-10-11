@@ -77,6 +77,36 @@ class FetchRoutesTest extends TestCase
     }
 
     /** @test */
+    function keeps_timestamp_for_unchanged_routes()
+    {
+        $existingRoute = Route::factory()->create([
+            'real_time_id' => '1',
+            'short_name' => '100',
+            'long_name' => 'BARREIRO',
+        ]);
+
+        $updatedAt = $existingRoute->updated_at;
+
+        $header = 'NumeroLinha;Linha;Nome';
+        $row1 = '1;100;BARREIRO';
+
+        $csv = implode("\r\n", [$header, $row1]);
+
+        Http::fake([
+            'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
+        ]);
+
+        $this->travel(1)->seconds();
+
+        $this->artisan('real-time:fetch:routes')
+            ->assertExitCode(0);
+
+        $existingRoute->refresh();
+
+        $this->assertEquals($updatedAt, $existingRoute->updated_at);
+    }
+
+    /** @test */
     function sets_route_parent_id_for_child_routes()
     {
         $header = 'NumeroLinha;Linha;Nome';
