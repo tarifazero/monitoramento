@@ -96,7 +96,7 @@ class FetchRoutesTest extends TestCase
             'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
         ]);
 
-        $this->travel(1)->seconds();
+        $this->travel(2)->seconds();
 
         $this->artisan('real-time:fetch:routes')
             ->assertExitCode(0);

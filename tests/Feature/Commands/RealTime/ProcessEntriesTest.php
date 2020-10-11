@@ -41,7 +41,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(1, Route::count());
 
-        $this->travel(1)->seconds();
+        $this->travel(2)->seconds();
 
         $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
             ->assertExitCode(0);
@@ -80,7 +80,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(1, Vehicle::count());
 
-        $this->travel(1)->seconds();
+        $this->travel(2)->seconds();
 
         $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
             ->assertExitCode(0);
