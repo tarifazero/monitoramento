@@ -57,4 +57,9 @@ class RealTimeEntry extends Model
     {
         return $query->where('processed', true);
     }
+
+    public function scopeUnprocessed($query)
+    {
+        return $query->where('processed', false);
+    }
 }
