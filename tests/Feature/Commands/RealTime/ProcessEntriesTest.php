@@ -21,7 +21,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(0, Route::count());
 
-        $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
+        $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $this->assertEquals(1, Route::count());
@@ -41,9 +41,9 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(1, Route::count());
 
-        $this->travel(2)->seconds();
+        $this->travel(1)->minutes();
 
-        $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
+        $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $route->refresh();
@@ -60,7 +60,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(0, Vehicle::count());
 
-        $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
+        $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $this->assertEquals(1, Vehicle::count());
@@ -80,9 +80,9 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(1, Vehicle::count());
 
-        $this->travel(2)->seconds();
+        $this->travel(1)->minutes();
 
-        $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
+        $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $vehicle->refresh();
@@ -99,7 +99,7 @@ class ProcessEntriesTest extends TestCase
 
         $this->assertEquals(false, $entry->processed);
 
-        $this->artisan('real-time:process:entries', [now()->toDateTimeString()])
+        $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $entry->refresh();
