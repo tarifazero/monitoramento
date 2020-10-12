@@ -7,8 +7,12 @@ trait HasActivityStatus
     public function activeInPastHour()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subHour()->startOfHour(), now()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subHour()->startOfHour(), now()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
@@ -16,8 +20,12 @@ trait HasActivityStatus
     public function activeInPastDay()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subDay()->startOfDay(), now()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subDay()->startOfDay(), now()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
@@ -25,8 +33,12 @@ trait HasActivityStatus
     public function activeInPastMonth()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subMonth()->startOfMonth(), now()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subMonth()->startOfMonth(), now()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
@@ -34,8 +46,12 @@ trait HasActivityStatus
     public function inactiveInPastHour()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subYear(), now()->subHour()->startOfHour()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now()->subHour()->startOfHour());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subHour()->startOfHour()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
@@ -43,8 +59,12 @@ trait HasActivityStatus
     public function inactiveInPastDay()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subYear(), now()->subDay()->startOfDay()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now()->subDay()->startOfDay());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subDay()->startOfDay()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
@@ -52,8 +72,12 @@ trait HasActivityStatus
     public function inactiveInPastMonth()
     {
         return $this->state(function (array $attributes) {
+            $created_at = $this->faker->dateTimeBetween(now()->subYear(), now()->subMonth()->startOfMonth()->subMinute());
+            $updated_at = $this->faker->dateTimeBetween($created_at, now()->subMonth()->startOfMonth());
+
             return [
-                'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subMonth()->startOfMonth()),
+                'created_at' => $created_at,
+                'updated_at' => $updated_at,
             ];
         });
     }
