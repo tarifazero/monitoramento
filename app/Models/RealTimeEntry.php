@@ -22,6 +22,16 @@ class RealTimeEntry extends Model
     protected $guarded = ['id'];
 
     /**
+     * Get the name of the "updated at" column.
+     *
+     * @return string
+     */
+    public function getUpdatedAtColumn()
+    {
+        return null;
+    }
+
+    /**
      * The "booted" method of the model.
      *
      * @return void
@@ -37,14 +47,14 @@ class RealTimeEntry extends Model
         });
     }
 
-    /**
-     * Get the name of the "updated at" column.
-     *
-     * @return string
-     */
-    public function getUpdatedAtColumn()
+    public function route()
     {
-        return null;
+        return $this->belongsTo(Route::class, 'route_real_time_id', 'real_time_id');
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_real_time_id', 'real_time_id');
     }
 
     public function scopeInvalid($query)
