@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\TimeSeries\ActiveRouteCount;
 use App\Models\TimeSeries\ActiveVehicleCount;
-use App\Models\TimeSeries\VehiclesByRouteCount;
 use App\Models\Vehicle;
 use Illuminate\Database\Seeder;
 
@@ -39,18 +39,17 @@ class DatabaseSeeder extends Seeder
             ]);
 
         foreach (range(0, 23) as $hour) {
-
             ActiveVehicleCount::factory()
                 ->create([
                     'resolution' => 'hour',
                     'time' => today()->hour($hour),
                 ]);
 
-            VehiclesByRouteCount::factory()
+            RealTimeEntry::factory()
+                ->count(10)
                 ->create([
-                    'resolution' => 'hour',
-                    'route_id' => $route->id,
-                    'time' => today()->hour($hour),
+                    'route_real_time_id' => $route->real_time_id,
+                    'created_at' => today()->hour($hour),
                 ]);
         }
     }

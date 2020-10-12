@@ -5,7 +5,6 @@ namespace App\Http\Livewire\RealTime;
 use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\TimeSeries\ActiveVehicleCount;
-use App\Models\TimeSeries\VehiclesByRouteCount;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -65,13 +64,15 @@ class RouteData extends Component
 
     public function getHourlyVehiclesByRouteCountsProperty()
     {
-        // TODO: handle sublines (must sum count)
-        return VehiclesByRouteCount::resolution('hour')
-            ->whereBetween('time', $this->localizedTimeConstraints)
-            ->whereIn('route_id', $this->route->toFlatTree()->pluck('id'))
+        return RealTimeEntry::query()
+            ->selectRaw('date_trunc(\'hour\', created_at) as hour')
+            ->selectRaw('count(distinct vehicle_real_time_id) as count')
+            ->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'))
+            ->whereBetween('created_at', $this->localizedTimeConstraints)
+            ->groupBy('hour')
             ->get()
             ->mapWithKeys(function ($vehicleCount) {
-                $hour = Carbon::parse($vehicleCount->time)
+                $hour = Carbon::parse($vehicleCount->hour)
                     ->setTimezone(config('app.display_timezone'))
                     ->hour;
 
