@@ -58,7 +58,7 @@ class CountActiveRoutes extends Command
             'time' => now()->{$timeOperation}()->{$timeTransform}(),
             'resolution' => $resolution,
         ], [
-            'count' => Route::{$scope}()->count(),
+            'count' => Route::{$scope}()->whereColumn('updated_at', '>', 'created_at')->count(),
         ]);
 
         return 0;

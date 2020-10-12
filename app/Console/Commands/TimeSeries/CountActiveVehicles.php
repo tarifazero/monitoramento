@@ -58,7 +58,7 @@ class CountActiveVehicles extends Command
             'time' => now()->{$timeOperation}()->{$timeTransform}(),
             'resolution' => $resolution,
         ], [
-            'count' => Vehicle::{$scope}()->count(),
+            'count' => Vehicle::{$scope}()->whereColumn('updated_at', '>', 'created_at')->count(),
         ]);
 
         return 0;
