@@ -20,7 +20,7 @@ class CleanupEntries extends Command
      *
      * @var string
      */
-    protected $description = 'Cleanup processed realtime entries';
+    protected $description = 'Cleanup invalid realtime entries';
 
     /**
      * Create a new command instance.
@@ -41,8 +41,6 @@ class CleanupEntries extends Command
     {
         $deletedCount = RealTimeEntry::withoutGlobalScopes()
             ->invalid()
-            ->orWhere
-            ->processed()
             ->delete();
 
         $this->info("Deleted {$deletedCount} entries");
