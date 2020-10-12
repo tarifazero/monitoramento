@@ -12,26 +12,6 @@ class CleanupEntriesTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /** @test */
-    function deletes_processed_entries()
-    {
-        $deletedEntry = RealTimeEntry::factory()
-            ->processed()
-            ->create();
-
-        $keptEntry = RealTimeEntry::factory()
-            ->create();
-
-        $this->assertEquals(2, RealTimeEntry::count());
-
-        $this->artisan('real-time:cleanup:entries')
-            ->assertExitCode(0);
-
-        $this->assertEquals(1, RealTimeEntry::count());
-        $this->assertNull(RealTimeEntry::find($deletedEntry->id));
-        $this->assertNotNull(RealTimeEntry::find($keptEntry->id));
-    }
-
-    /** @test */
     function deletes_invalid_entries()
     {
         $deletedEntry = RealTimeEntry::factory()
