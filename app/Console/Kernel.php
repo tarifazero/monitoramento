@@ -29,21 +29,10 @@ class Kernel extends ConsoleKernel
                  ->withoutOverlapping();
 
         $schedule->command('real-time:process:entries')
-                 ->hourly()
-                 ->after(function () {
-                     Artisan::call('time-series:count:active-vehicles', [
-                         'resolution' => 'hour',
-                     ]);
-                 });
+                 ->hourly();
 
         $schedule->command('real-time:fetch:routes')
                  ->daily();
-
-        $schedule->command('real-time:count:active-routes')
-                 ->daily();
-
-        $schedule->command('real-time:count:active-vehicles month')
-                 ->monthly();
     }
 
     /**

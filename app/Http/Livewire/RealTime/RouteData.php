@@ -4,7 +4,6 @@ namespace App\Http\Livewire\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
-use App\Models\TimeSeries\ActiveVehicleCount;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -28,10 +27,10 @@ class RouteData extends Component
 
     public function getMonthlyActiveVehicleCountProperty()
     {
-        $count = ActiveVehicleCount::resolution('month')->first();
+        $count = Vehicle::activeInPastMonth()->count();
 
         return $count
-            ? $count->count
+            ? $count
             : 2500; // TODO: remove this hardcoded value
     }
 
@@ -50,25 +49,13 @@ class RouteData extends Component
 
     public function getHourlyActiveVehicleCountsProperty()
     {
-        return ActiveVehicleCount::resolution('hour')
-            ->whereBetween('time', $this->localizedTimeConstraints)
-            ->get()
-            ->mapWithKeys(function ($vehicleCount) {
-                $hour = Carbon::parse($vehicleCount->time)
-                    ->setTimezone(config('app.display_timezone'))
-                    ->hour;
-
-                return [$hour => $vehicleCount->count];
-            });
-    }
-
-    public function getHourlyVehiclesByRouteCountsProperty()
-    {
         return RealTimeEntry::query()
             ->selectRaw('date_trunc(\'hour\', created_at) as hour')
             ->selectRaw('count(distinct vehicle_real_time_id) as count')
-            ->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'))
             ->whereBetween('created_at', $this->localizedTimeConstraints)
+            ->when($this->route, function ($query, $route) {
+                $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
+            })
             ->groupBy('hour')
             ->get()
             ->mapWithKeys(function ($vehicleCount) {
@@ -85,9 +72,7 @@ class RouteData extends Component
         $statsByHour = collect();
 
         foreach (range(0, 23) as $hour) {
-            $vehicleCount = $this->route
-                ? $this->hourlyVehiclesByRouteCounts->get($hour, 0)
-                : $this->hourlyActiveVehicleCounts->get($hour, 0);
+            $vehicleCount = $this->hourlyActiveVehicleCounts->get($hour, 0);
 
             $statsByHour->put(
                 $hour,
