@@ -14,19 +14,27 @@ class CreateRealTimeEntriesTable extends Migration
     public function up()
     {
         Schema::create('real_time_entries', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->integer('route_real_time_id');
-            $table->integer('vehicle_real_time_id');
+            $table->uuid('id')
+                  ->primary();
+            $table->integer('route_real_time_id')
+                ->index();
+            $table->integer('vehicle_real_time_id')
+                ->index();
             $table->integer('event');
             $table->dateTime('timestamp');
             $table->double('latitude');
             $table->double('longitude');
             $table->integer('speed');
-            $table->integer('cardinal_direction')->nullable();
-            $table->integer('travel_direction')->nullable();
-            $table->integer('distance')->nullable();
-            $table->dateTime('created_at');
-            $table->boolean('processed')->default(false);
+            $table->integer('cardinal_direction')
+                  ->nullable();
+            $table->integer('travel_direction')
+                  ->nullable();
+            $table->integer('distance')
+                  ->nullable();
+            $table->dateTime('created_at')
+                  ->index();
+            $table->boolean('processed')
+                  ->default(false);
         });
     }
 
