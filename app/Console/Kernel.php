@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('real-time:fetch:entries')
-                 ->everyMinute()
+                 ->everyFiveMinutes()
                  ->withoutOverlapping();
 
         $schedule->command('real-time:process:entries')
@@ -34,7 +34,6 @@ class Kernel extends ConsoleKernel
                      Artisan::call('time-series:count:active-vehicles', [
                          'resolution' => 'hour',
                      ]);
-                     Artisan::call('time-series:count:vehicles-by-route');
                  });
 
         $schedule->command('real-time:fetch:routes')
