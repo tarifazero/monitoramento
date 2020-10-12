@@ -45,7 +45,8 @@ class ProcessEntries extends Command
             ? Carbon::parse($this->argument('cutOffTime'))
             : now()->startOfHour();
 
-        $entries = RealTimeEntry::where('created_at', '<', $cutOffTime)
+        $entries = RealTimeEntry::unprocessed()
+            ->where('created_at', '<', $cutOffTime)
             ->orderBy('created_at', 'ASC');
 
         foreach ($entries->cursor() as $entry) {
@@ -60,12 +61,6 @@ class ProcessEntries extends Command
                 'real_time_id' => $entry->vehicle_real_time_id,
             ], [
                 'updated_at' => now(),
-            ]);
-
-            $route->vehicles()->syncWithoutDetaching([
-                $vehicle->id => [
-                    'updated_at' => now(),
-                ],
             ]);
         }
 
