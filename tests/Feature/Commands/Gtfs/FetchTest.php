@@ -77,13 +77,13 @@ class FetchTest extends TestCase
              ->assertExitCode(0);
 
         Storage::disk('gtfs')
-            ->assertExists('gtfsfiles/agency.txt')
-            ->assertExists('gtfsfiles/calendar_dates.txt')
-            ->assertExists('gtfsfiles/fare_attributes.txt')
-            ->assertExists('gtfsfiles/fare_rules.txt')
-            ->assertExists('gtfsfiles/routes.txt')
-            ->assertExists('gtfsfiles/stop_times.txt')
-            ->assertExists('gtfsfiles/stops.txt')
-            ->assertExists('gtfsfiles/trips.txt');
+            ->assertExists('latest/agency.txt')
+            ->assertExists('latest/calendar_dates.txt')
+            ->assertExists('latest/fare_attributes.txt')
+            ->assertExists('latest/fare_rules.txt')
+            ->assertExists('latest/routes.txt')
+            ->assertExists('latest/stop_times.txt')
+            ->assertExists('latest/stops.txt')
+            ->assertExists('latest/trips.txt');
     }
 }

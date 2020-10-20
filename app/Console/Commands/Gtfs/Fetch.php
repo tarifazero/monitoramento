@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use \ZipArchive;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use \ZipArchive;
+use Illuminate\Support\Str;
 
 class Fetch extends Command
 {
@@ -90,6 +91,9 @@ class Fetch extends Command
         $metadata = $response->json();
 
         $latestFile = collect(Storage::disk('gtfs')->files())
+            ->filter(function ($file) {
+                return Str::contains($file, '.zip');
+            })
             ->sort()
             ->last();
 
@@ -109,7 +113,7 @@ class Fetch extends Command
             return 1;
         }
 
-        $unzipPath = pathinfo(realpath($path), PATHINFO_DIRNAME);
+        $unzipPath = Storage::disk('gtfs')->path('latest');
 
         $zip->extractTo($unzipPath);
         $zip->close();
