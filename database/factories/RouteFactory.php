@@ -27,6 +27,7 @@ class RouteFactory extends Factory
     {
         return [
             'real_time_id' => $this->faker->unique()->randomNumber,
+            'gtfs_id' => $this->faker->unique()->randomNumber,
             'short_name' => $this->faker->randomNumber,
             'long_name' => $this->faker->streetName,
             'type' => Route::TYPE_BUS,
@@ -47,6 +48,15 @@ class RouteFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'updated_at' => $this->faker->dateTimeBetween(now()->subYear(), now()->subWeek()),
+            ];
+        });
+    }
+
+    public function realTimeOnly()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'gtfs_id' => null,
             ];
         });
     }

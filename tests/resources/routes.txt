@@ -1,0 +1,6 @@
+route_id,route_short_name,route_long_name,route_type
+2102  02,2102,Gameleira / Serra (Desvio Feira Da Av. Afonso Pena),3
+330   02,330,Estacao Barreiro / Independencia (Noturno),3
+4103  02,4103,Aparecida/Mangabeiras (Desvio Feira Da Av.Afonso Pena),3
+607   02,607,Estacao Vilarinho / Esplendor (Zoologico - Partidas Do Esplendor),3
+627   02,627,Estacao Venda Nova/Mantiqueira (Noturno),3
