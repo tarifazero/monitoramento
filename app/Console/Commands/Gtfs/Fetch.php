@@ -94,7 +94,7 @@ class Fetch extends Command
             ->last();
 
         return ! $latestFile
-            || Carbon::create($metadata['last_modified'])
+            || Carbon::create($metadata['result']['last_modified'])
                 ->greaterThan(Carbon::create(Storage::disk('gtfs')->lastModified($latestFile)));
     }
 

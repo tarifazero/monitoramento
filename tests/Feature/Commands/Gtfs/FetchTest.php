@@ -24,7 +24,9 @@ class FetchTest extends TestCase
 
         Http::fake([
             'dados.pbh.gov.br/api/*' => Http::response([
-                'last_modified' => now()->subDays(2),
+                'result' => [
+                    'last_modified' => now()->subDays(2),
+                ],
             ], 200),
         ]);
 
