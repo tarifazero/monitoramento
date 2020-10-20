@@ -32,6 +32,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('real-time:fetch:routes')
                  ->daily();
+
+        $schedule->command('gtfs:fetch')
+                 ->daily();
     }
 
     /**
