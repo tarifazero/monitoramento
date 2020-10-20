@@ -44,6 +44,11 @@ class FetchTest extends TestCase
         $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
+            'dados.pbh.gov.br/api/*' => Http::response([
+                'result' => [
+                    'last_modified' => now()->subDays(2),
+                ],
+            ], 200),
             'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
         ]);
 
@@ -67,6 +72,11 @@ class FetchTest extends TestCase
         $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
+            'dados.pbh.gov.br/api/*' => Http::response([
+                'result' => [
+                    'last_modified' => now()->subDays(2),
+                ],
+            ], 200),
             'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
         ]);
 
