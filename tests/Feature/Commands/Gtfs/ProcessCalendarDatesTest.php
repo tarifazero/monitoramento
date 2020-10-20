@@ -18,19 +18,10 @@ class ProcessCalendarDatesTest extends TestCase
     {
         Storage::fake('gtfs');
 
-        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
-
-        Http::fake([
-            'dados.pbh.gov.br/api/*' => Http::response([
-                'result' => [
-                    'last_modified' => now()->subDays(2),
-                ],
-            ], 200),
-            'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
-        ]);
-
-        $this->artisan('gtfs:fetch')
-             ->assertExitCode(0);
+        Storage::disk('gtfs')->put(
+            'latest/calendar_dates.txt',
+            file_get_contents(base_path('tests/resources/calendar_dates.txt'))
+        );
 
         $this->artisan('gtfs:process:calendar-dates')
             ->assertExitCode(0);
