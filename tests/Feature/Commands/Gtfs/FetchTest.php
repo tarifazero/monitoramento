@@ -12,7 +12,30 @@ use Tests\TestCase;
 class FetchTest extends TestCase
 {
     /** @test */
-    function downloads_and_stores_gtfs_zip_file()
+    function ignores_repeated_gtfs_file()
+    {
+        Storage::fake('gtfs');
+
+        $dateSuffix = today()->subDay()->toDateString();
+
+        Storage::disk('gtfs')->put("gtfsfiles-{$dateSuffix}.zip", 'teste');
+
+        $this->assertCount(1, Storage::disk('gtfs')->files());
+
+        Http::fake([
+            'dados.pbh.gov.br/api/*' => Http::response([
+                'last_modified' => now()->subDays(2),
+            ], 200),
+        ]);
+
+        $this->artisan('gtfs:fetch')
+             ->assertExitCode(0);
+
+        $this->assertCount(1, Storage::disk('gtfs')->files());
+    }
+
+    /** @test */
+    function downloads_and_stores_gtfs_file()
     {
         Storage::fake('gtfs');
 
