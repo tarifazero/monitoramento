@@ -48,6 +48,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'gtfs' => [
+            'driver' => 'local',
+            'root' => storage_path('app/gtfs'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
