@@ -39,18 +39,49 @@ class FetchTest extends TestCase
     {
         Storage::fake('gtfs');
 
-        $testFile = new File(base_path('tests/resources/gtfsfiles.zip'));
+        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
             'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
         ]);
 
-        $this->artisan('gtfs:fetch')
-             ->assertExitCode(0);
-
         $dateSuffix = today()->toDateString();
 
         Storage::disk('gtfs')
+            ->assertMissing("gtfsfiles-{$dateSuffix}.zip");
+
+        $this->artisan('gtfs:fetch')
+             ->assertExitCode(0);
+
+        Storage::disk('gtfs')
             ->assertExists("gtfsfiles-{$dateSuffix}.zip");
+    }
+
+    /** @test */
+    public function unzips_gtfs_file_after_retrieval()
+    {
+        Storage::fake('gtfs');
+
+        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
+
+        Http::fake([
+            'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
+        ]);
+
+        Storage::disk('gtfs')
+            ->assertMissing('latest');
+
+        $this->artisan('gtfs:fetch')
+             ->assertExitCode(0);
+
+        Storage::disk('gtfs')
+            ->assertExists('gtfsfiles/agency.txt')
+            ->assertExists('gtfsfiles/calendar_dates.txt')
+            ->assertExists('gtfsfiles/fare_attributes.txt')
+            ->assertExists('gtfsfiles/fare_rules.txt')
+            ->assertExists('gtfsfiles/routes.txt')
+            ->assertExists('gtfsfiles/stop_times.txt')
+            ->assertExists('gtfsfiles/stops.txt')
+            ->assertExists('gtfsfiles/trips.txt');
     }
 }

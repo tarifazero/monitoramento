@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use \ZipArchive;
 
 class Fetch extends Command
 {
@@ -52,19 +53,28 @@ class Fetch extends Command
             return 0;
         }
 
+        $path = $this->fetchFile();
+        $this->unzipFile($path);
+
+        return 0;
+    }
+
+    protected function fetchFile()
+    {
         $dateSuffix = today()->toDateString();
+        $path = Storage::disk('gtfs')->path("gtfsfiles-{$dateSuffix}.zip");
 
         $response = Http::withOptions([
-            'sink' => Storage::disk('gtfs')->path("gtfsfiles-{$dateSuffix}.zip"),
+            'sink' => $path
         ])->get(self::DATA_URL);
 
         if ($response->failed()) {
             $this->error('Could not fetch files');
 
-            return 1;
+            exit(1);
         }
 
-        return 0;
+        return $path;
     }
 
     protected function fileHasChanged()
@@ -86,5 +96,22 @@ class Fetch extends Command
         return ! $latestFile
             || Carbon::create($metadata['last_modified'])
                 ->greaterThan(Carbon::create(Storage::disk('gtfs')->lastModified($latestFile)));
+    }
+
+    protected function unzipFile($path)
+    {
+        $zip = new ZipArchive;
+        $canOpen = $zip->open($path);
+
+        if ($canOpen !== true) {
+            $this->error('Could not unzip file');
+
+            return 1;
+        }
+
+        $unzipPath = pathinfo(realpath($path), PATHINFO_DIRNAME);
+
+        $zip->extractTo($unzipPath);
+        $zip->close();
     }
 }
