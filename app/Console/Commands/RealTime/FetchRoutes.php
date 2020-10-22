@@ -51,7 +51,7 @@ class FetchRoutes extends Command
 
         $this->storeRoutes($routes);
 
-        $this->setParentRoutes();
+        Route::rebuildTree();
 
         return 0;
     }
@@ -85,25 +85,6 @@ class FetchRoutes extends Command
                     'long_name' => $route['Nome'],
                 ],
             );
-        });
-    }
-
-    protected function setParentRoutes()
-    {
-        Route::cursor()->each(function ($route) {
-            $baseRoute = Str::before($route->short_name, '-');
-
-            if ($baseRoute === $route->short_name) {
-                return;
-            }
-
-            $parentRoute = Route::where('short_name', $baseRoute)->first();
-
-            if (! $parentRoute) {
-                return;
-            }
-
-            $route->update(['parent_id' => $parentRoute->id]);
         });
     }
 }
