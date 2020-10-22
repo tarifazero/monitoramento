@@ -5,6 +5,7 @@ namespace App\Console\Commands\Gtfs;
 use App\Models\Route;
 use App\Models\Trip;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\LazyCollection;
 
@@ -64,7 +65,8 @@ class ProcessTrips extends Command
             $route = Route::where('gtfs_id', $line[0])->first();
 
             if (! $route) {
-                // TODO: log this
+                Log::warning('Route missing for trip ', $line);
+
                 return;
             }
 
