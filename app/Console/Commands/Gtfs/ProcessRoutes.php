@@ -4,6 +4,7 @@ namespace App\Console\Commands\Gtfs;
 
 use App\Models\Route;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\LazyCollection;
 
@@ -60,20 +61,15 @@ class ProcessRoutes extends Command
         ->each(function ($line) {
             $shortName = preg_replace('!\s+!', '-', $line[0]);
 
-            $route = Route::where('short_name', $shortName)->first();
-
-            if (! $route) {
-                // TODO: log this
-                return;
-            }
-
-            if ($route->gtfs_id && $route->gtfs_id !== $line[0]) {
-                // TODO: log this
-                return;
-            }
-
-            $route->update(['gtfs_id' => $line[0]]);
+            Route::updateOrCreate([
+                'short_name' => $shortName,
+                'type' => Route::TYPE_BUS,
+            ], [
+                'gtfs_id' => $line[0],
+            ]);
         });
+
+        Route::rebuildTree();
 
         return 0;
     }

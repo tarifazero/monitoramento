@@ -14,12 +14,17 @@ class ProcessRoutesTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function skips_inexisting_routes()
+    function creates_inexisting_routes()
     {
-        $this->artisan('gtfs:process:routes')
-            ->assertExitCode(0);
+        Storage::fake('gtfs');
 
-        $this->assertEquals(0, Route::count());
+        Storage::disk('gtfs')
+            ->put('latest/routes.txt', file_get_contents(base_path('tests/resources/routes.txt')));
+
+        $this->artisan('gtfs:process:routes')
+             ->assertExitCode(0);
+
+        $this->assertEquals(5, Route::count());
     }
 
     /** @test */
