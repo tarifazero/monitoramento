@@ -34,7 +34,12 @@ class Kernel extends ConsoleKernel
                  ->daily();
 
         $schedule->command('gtfs:fetch')
-                 ->daily();
+                 ->daily()
+                 ->onSuccess(function () {
+                     Artisan::call('gtfs:process:routes');
+                     Artisan::call('gtfs:process:calendar-dates');
+                     Artisan::call('gtfs:process:trips');
+                 });
     }
 
     /**
