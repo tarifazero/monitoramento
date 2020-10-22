@@ -4,6 +4,7 @@ namespace App\Http\Livewire\RealTime;
 
 use App\Models\RealTimeEntry;
 use App\Models\Route;
+use App\Models\Trip;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
@@ -84,6 +85,15 @@ class RouteData extends Component
         }
 
         return $statsByHour;
+    }
+
+    public function getForecastTripsCountProperty()
+    {
+        return Trip::forDate(today())
+            ->when($this->route, function ($query, $route) {
+                $query->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
+            })
+            ->count();
     }
 
     public function routeSelected(Route $route)

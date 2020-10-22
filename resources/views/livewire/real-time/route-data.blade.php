@@ -11,6 +11,10 @@
     <div wire:poll.60s class="mt-6">
 
         <p class="text-center">
+            Viagens programadas: {{ $this->forecastTripsCount }}
+        </p>
+
+        <p class="text-center">
             Veículos rodando: {{ $this->currentActiveVehicleCount }}
         </p>
 

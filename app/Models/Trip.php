@@ -21,4 +21,13 @@ class Trip extends Model
     {
         return $this->belongsTo(Route::class);
     }
+
+    public function scopeForDate($query, $date)
+    {
+        if (! $service = Service::where('date', $date)->first()) {
+            return null;
+        }
+
+        return $query->where('service_gtfs_id', $service->gtfs_id);
+    }
 }
