@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\GtfsFetch;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class GtfsFetchFactory extends Factory
 {
@@ -22,7 +24,20 @@ class GtfsFetchFactory extends Factory
     public function definition()
     {
         return [
-            'path' => $this->faker->word,
+            'path' => Str::random(40),
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (GtfsFetch $gtfs) {
+            Storage::disk(GtfsFetch::STORAGE_DISK)
+                ->put($gtfs->path . '.zip', file_get_contents(base_path('tests/resources/gtfsfiles.zip')));
+        });
     }
 }

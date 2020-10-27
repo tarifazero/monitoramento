@@ -27,16 +27,21 @@ class GtfsFetch extends Model
         return self::orderBy('created_at', 'DESC')->first();
     }
 
-    public function unzip($destination)
+    public function getTripsFilePath()
+    {
+        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/trips.txt');
+    }
+
+    public function unzip()
     {
         $zip = new ZipArchive;
-        $canOpen = $zip->open(Storage::disk(self::STORAGE_DISK)->path($this->path));
+        $canOpen = $zip->open(Storage::disk(self::STORAGE_DISK)->path($this->path . '.zip'));
 
         if ($canOpen !== true) {
             throw new \Exception('Could not unzip GTFS file');
         }
 
-        $zip->extractTo(Storage::disk(self::STORAGE_DISK)->path($destination));
+        $zip->extractTo(Storage::disk(self::STORAGE_DISK)->path($this->path));
         $zip->close();
     }
 }
