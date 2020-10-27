@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use App\Models\Route;
 use App\Models\Trip;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\LazyCollection;
 
 class ProcessTrips extends Command
@@ -42,17 +42,17 @@ class ProcessTrips extends Command
      */
     public function handle()
     {
-        if (! Storage::disk('gtfs')->exists('latest/trips.txt')) {
-            $this->error('The trips file was not found');
+        if (! $gtfs = GtfsFetch::latest()) {
+            $this->error('No GTFS found');
 
             return 1;
         }
 
-        Trip::query()->delete();
+        $gtfs->unzip();
 
-        LazyCollection::make(function () {
+        LazyCollection::make(function () use ($gtfs) {
             $handle = fopen(
-                Storage::disk('gtfs')->path('latest/trips.txt'),
+                $gtfs->getTripsFilePath(),
                 'r'
             );
 
@@ -61,7 +61,7 @@ class ProcessTrips extends Command
             }
         })
         ->except(0) // skip header
-        ->each(function ($line) {
+        ->each(function ($line) use ($gtfs) {
             $route = Route::where('gtfs_id', $line[0])->first();
 
             if (! $route) {
@@ -70,10 +70,9 @@ class ProcessTrips extends Command
                 return;
             }
 
-            Trip::withTrashed()
-                ->updateOrCreate([
+            Trip::create([
+                    'gtfs_fetch_id' => $gtfs->id,
                     'gtfs_id' => $line[2],
-                ], [
                     'route_id' => $route->id,
                     'service_gtfs_id' => $line[1],
                     'headsign' => $line[3],

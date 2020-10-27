@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\GtfsFetch;
 use App\Models\Route;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,6 +24,7 @@ class TripFactory extends Factory
     public function definition()
     {
         return [
+            'gtfs_fetch_id' => GtfsFetch::factory():
             'route_id' => Route::factory(),
             'service_gtfs_id' => $this->faker->unique()->randomNumber,
             'gtfs_id' => $this->faker->unique()->randomNumber,
