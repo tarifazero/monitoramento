@@ -15,6 +15,10 @@
         </p>
 
         <p class="text-center">
+            Viagens executadas: {{ $this->executedTripsCount }}
+        </p>
+
+        <p class="text-center">
             Veículos rodando: {{ $this->currentActiveVehicleCount }}
         </p>
 
