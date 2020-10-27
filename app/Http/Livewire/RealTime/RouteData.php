@@ -9,7 +9,6 @@ use App\Models\Trip;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use DateTimeZone;
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
 class RouteData extends Component
@@ -102,38 +101,28 @@ class RouteData extends Component
 
     public function getExecutedTripsCountProperty()
     {
-        $cacheKey = 'executed-trips-count';
+        $entries = RealTimeEntry::whereBetween('created_at', $this->localizedTimeConstraints)
+            ->orderBy('created_at', 'ASC')
+            ->when($this->route, function ($query, $route) {
+                $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
+            })
+            ->get();
 
-        if ($this->route) {
-            $cacheKey .= '-route-' . $this->route->id;
-        } else {
-            $cacheKey .= '-global';
+        $entriesByVehicle = $entries->groupBy('vehicle_real_time_id');
+
+        $count = 0;
+
+        foreach ($entriesByVehicle as $vehicle => $entries) {
+            $entries->reduce(function ($previousTravelDirection, $entry) use (&$count) {
+                if ($entry->travel_direction !== $previousTravelDirection) {
+                    $count += 1;
+                }
+
+                return $entry->travel_direction;
+            });
         }
 
-        return Cache::remember($cacheKey, now()->endOfDay(), function () {
-            $entries = RealTimeEntry::whereBetween('created_at', $this->localizedTimeConstraints)
-                ->orderBy('created_at', 'ASC')
-                ->when($this->route, function ($query, $route) {
-                    $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
-                })
-                ->get();
-
-            $entriesByVehicle = $entries->groupBy('vehicle_real_time_id');
-
-            $count = 0;
-
-            foreach ($entriesByVehicle as $vehicle => $entries) {
-                $entries->reduce(function ($previousTravelDirection, $entry) use (&$count) {
-                    if ($entry->travel_direction !== $previousTravelDirection) {
-                        $count += 1;
-                    }
-
-                    return $entry->travel_direction;
-                });
-            }
-
-            return $count;
-        });
+        return $count;
     }
 
     public function routeSelected(Route $route)
