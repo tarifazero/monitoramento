@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,12 +17,9 @@ class ProcessCalendarDatesTest extends TestCase
     /** @test */
     function processes_calendar_dates()
     {
-        Storage::fake('gtfs');
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
-        Storage::disk('gtfs')->put(
-            'latest/calendar_dates.txt',
-            file_get_contents(base_path('tests/resources/calendar_dates.txt'))
-        );
+        GtfsFetch::factory()->create();
 
         $this->artisan('gtfs:process:calendar-dates')
             ->assertExitCode(0);
@@ -30,9 +28,9 @@ class ProcessCalendarDatesTest extends TestCase
     }
 
     /** @test */
-    function exits_with_error_if_calendar_dates_file_does_not_exist()
+    function exits_with_error_if_no_gtfs_exists()
     {
-        Storage::fake('gtfs');
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
         $this->artisan('gtfs:process:calendar-dates')
             ->assertExitCode(1);

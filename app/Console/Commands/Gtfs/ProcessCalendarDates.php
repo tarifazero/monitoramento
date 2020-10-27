@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use App\Models\Service;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -40,15 +41,17 @@ class ProcessCalendarDates extends Command
      */
     public function handle()
     {
-        if (! Storage::disk('gtfs')->exists('latest/calendar_dates.txt')) {
-            $this->error('The calendar_dates file was not found');
+        if (! $gtfs = GtfsFetch::latest()) {
+            $this->error('No GTFS found');
 
             return 1;
         }
 
-        LazyCollection::make(function () {
+        $gtfs->unzip();
+
+        LazyCollection::make(function () use ($gtfs) {
             $handle = fopen(
-                Storage::disk('gtfs')->path('latest/calendar_dates.txt'),
+                $gtfs->getCalendarDatesFilePath(),
                 'r'
             );
 
@@ -58,10 +61,9 @@ class ProcessCalendarDates extends Command
         })
         ->except(0) // skip header
         ->each(function ($line) {
-            Service::updateOrCreate([
+            Service::create([
                 'gtfs_id' => $line[0],
                 'date' => $line[1],
-            ], [
                 'exception_type' => $line[2],
             ]);
         });
