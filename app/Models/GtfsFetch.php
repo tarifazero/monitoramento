@@ -22,6 +22,11 @@ class GtfsFetch extends Model
      */
     protected $guarded = ['id'];
 
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
+    }
+
     public static function latest()
     {
         return self::orderBy('created_at', 'DESC')->first();

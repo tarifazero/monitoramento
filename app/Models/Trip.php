@@ -17,6 +17,11 @@ class Trip extends Model
      */
     protected $guarded = ['id'];
 
+    public function gtfsFetch()
+    {
+        return $this->belongsTo(GtfsFetch::class);
+    }
+
     public function route()
     {
         return $this->belongsTo(Route::class);
