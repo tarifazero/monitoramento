@@ -55,19 +55,18 @@ class Fetch extends Command
             return 0;
         }
 
-        $fetch = $this->fetch();
-        $fetch->unzip('latest');
+        $this->fetch();
 
         return 0;
     }
 
     protected function fetch()
     {
-        $path = Str::random(40) . '.zip';
+        $path = Str::random(40);
 
         $response = Http::withOptions([
             'sink' => Storage::disk(GtfsFetch::STORAGE_DISK)
-                ->path($path),
+                ->path($path . '.zip'),
         ])->get(self::DATA_URL);
 
         if ($response->failed()) {

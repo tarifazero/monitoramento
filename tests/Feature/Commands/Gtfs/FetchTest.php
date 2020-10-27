@@ -89,39 +89,6 @@ class FetchTest extends TestCase
         $this->assertCount(1, Storage::disk(GtfsFetch::STORAGE_DISK)->files());
 
         Storage::disk(GtfsFetch::STORAGE_DISK)
-            ->assertExists(GtfsFetch::latest()->path);
-    }
-
-    /** @test */
-    public function unzips_gtfs_file_after_retrieval()
-    {
-        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
-
-        Http::fake([
-            'dados.pbh.gov.br/api/*' => Http::response([
-                'result' => [
-                    'last_modified' => now()->subDays(2),
-                ],
-            ], 200),
-            'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
-        ]);
-
-        Storage::fake(GtfsFetch::STORAGE_DISK);
-
-        Storage::disk('gtfs')
-            ->assertMissing('latest');
-
-        $this->artisan('gtfs:fetch')
-             ->assertExitCode(0);
-
-        Storage::disk('gtfs')
-            ->assertExists('latest/agency.txt')
-            ->assertExists('latest/calendar_dates.txt')
-            ->assertExists('latest/fare_attributes.txt')
-            ->assertExists('latest/fare_rules.txt')
-            ->assertExists('latest/routes.txt')
-            ->assertExists('latest/stop_times.txt')
-            ->assertExists('latest/stops.txt')
-            ->assertExists('latest/trips.txt');
+            ->assertExists(GtfsFetch::latest()->path . '.zip');
     }
 }
