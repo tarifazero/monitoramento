@@ -16,7 +16,8 @@ class CreateGtfsFetchesTable extends Migration
         Schema::create('gtfs_fetches', function (Blueprint $table) {
             $table->id();
             $table->string('path');
-            $table->timestamp('created_at', 0);
+            $table->timestamp('created_at', 0)
+                ->index();
         });
     }
 
