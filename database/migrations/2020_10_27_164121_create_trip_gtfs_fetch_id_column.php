@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Trip;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,8 @@ class CreateTripGtfsFetchIdColumn extends Migration
      */
     public function up()
     {
+        Trip::query()->forceDelete();
+
         Schema::table('trips', function (Blueprint $table) {
             $table->foreignId('gtfs_fetch_id')
                   ->constrained()
