@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\File;
@@ -11,36 +12,61 @@ use Tests\TestCase;
 
 class FetchTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
-    function ignores_repeated_gtfs_file()
+    function creates_gtfs_fetch()
     {
-        Storage::fake('gtfs');
-
-        $dateSuffix = today()->subDay()->toDateString();
-
-        Storage::disk('gtfs')->put("gtfsfiles-{$dateSuffix}.zip", 'teste');
-
-        $this->assertCount(1, Storage::disk('gtfs')->files());
+        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
             'dados.pbh.gov.br/api/*' => Http::response([
                 'result' => [
-                    'last_modified' => now()->subDays(2),
+                    'last_modified' => now(),
                 ],
             ], 200),
+            'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
+        ]);
+
+        Storage::fake(GtfsFetch::STORAGE_DISK);
+
+        $this->assertEquals(0, GtfsFetch::count());
+
+        $this->artisan('gtfs:fetch')
+             ->assertExitCode(0);
+
+        $this->assertEquals(1, GtfsFetch::count());
+    }
+
+    /** @test */
+    function ignores_repeated_gtfs_file()
+    {
+        $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
+
+        Http::fake([
+            'dados.pbh.gov.br/api/*' => Http::response([
+                'result' => [
+                    'last_modified' => today()->subDays(2),
+                ],
+            ], 200),
+            'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
+        ]);
+
+        Storage::fake(GtfsFetch::STORAGE_DISK);
+
+        GtfsFetch::factory()->create([
+            'created_at' => today(),
         ]);
 
         $this->artisan('gtfs:fetch')
              ->assertExitCode(0);
 
-        $this->assertCount(1, Storage::disk('gtfs')->files());
+        $this->assertEquals(1, GtfsFetch::count());
     }
 
     /** @test */
     function downloads_and_stores_gtfs_file()
     {
-        Storage::fake('gtfs');
-
         $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
@@ -52,23 +78,23 @@ class FetchTest extends TestCase
             'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
         ]);
 
-        $dateSuffix = today()->toDateString();
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
-        Storage::disk('gtfs')
-            ->assertMissing("gtfsfiles-{$dateSuffix}.zip");
+        $this->assertNull(GtfsFetch::latest());
 
         $this->artisan('gtfs:fetch')
              ->assertExitCode(0);
 
-        Storage::disk('gtfs')
-            ->assertExists("gtfsfiles-{$dateSuffix}.zip");
+        $this->assertNotNull($gtfs = GtfsFetch::latest());
+        $this->assertCount(1, Storage::disk(GtfsFetch::STORAGE_DISK)->files());
+
+        Storage::disk(GtfsFetch::STORAGE_DISK)
+            ->assertExists(GtfsFetch::latest()->path);
     }
 
     /** @test */
     public function unzips_gtfs_file_after_retrieval()
     {
-        Storage::fake('gtfs');
-
         $testFile = file_get_contents(base_path('tests/resources/gtfsfiles.zip'));
 
         Http::fake([
@@ -79,6 +105,8 @@ class FetchTest extends TestCase
             ], 200),
             'ckan.pbh.gov.br/*' => Http::response($testFile, 200),
         ]);
+
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
         Storage::disk('gtfs')
             ->assertMissing('latest');

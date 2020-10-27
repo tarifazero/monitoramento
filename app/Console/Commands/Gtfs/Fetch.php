@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Gtfs;
 
 use \ZipArchive;
+use App\Models\GtfsFetch;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -54,19 +55,19 @@ class Fetch extends Command
             return 0;
         }
 
-        $path = $this->fetchFile();
-        $this->unzipFile($path);
+        $fetch = $this->fetch();
+        $fetch->unzip('latest');
 
         return 0;
     }
 
-    protected function fetchFile()
+    protected function fetch()
     {
-        $dateSuffix = today()->toDateString();
-        $path = Storage::disk('gtfs')->path("gtfsfiles-{$dateSuffix}.zip");
+        $path = Str::random(40) . '.zip';
 
         $response = Http::withOptions([
-            'sink' => $path
+            'sink' => Storage::disk(GtfsFetch::STORAGE_DISK)
+                ->path($path),
         ])->get(self::DATA_URL);
 
         if ($response->failed()) {
@@ -75,7 +76,7 @@ class Fetch extends Command
             exit(1);
         }
 
-        return $path;
+        return GtfsFetch::create(compact('path'));
     }
 
     protected function fileHasChanged()
@@ -90,32 +91,10 @@ class Fetch extends Command
 
         $metadata = $response->json();
 
-        $latestFile = collect(Storage::disk('gtfs')->files())
-            ->filter(function ($file) {
-                return Str::contains($file, '.zip');
-            })
-            ->sort()
-            ->last();
+        $latestFetch = GtfsFetch::latest();
 
-        return ! $latestFile
+        return ! $latestFetch
             || Carbon::create($metadata['result']['last_modified'])
-                ->greaterThan(Carbon::create(Storage::disk('gtfs')->lastModified($latestFile)));
-    }
-
-    protected function unzipFile($path)
-    {
-        $zip = new ZipArchive;
-        $canOpen = $zip->open($path);
-
-        if ($canOpen !== true) {
-            $this->error('Could not unzip file');
-
-            return 1;
-        }
-
-        $unzipPath = Storage::disk('gtfs')->path('latest');
-
-        $zip->extractTo($unzipPath);
-        $zip->close();
+                ->greaterThan($latestFetch->created_at);
     }
 }
