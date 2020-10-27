@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use App\Models\Route;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -41,15 +42,17 @@ class ProcessRoutes extends Command
      */
     public function handle()
     {
-        if (! Storage::disk('gtfs')->exists('latest/routes.txt')) {
-            $this->error('The routes file was not found');
+        if (! $gtfs = GtfsFetch::latest()) {
+            $this->error('No GTFS found');
 
             return 1;
         }
 
-        LazyCollection::make(function () {
+        $gtfs->unzip();
+
+        LazyCollection::make(function () use ($gtfs) {
             $handle = fopen(
-                Storage::disk('gtfs')->path('latest/routes.txt'),
+                $gtfs->getRoutesFilePath(),
                 'r'
             );
 

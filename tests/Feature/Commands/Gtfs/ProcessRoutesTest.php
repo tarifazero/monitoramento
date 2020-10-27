@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Commands\Gtfs;
 
+use App\Models\GtfsFetch;
 use App\Models\Route;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,10 +17,9 @@ class ProcessRoutesTest extends TestCase
     /** @test */
     function creates_inexisting_routes()
     {
-        Storage::fake('gtfs');
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
-        Storage::disk('gtfs')
-            ->put('latest/routes.txt', file_get_contents(base_path('tests/resources/routes.txt')));
+        GtfsFetch::factory()->create();
 
         $this->artisan('gtfs:process:routes')
              ->assertExitCode(0);
@@ -30,10 +30,9 @@ class ProcessRoutesTest extends TestCase
     /** @test */
     function updates_existing_routes()
     {
-        Storage::fake('gtfs');
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
-        Storage::disk('gtfs')
-            ->put('latest/routes.txt', file_get_contents(base_path('tests/resources/routes.txt')));
+        GtfsFetch::factory()->create();
 
         $route = Route::factory()
             ->realTimeOnly()
@@ -50,9 +49,9 @@ class ProcessRoutesTest extends TestCase
     }
 
     /** @test */
-    function exits_with_error_if_routes_file_does_not_exist()
+    function exits_with_error_if_no_gtfs_exists()
     {
-        Storage::fake('gtfs');
+        Storage::fake(GtfsFetch::STORAGE_DISK);
 
         $this->artisan('gtfs:process:routes')
             ->assertExitCode(1);

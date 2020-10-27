@@ -27,6 +27,11 @@ class GtfsFetch extends Model
         return self::orderBy('created_at', 'DESC')->first();
     }
 
+    public function getRoutesFilePath()
+    {
+        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/routes.txt');
+    }
+
     public function getTripsFilePath()
     {
         return Storage::disk(self::STORAGE_DISK)->path($this->path . '/trips.txt');
