@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\RealTime;
 
+use App\Models\GtfsFetch;
 use App\Models\RealTimeEntry;
 use App\Models\Route;
 use App\Models\Trip;
@@ -89,7 +90,9 @@ class RouteData extends Component
 
     public function getForecastTripsCountProperty()
     {
-        return Trip::forDate(today())
+        return GtfsFetch::latest()
+            ->trips()
+            ->forDate(today())
             ->when($this->route, function ($query, $route) {
                 $query->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
             })
