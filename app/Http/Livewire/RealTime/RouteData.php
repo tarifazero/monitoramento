@@ -99,32 +99,6 @@ class RouteData extends Component
             ->count();
     }
 
-    public function getExecutedTripsCountProperty()
-    {
-        $entries = RealTimeEntry::whereBetween('created_at', $this->localizedTimeConstraints)
-            ->orderBy('created_at', 'ASC')
-            ->when($this->route, function ($query, $route) {
-                $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
-            })
-            ->get();
-
-        $entriesByVehicle = $entries->groupBy('vehicle_real_time_id');
-
-        $count = 0;
-
-        foreach ($entriesByVehicle as $vehicle => $entries) {
-            $entries->reduce(function ($previousTravelDirection, $entry) use (&$count) {
-                if ($entry->travel_direction !== $previousTravelDirection) {
-                    $count += 1;
-                }
-
-                return $entry->travel_direction;
-            });
-        }
-
-        return $count;
-    }
-
     public function routeSelected(Route $route)
     {
         $this->route = $route;
