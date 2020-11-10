@@ -19,12 +19,30 @@ class ProcessStopsTest extends TestCase
     {
         Storage::fake(GtfsFetch::STORAGE_DISK);
 
+        Stop::factory()
+            ->create([
+                'gtfs_id' => '10101153700105',
+            ]);
+
         GtfsFetch::factory()->create();
 
         $this->artisan('gtfs:process:stops')
             ->assertExitCode(0);
 
-        $this->assertEquals(5, Stop::count());
+        $this->assertEquals(6, Stop::count());
+    }
+
+    /** @test */
+    function ignores_stops_with_missing_parents()
+    {
+        Storage::fake(GtfsFetch::STORAGE_DISK);
+
+        GtfsFetch::factory()->create();
+
+        $this->artisan('gtfs:process:stops')
+            ->assertExitCode(0);
+
+        $this->assertEquals(4, Stop::count());
     }
 
     /** @test */

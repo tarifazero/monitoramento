@@ -24,7 +24,7 @@ class CreateStopsTable extends Migration
             $table->double('latitude');
             $table->double('longitude');
             $table->enum('location_type', [0, 1, 2, 3, 4])
-                ->nullable();
+                ->default(0);
             $table->foreignId('parent_station')
                   ->nullable()
                   ->constrained('stops')

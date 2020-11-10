@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use App\Exceptions\ParentStopNotFoundException;
 use App\Models\GtfsFetch;
 use App\Models\Route;
 use App\Models\Stop;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\LazyCollection;
 
 class ProcessStops extends Command
@@ -62,17 +62,38 @@ class ProcessStops extends Command
         })
         ->except(0) // skip header
         ->each(function ($line) use ($gtfs) {
-            Stop::create([
-                'gtfs_fetch_id' => $gtfs->id,
-                'gtfs_id' => $line[0],
-                'name' => $line[1],
-                'longitude' => $line[2],
-                'latitude' => $line[3],
-                'location_type' => $line[4] ? $line[4] : null,
-                'parent_station' => $line[5] ? $line[5] : null,
-            ]);
+            try {
+                Stop::create([
+                    'gtfs_fetch_id' => $gtfs->id,
+                    'gtfs_id' => $line[0],
+                    'name' => $line[1],
+                    'longitude' => $line[2],
+                    'latitude' => $line[3],
+                    'location_type' => $line[4] ? $line[4] : 0,
+                    'parent_station' => $this->getParentStationId($line[5]),
+                ]);
+            } catch (ParentStopNotFoundException $exception) {
+                report($exception);
+            }
         });
 
         return 0;
+    }
+
+    protected function getParentStationId($stopGtfsId)
+    {
+        if (! $stopGtfsId) {
+            return null;
+        }
+
+        $parentStation = Stop::where('gtfs_id', $stopGtfsId)->first();
+
+        if (! $parentStation) {
+            throw new ParentStopNotFoundException($stopGtfsId);
+
+            return null;
+        }
+
+        return $parentStation->id;
     }
 }
