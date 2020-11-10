@@ -29,7 +29,7 @@ class TripFactory extends Factory
             'service_gtfs_id' => $this->faker->unique()->randomNumber,
             'gtfs_id' => $this->faker->unique()->randomNumber,
             'headsign' => $this->faker->word,
-            'direction_id' => $this->faker->numberBetween(0, 1),
+            'direction_id' => $this->faker->randomElement([0, 1]),
         ];
     }
 }
