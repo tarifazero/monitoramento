@@ -77,7 +77,6 @@ class ProcessTrips extends Command
                     'service_gtfs_id' => $line[1],
                     'headsign' => $line[3],
                     'direction_id' => $line[4],
-                    'deleted_at' => null,
                 ]);
         });
 
