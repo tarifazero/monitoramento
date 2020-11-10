@@ -4,7 +4,6 @@ namespace Tests\Feature\Commands\Gtfs;
 
 use App\Models\GtfsFetch;
 use App\Models\Stop;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
