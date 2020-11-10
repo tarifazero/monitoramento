@@ -47,6 +47,11 @@ class GtfsFetch extends Model
         return Storage::disk(self::STORAGE_DISK)->path($this->path . '/routes.txt');
     }
 
+    public function getStopsFilePath()
+    {
+        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/stops.txt');
+    }
+
     public function getTripsFilePath()
     {
         return Storage::disk(self::STORAGE_DISK)->path($this->path . '/trips.txt');
