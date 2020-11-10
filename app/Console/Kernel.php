@@ -39,6 +39,7 @@ class Kernel extends ConsoleKernel
                      Artisan::call('gtfs:process:routes');
                      Artisan::call('gtfs:process:calendar-dates');
                      Artisan::call('gtfs:process:trips');
+                     Artisan::call('gtfs:process:stops');
                  });
     }
 
