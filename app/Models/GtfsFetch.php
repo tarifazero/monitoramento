@@ -22,6 +22,11 @@ class GtfsFetch extends Model
      */
     protected $guarded = ['id'];
 
+    public function stops()
+    {
+        return $this->hasMany(Stop::class);
+    }
+
     public function trips()
     {
         return $this->hasMany(Trip::class);
