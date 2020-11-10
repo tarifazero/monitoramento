@@ -24,7 +24,7 @@ class TripFactory extends Factory
     public function definition()
     {
         return [
-            'gtfs_fetch_id' => GtfsFetch::factory():
+            'gtfs_fetch_id' => GtfsFetch::factory(),
             'route_id' => Route::factory(),
             'service_gtfs_id' => $this->faker->unique()->randomNumber,
             'gtfs_id' => $this->faker->unique()->randomNumber,
