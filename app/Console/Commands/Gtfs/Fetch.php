@@ -52,7 +52,7 @@ class Fetch extends Command
         if (! $this->fileHasChanged()) {
             $this->info('The latest file has already been fetched');
 
-            return 0;
+            return 1;
         }
 
         $this->fetch();
@@ -85,7 +85,7 @@ class Fetch extends Command
         if ($response->failed()) {
             $this->error('Could not fetch metadata');
 
-            return 1;
+            exit(1);
         }
 
         $metadata = $response->json();

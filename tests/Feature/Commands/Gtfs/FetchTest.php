@@ -59,7 +59,7 @@ class FetchTest extends TestCase
         ]);
 
         $this->artisan('gtfs:fetch')
-             ->assertExitCode(0);
+             ->assertExitCode(1);
 
         $this->assertEquals(1, GtfsFetch::count());
     }
