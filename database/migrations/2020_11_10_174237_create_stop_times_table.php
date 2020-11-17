@@ -24,10 +24,10 @@ class CreateStopTimesTable extends Migration
             $table->foreignId('stop_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->time('arrival_time')
-                ->nullable();
-            $table->time('departure_time')
-                ->nullable();
+            $table->string('arrival_time', 9)
+                  ->nullable();
+            $table->string('departure_time', 9)
+                  ->nullable();
             $table->integer('stop_sequence');
             $table->enum('timepoint', [0, 1])
                 ->default(0);
