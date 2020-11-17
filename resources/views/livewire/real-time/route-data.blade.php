@@ -1,8 +1,8 @@
 <div class="mt-12">
 
     <h2 class="text-center text-2xl font-bold leading-tight">
-        @if ($route)
-            {{ $route->short_name }} - {{ $route->long_name }}
+        @if ($this->route)
+            {{ $this->route->short_name }} - {{ $this->route->long_name }}
         @else
             Dados globais
         @endif
@@ -10,59 +10,18 @@
 
     <div wire:poll.60s class="mt-6">
 
-        <p class="text-center">
-            Viagens programadas: {{ $this->forecastTripsCount }}
-        </p>
+        <livewire:real-time.data.forecast-trips
+            :start-time="$this->localizedStartTime"
+            :end-time="$this->localizedEndTime"
+            :route="$this->route"
+        />
 
-        <p class="text-center">
-            Veículos rodando: {{ $this->currentActiveVehicleCount }}
-        </p>
+        <livewire:real-time.data.active-vehicles
+            :start-time="$this->localizedStartTime"
+            :end-time="$this->localizedEndTime"
+            :route="$this->route"
+        />
 
-        <table class="mx-auto mt-4">
-
-            <thead>
-                <tr>
-
-                    <th class="text-center px-4 py-1">
-                        Hora
-                    </th>
-
-                    @if ($route)
-                        <th class="text-center px-4 py-1">
-                            Número de veículos
-                        </th>
-
-                    @else
-                        <th class="text-center px-4 py-1">
-                            Percentual da frota
-                        </th>
-                    @endif
-
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($this->statsByHour as $hour => $stats)
-                    <tr>
-
-                        <td class="text-center px-4 py-1">
-                            {{ $hour }}
-                        </td>
-
-                        @if ($route)
-                            <td class="text-center px-4 py-1">
-                                {{ $stats['vehicle_count'] }}
-                            </td>
-                        @else
-                            <td class="text-center px-4 py-1">
-                                @percentage($stats['vehicle_percentage'])
-                            </td>
-                        @endif
-
-                    </tr>
-                @endforeach
-            </tbody>
-
-        </table>
     </div>
+
 </div>
