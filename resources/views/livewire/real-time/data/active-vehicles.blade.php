@@ -1,4 +1,4 @@
-<div>
+<div wire:poll.60s>
 
     <p class="text-center">
         Veículos rodando: {{ $this->currentActiveVehicleCount }}

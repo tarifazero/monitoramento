@@ -14,7 +14,7 @@ class ForecastTrips extends Component
 
     protected $route;
 
-    public function mounted($startTime, $endTime, $route = null)
+    public function mount($startTime, $endTime, $route = null)
     {
         $this->startTime = $startTime;
         $this->endTime = $endTime;

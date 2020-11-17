@@ -8,9 +8,12 @@ use Livewire\Component;
 
 class RouteData extends Component
 {
-    public $routeId;
+    protected $route;
 
-    protected $listeners = ['routeSelected'];
+    public function mount($route = null)
+    {
+        $this->route = $route;
+    }
 
     public function getLocalizedStartTimeProperty()
     {
@@ -26,18 +29,10 @@ class RouteData extends Component
             ->setTimezone(config('app.timezone'));
     }
 
-    public function getRouteProperty()
-    {
-        return Route::find($this->routeId);
-    }
-
-    public function routeSelected($routeId)
-    {
-        $this->routeId = $routeId;
-    }
-
     public function render()
     {
-        return view('livewire.real-time.route-data');
+        return view('livewire.real-time.route-data', [
+            'route' => $this->route,
+        ]);
     }
 }

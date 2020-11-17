@@ -27,6 +27,11 @@ class Trip extends Model
         return $this->belongsTo(Route::class);
     }
 
+    public function stopTimes()
+    {
+        return $this->hasMany(StopTime::class);
+    }
+
     public function scopeForDate($query, $date)
     {
         if (! $service = Service::where('date', $date)->first()) {
@@ -34,5 +39,43 @@ class Trip extends Model
         }
 
         return $query->where('service_gtfs_id', $service->gtfs_id);
+    }
+
+    public function scopeWithArrivalTime($query)
+    {
+        $query->addSelect(['arrival_time' => StopTime::select('arrival_time')
+            ->whereColumn('trip_id', 'trips.id')
+            ->orderBy('stop_sequence', 'desc')
+            ->limit(1)
+        ]);
+    }
+
+    public function scopeWithDepartureTime($query)
+    {
+        $query->addSelect(['departure_time' => StopTime::select('departure_time')
+            ->whereColumn('trip_id', 'trips.id')
+            ->orderBy('stop_sequence', 'asc')
+            ->limit(1)
+        ]);
+    }
+
+    public function getArrivalStop()
+    {
+        return $this->getArrivalStopTime()
+                    ->stop;
+    }
+
+    public function getArrivalStopTime()
+    {
+        return $this->stopTimes()
+            ->orderBy('stop_sequence', 'desc')
+            ->first();
+    }
+
+    public function getDepartureStopTime()
+    {
+        return $this->stopTimes()
+            ->orderBy('stop_sequence', 'asc')
+            ->first();
     }
 }

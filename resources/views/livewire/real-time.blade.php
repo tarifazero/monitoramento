@@ -2,6 +2,6 @@
 
     <livewire:real-time.route-search />
 
-    <livewire:real-time.route-data :route="$route" />
+    <livewire:real-time.route-data :route="$this->route" />
 
 </div>

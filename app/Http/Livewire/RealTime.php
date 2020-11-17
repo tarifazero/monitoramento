@@ -7,16 +7,21 @@ use Livewire\Component;
 
 class RealTime extends Component
 {
-    public $route;
+    public $routeShortName;
 
     public function mount($routeShortName = null)
     {
-        if (! $routeShortName) {
-            return;
+        $this->routeShortName = $routeShortName;
+    }
+
+    public function getRouteProperty()
+    {
+        if (! $this->routeShortName) {
+            return null;
         }
 
-        $this->route = Route::main()
-             ->where('short_name', $routeShortName)
+        return Route::main()
+             ->where('short_name', $this->routeShortName)
              ->first();
     }
 
