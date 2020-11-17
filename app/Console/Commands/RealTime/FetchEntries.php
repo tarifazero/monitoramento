@@ -84,7 +84,7 @@ class FetchEntries extends Command
 
             // The realtime data uses commas as decimal separators
             $latitude = str_replace(',', '.', $item['LT']);
-            $longitude = str_replace(',', '.', $item['LT']);
+            $longitude = str_replace(',', '.', $item['LG']);
 
             RealTimeEntry::create([
                 'route_real_time_id' => $item['NL'],
