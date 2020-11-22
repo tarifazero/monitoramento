@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStopTimesTable extends Migration
+class CreateTripsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,21 @@ class CreateStopTimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('stop_times', function (Blueprint $table) {
+        Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->foreignId('gtfs_fetch_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->foreignId('trip_id')
+            $table->foreignId('route_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->foreignId('stop_id')
+            $table->foreignId('service_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->string('arrival_time', 9)
-                  ->nullable();
-            $table->string('departure_time', 9)
-                  ->nullable();
-            $table->integer('stop_sequence');
-            $table->enum('timepoint', [0, 1])
-                  ->default(0);
+            $table->string('gtfs_id')
+                  ->unique();
+            $table->string('headsign');
+            $table->enum('direction_id', [0, 1]);
         });
     }
 
@@ -41,6 +38,6 @@ class CreateStopTimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stop_times');
+        Schema::dropIfExists('trips');
     }
 }

@@ -29,8 +29,6 @@ class CreateStopsTable extends Migration
                   ->nullable()
                   ->constrained('stops')
                   ->onDelete('cascade');
-            $table->timestamps();
-            $table->softDeletes();
         });
     }
 

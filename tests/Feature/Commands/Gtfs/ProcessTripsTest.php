@@ -4,6 +4,7 @@ namespace Tests\Feature\Commands\Gtfs;
 
 use App\Models\GtfsFetch;
 use App\Models\Route;
+use App\Models\Service;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,6 +21,8 @@ class ProcessTripsTest extends TestCase
     {
         Storage::fake(GtfsFetch::STORAGE_DISK);
 
+        $gtfsFetch = GtfsFetch::factory()->create();
+
         Route::factory()
             ->count(2)
             ->state(new Sequence(
@@ -28,7 +31,11 @@ class ProcessTripsTest extends TestCase
             ))
             ->create();
 
-        GtfsFetch::factory()->create();
+        Service::factory()
+            ->state([
+                'gtfs_id' => '33',
+            ])
+            ->create();
 
         $this->artisan('gtfs:process:trips')
             ->assertExitCode(0);

@@ -9,9 +9,7 @@ class CreateRealTimeEntriesTable extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
-     */
-    public function up()
+     * @return void */ public function up()
     {
         Schema::create('real_time_entries', function (Blueprint $table) {
             $table->uuid('id')
@@ -25,16 +23,12 @@ class CreateRealTimeEntriesTable extends Migration
             $table->double('latitude');
             $table->double('longitude');
             $table->integer('speed');
-            $table->integer('cardinal_direction')
-                  ->nullable();
             $table->integer('travel_direction')
-                  ->nullable();
-            $table->integer('distance')
                   ->nullable();
             $table->dateTime('created_at')
                   ->index();
-            $table->boolean('processed')
-                  ->default(false);
+            $table->dateTime('processed_at')
+                  ->nullable();
         });
     }
 

@@ -2,13 +2,20 @@
 
 namespace App\Models;
 
+use App\Scopes\LatestGtfsFetchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Trip extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that aren't mass assignable.
@@ -17,9 +24,9 @@ class Trip extends Model
      */
     protected $guarded = ['id'];
 
-    public function gtfsFetch()
+    protected static function booted()
     {
-        return $this->belongsTo(GtfsFetch::class);
+        static::addGlobalScope(new LatestGtfsFetchScope);
     }
 
     public function route()
@@ -34,11 +41,11 @@ class Trip extends Model
 
     public function scopeForDate($query, $date)
     {
-        if (! $service = Service::where('date', $date)->first()) {
+        if (! $calendarDate = CalendarDate::where('date', $date)->first()) {
             return null;
         }
 
-        return $query->where('service_gtfs_id', $service->gtfs_id);
+        return $query->where('calendar_date_id', $calendarDate->id);
     }
 
     public function scopeWithArrivalTime($query)

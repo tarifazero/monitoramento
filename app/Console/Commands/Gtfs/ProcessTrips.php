@@ -4,10 +4,11 @@ namespace App\Console\Commands\Gtfs;
 
 use App\Models\GtfsFetch;
 use App\Models\Route;
+use App\Models\Service;
 use App\Models\Trip;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\LazyCollection;
 
 class ProcessTrips extends Command
 {
@@ -50,35 +51,36 @@ class ProcessTrips extends Command
 
         $gtfs->unzip();
 
-        LazyCollection::make(function () use ($gtfs) {
-            $handle = fopen(
-                $gtfs->getTripsFilePath(),
-                'r'
-            );
+        File::lines($gtfs->getFilePath('trips'))
+            ->except(0) // skip header
+            ->filter()
+            ->map(fn ($line) => str_getcsv($line))
+            ->each(function ($line) use ($gtfs) {
+                $route = Route::where('gtfs_id', $line[0])->first();
 
-            while (($line = fgetcsv($handle)) !== false) {
-                yield $line;
-            }
-        })
-        ->except(0) // skip header
-        ->each(function ($line) use ($gtfs) {
-            $route = Route::where('gtfs_id', $line[0])->first();
+                if (! $route) {
+                    Log::warning('Route missing for trip ', $line);
 
-            if (! $route) {
-                Log::warning('Route missing for trip ', $line);
+                    return;
+                }
 
-                return;
-            }
+                $service = Service::where('gtfs_id', $line[1])->first();
 
-            Trip::create([
-                'gtfs_fetch_id' => $gtfs->id,
-                'gtfs_id' => $line[2],
-                'route_id' => $route->id,
-                'service_gtfs_id' => $line[1],
-                'headsign' => $line[3],
-                'direction_id' => $line[4],
-            ]);
-        });
+                if (! $service) {
+                    Log::warning('Service missing for trip ', $line);
+
+                    return;
+                }
+
+                Trip::create([
+                    'gtfs_fetch_id' => $gtfs->id,
+                    'route_id' => $route->id,
+                    'service_id' => $service->id,
+                    'gtfs_id' => $line[2],
+                    'headsign' => $line[3],
+                    'direction_id' => $line[4],
+                ]);
+            });
 
         return 0;
     }

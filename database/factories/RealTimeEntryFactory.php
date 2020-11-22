@@ -30,11 +30,8 @@ class RealTimeEntryFactory extends Factory
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
             'speed' => $this->faker->numberBetween(0, 60),
-            'cardinal_direction' => $this->faker->numberBetween(0, 360),
             'travel_direction' => $this->faker->numberBetween(1, 2),
-            'distance' => $this->faker->numberBetween(0, 100),
             'created_at' => $this->faker->dateTimeBetween(now()->subDay(), now()->subSecond()),
-            'processed' => false,
         ];
     }
 

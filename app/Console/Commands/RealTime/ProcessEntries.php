@@ -64,7 +64,7 @@ class ProcessEntries extends Command
             ]);
         }
 
-        $entries->update(['processed' => true]);
+        $entries->update(['processed_at' => now()]);
 
         $this->info("Processed {$entries->count()} entries");
     }

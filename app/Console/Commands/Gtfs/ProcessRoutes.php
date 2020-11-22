@@ -5,9 +5,7 @@ namespace App\Console\Commands\Gtfs;
 use App\Models\GtfsFetch;
 use App\Models\Route;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Facades\File;
 
 class ProcessRoutes extends Command
 {
@@ -50,27 +48,20 @@ class ProcessRoutes extends Command
 
         $gtfs->unzip();
 
-        LazyCollection::make(function () use ($gtfs) {
-            $handle = fopen(
-                $gtfs->getRoutesFilePath(),
-                'r'
-            );
+        File::lines($gtfs->getFilePath('routes'))
+            ->except(0) // skip header
+            ->filter()
+            ->map(fn ($line) => str_getcsv($line))
+            ->each(function ($line) {
+                $shortName = preg_replace('!\s+!', '-', $line[0]);
 
-            while (($line = fgetcsv($handle)) !== false) {
-                yield $line;
-            }
-        })
-        ->except(0) // skip header
-        ->each(function ($line) {
-            $shortName = preg_replace('!\s+!', '-', $line[0]);
-
-            Route::updateOrCreate([
-                'short_name' => $shortName,
-                'type' => Route::TYPE_BUS,
-            ], [
-                'gtfs_id' => $line[0],
-            ]);
-        });
+                Route::updateOrCreate([
+                    'short_name' => $shortName,
+                    'type' => Route::TYPE_BUS,
+                ], [
+                    'gtfs_id' => $line[0],
+                ]);
+            });
 
         Route::rebuildTree();
 

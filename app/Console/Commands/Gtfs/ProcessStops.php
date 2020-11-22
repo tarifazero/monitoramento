@@ -7,7 +7,7 @@ use App\Models\GtfsFetch;
 use App\Models\Route;
 use App\Models\Stop;
 use Illuminate\Console\Command;
-use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Facades\File;
 
 class ProcessStops extends Command
 {
@@ -50,32 +50,25 @@ class ProcessStops extends Command
 
         $gtfs->unzip();
 
-        LazyCollection::make(function () use ($gtfs) {
-            $handle = fopen(
-                $gtfs->getStopsFilePath(),
-                'r'
-            );
-
-            while (($line = fgetcsv($handle)) !== false) {
-                yield $line;
-            }
-        })
-        ->except(0) // skip header
-        ->each(function ($line) use ($gtfs) {
-            try {
-                Stop::create([
-                    'gtfs_fetch_id' => $gtfs->id,
-                    'gtfs_id' => $line[0],
-                    'name' => $line[1],
-                    'longitude' => $line[2],
-                    'latitude' => $line[3],
-                    'location_type' => $line[4] ? $line[4] : 0,
-                    'parent_station' => $this->getParentStationId($line[5]),
-                ]);
-            } catch (ParentStopNotFoundException $exception) {
-                report($exception);
-            }
-        });
+        File::lines($gtfs->getFilePath('stops'))
+            ->except(0) // skip header
+            ->filter()
+            ->map(fn ($line) => str_getcsv($line))
+            ->each(function ($line) use ($gtfs) {
+                try {
+                    Stop::create([
+                        'gtfs_fetch_id' => $gtfs->id,
+                        'gtfs_id' => $line[0],
+                        'name' => $line[1],
+                        'longitude' => $line[2],
+                        'latitude' => $line[3],
+                        'location_type' => $line[4] ? $line[4] : 0,
+                        'parent_station' => $this->getParentStationId($line[5]),
+                    ]);
+                } catch (ParentStopNotFoundException $exception) {
+                    report($exception);
+                }
+            });
 
         return 0;
     }

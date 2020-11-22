@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Commands\Gtfs;
 
+use App\Models\CalendarDates;
 use App\Models\GtfsFetch;
 use App\Models\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,7 +25,8 @@ class ProcessCalendarDatesTest extends TestCase
         $this->artisan('gtfs:process:calendar-dates')
             ->assertExitCode(0);
 
-        $this->assertEquals(5, Service::count());
+        $this->assertEquals(3, Service::count());
+        $this->assertEquals(5, CalendarDates::count());
     }
 
     /** @test */

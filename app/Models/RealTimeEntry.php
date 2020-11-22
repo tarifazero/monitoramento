@@ -10,6 +10,8 @@ class RealTimeEntry extends Model
 {
     use HasFactory, HasUuid;
 
+    const UPDATED_AT = null;
+
     const VALID_EVENTS = [105];
 
     const VALID_TRAVEL_DIRECTIONS = [1, 2];
@@ -20,16 +22,6 @@ class RealTimeEntry extends Model
      * @var array
      */
     protected $guarded = ['id'];
-
-    /**
-     * Get the name of the "updated at" column.
-     *
-     * @return string
-     */
-    public function getUpdatedAtColumn()
-    {
-        return null;
-    }
 
     /**
      * The "booted" method of the model.
@@ -65,11 +57,11 @@ class RealTimeEntry extends Model
 
     public function scopeProcessed($query)
     {
-        return $query->where('processed', true);
+        return $query->whereNotNull('processed_at');
     }
 
     public function scopeUnprocessed($query)
     {
-        return $query->where('processed', false);
+        return $query->whereNull('processed_at');
     }
 }

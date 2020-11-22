@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTripsTable extends Migration
+class CreateCalendarDatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreateTripsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trips', function (Blueprint $table) {
+        Schema::create('calendar_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('route_id')
+            $table->foreignId('gtfs_fetch_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->integer('service_gtfs_id');
-            $table->string('gtfs_id')
-                  ->unique();
-            $table->string('headsign');
-            $table->enum('direction_id', [0, 1]);
-            $table->timestamps();
-            $table->softDeletes();
+            $table->foreignId('service_id')
+                  ->constrained()
+                  ->onDelete('cascade');
+            $table->date('date')
+                  ->index();
+            $table->enum('exception_type', [1, 2]);
         });
     }
 
@@ -35,6 +34,6 @@ class CreateTripsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trips');
+        Schema::dropIfExists('calendar_dates');
     }
 }

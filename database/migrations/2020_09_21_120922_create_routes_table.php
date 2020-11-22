@@ -19,8 +19,12 @@ class CreateRoutesTable extends Migration
                   ->nullable()
                   ->constrained('routes')
                   ->onDelete('cascade');
+            $table->string('gtfs_id')
+                  ->nullable()
+                  ->unique();
             $table->integer('real_time_id')
-                ->unique();
+                  ->nullable()
+                  ->unique();
             $table->string('short_name')
                 ->nullable();
             $table->string('long_name')

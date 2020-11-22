@@ -5,9 +5,8 @@ namespace App\Models;
 use App\Scopes\LatestGtfsFetchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Stop extends Model
+class CalendarDates extends Model
 {
     use HasFactory;
 

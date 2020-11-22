@@ -22,44 +22,14 @@ class GtfsFetch extends Model
      */
     protected $guarded = ['id'];
 
-    public function stops()
-    {
-        return $this->hasMany(Stop::class);
-    }
-
-    public function trips()
-    {
-        return $this->hasMany(Trip::class);
-    }
-
     public static function latest()
     {
         return self::orderBy('created_at', 'DESC')->first();
     }
 
-    public function getCalendarDatesFilePath()
+    public function getFilePath($file)
     {
-        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/calendar_dates.txt');
-    }
-
-    public function getRoutesFilePath()
-    {
-        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/routes.txt');
-    }
-
-    public function getStopsFilePath()
-    {
-        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/stops.txt');
-    }
-
-    public function getStopTimesFilePath()
-    {
-        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/stop_times.txt');
-    }
-
-    public function getTripsFilePath()
-    {
-        return Storage::disk(self::STORAGE_DISK)->path($this->path . '/trips.txt');
+        return Storage::disk(self::STORAGE_DISK)->path($this->path . "/{$file}.txt");
     }
 
     public function unzip()

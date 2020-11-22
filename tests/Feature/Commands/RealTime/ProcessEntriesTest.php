@@ -97,13 +97,13 @@ class ProcessEntriesTest extends TestCase
         $entry = RealTimeEntry::factory()
             ->create();
 
-        $this->assertEquals(false, $entry->processed);
+        $this->assertNull($entry->processed_at);
 
         $this->artisan('real-time:process:entries "' . now()->toDateTimeString() . '"')
             ->assertExitCode(0);
 
         $entry->refresh();
 
-        $this->assertEquals(true, $entry->processed);
+        $this->assertNotNull($entry->processed_at);
     }
 }

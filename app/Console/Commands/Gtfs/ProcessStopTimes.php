@@ -52,8 +52,9 @@ class ProcessStopTimes extends Command
 
         $gtfs->unzip();
 
-        File::lines($gtfs->getStopTimesFilePath())
+        File::lines($gtfs->getFilePath('stop_times'))
             ->except(0) // skip header
+            ->filter()
             ->map(fn ($line) => str_getcsv($line))
             ->each(function ($line) use ($gtfs) {
                 $trip = Trip::where('gtfs_id', $line[0])->first();
@@ -74,7 +75,6 @@ class ProcessStopTimes extends Command
 
                 StopTime::create([
                     'gtfs_fetch_id' => $gtfs->id,
-                    'gtfs_id' => $line[0],
                     'trip_id' => $trip->id,
                     'stop_id' => $stop->id,
                     'arrival_time' => $line[1] ? $line[1] : null,

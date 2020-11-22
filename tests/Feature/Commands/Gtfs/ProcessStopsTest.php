@@ -18,12 +18,13 @@ class ProcessStopsTest extends TestCase
     {
         Storage::fake(GtfsFetch::STORAGE_DISK);
 
+        $gtfsFetch = GtfsFetch::factory()->create();
+
         Stop::factory()
             ->create([
+                'gtfs_fetch_id' => $gtfsFetch->id,
                 'gtfs_id' => '10101153700105',
             ]);
-
-        GtfsFetch::factory()->create();
 
         $this->artisan('gtfs:process:stops')
             ->assertExitCode(0);

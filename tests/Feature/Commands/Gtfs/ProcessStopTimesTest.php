@@ -21,13 +21,17 @@ class ProcessStopTimesTest extends TestCase
     {
         Storage::fake(GtfsFetch::STORAGE_DISK);
 
+        $gtfsFetch = GtfsFetch::factory()->create();
+
         Trip::factory()
             ->create([
+                'gtfs_fetch_id' => $gtfsFetch->id,
                 'gtfs_id' => 'SC01A 011320090520',
             ]);
 
         Stop::factory()
             ->count(5)
+            ->state(['gtfs_fetch_id' => $gtfsFetch->id])
             ->state(new Sequence(
                 ['gtfs_id' => '00101722809716'],
                 ['gtfs_id' => '00101722810080'],
@@ -37,7 +41,6 @@ class ProcessStopTimesTest extends TestCase
             ))
             ->create();
 
-        GtfsFetch::factory()->create();
 
         $this->artisan('gtfs:process:stop-times')
             ->assertExitCode(0);

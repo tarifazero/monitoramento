@@ -17,7 +17,7 @@ class CreateGtfsFetchesTable extends Migration
             $table->id();
             $table->string('path');
             $table->timestamp('created_at', 0)
-                ->index();
+                  ->index();
         });
     }
 

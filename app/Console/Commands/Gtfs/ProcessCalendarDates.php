@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Gtfs;
 
+use App\Models\CalendarDates;
 use App\Models\GtfsFetch;
 use App\Models\Service;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Facades\File;
 
 class ProcessCalendarDates extends Command
 {
@@ -49,24 +49,23 @@ class ProcessCalendarDates extends Command
 
         $gtfs->unzip();
 
-        LazyCollection::make(function () use ($gtfs) {
-            $handle = fopen(
-                $gtfs->getCalendarDatesFilePath(),
-                'r'
-            );
+        File::lines($gtfs->getFilePath('calendar_dates'))
+            ->except(0) // skip header
+            ->filter()
+            ->map(fn ($line) => str_getcsv($line))
+            ->each(function ($line) use ($gtfs) {
+                $service = Service::firstOrCreate([
+                    'gtfs_id' => $line[0],
+                ]);
 
-            while (($line = fgetcsv($handle)) !== false) {
-                yield $line;
-            }
-        })
-        ->except(0) // skip header
-        ->each(function ($line) {
-            Service::create([
-                'gtfs_id' => $line[0],
-                'date' => $line[1],
-                'exception_type' => $line[2],
-            ]);
-        });
+                CalendarDates::updateOrCreate([
+                    'gtfs_fetch_id' => $gtfs->id,
+                    'date' => $line[1],
+                ], [
+                    'service_id' => $service->id,
+                    'exception_type' => $line[2],
+                ]);
+            });
 
         return 0;
     }
