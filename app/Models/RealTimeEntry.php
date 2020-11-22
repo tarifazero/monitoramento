@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
+use App\Models\RealTimeFetch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +11,16 @@ class RealTimeEntry extends Model
 {
     use HasFactory, HasUuid;
 
-    const UPDATED_AT = null;
-
     const VALID_EVENTS = [105];
 
     const VALID_TRAVEL_DIRECTIONS = [1, 2];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that aren't mass assignable.
@@ -53,6 +59,15 @@ class RealTimeEntry extends Model
     {
         $query->whereNotIn('event', self::VALID_EVENTS)
             ->orWhereNotIn('travel_direction', self::VALID_TRAVEL_DIRECTIONS);
+    }
+
+    public function scopeFromLatestFetch($query)
+    {
+        $latestRealTimeFetch = RealTimeFetch::latest();
+
+        if ($latestRealTimeFetch) {
+            $builder->where('real_time_fetch_id', $latestRealTimeFetch->id);
+        }
     }
 
     public function scopeProcessed($query)
