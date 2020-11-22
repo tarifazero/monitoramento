@@ -22,4 +22,9 @@ class RealTimeFetch extends Model
     {
         return self::orderBy('created_at', 'DESC')->first();
     }
+
+    public function entries()
+    {
+        return $this->hasMany(RealTimeEntry::class);
+    }
 }

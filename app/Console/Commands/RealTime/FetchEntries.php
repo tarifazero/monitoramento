@@ -3,6 +3,7 @@
 namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
+use App\Models\RealTimeFetch;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -71,7 +72,9 @@ class FetchEntries extends Command
 
     protected function storeData(Collection $data)
     {
-        $data->each(function ($item) {
+        $fetch = RealTimeFetch::create();
+
+        $data->each(function ($item) use ($fetch) {
             // The realtime data timestamp comes in a YYYYMMDDHHmmSS format
             $timestamp = Carbon::create(
                 Str::substr($item['HR'], 0, 4), // Year
@@ -87,6 +90,7 @@ class FetchEntries extends Command
             $longitude = str_replace(',', '.', $item['LG']);
 
             RealTimeEntry::create([
+                'real_time_fetch_id' => $fetch->id,
                 'route_real_time_id' => $item['NL'],
                 'vehicle_real_time_id' => $item['NV'],
                 'event' => $item['EV'],

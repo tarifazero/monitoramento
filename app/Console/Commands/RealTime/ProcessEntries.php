@@ -3,6 +3,7 @@
 namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
+use App\Models\RealTimeFetch;
 use App\Models\Route;
 use App\Models\Vehicle;
 use Carbon\Carbon;
@@ -45,9 +46,12 @@ class ProcessEntries extends Command
             ? Carbon::parse($this->argument('cutOffTime'))
             : now()->startOfHour();
 
-        $entries = RealTimeEntry::unprocessed()
-            ->where('created_at', '<', $cutOffTime)
-            ->orderBy('created_at', 'ASC');
+        $realTimeFetchIds = RealTimeFetch::where('created_at', '<', $cutOffTime)
+            ->orderBy('created_at', 'ASC')
+            ->pluck('id');
+
+        $entries = RealTimeEntry::whereIn('real_time_fetch_id', $realTimeFetchIds)
+            ->unprocessed();
 
         foreach ($entries->cursor() as $entry) {
             $route = Route::updateOrCreate([

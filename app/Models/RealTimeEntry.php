@@ -45,6 +45,11 @@ class RealTimeEntry extends Model
         });
     }
 
+    public function realTimeFetch()
+    {
+        return $this->belongsTo(RealTimeFetch::class);
+    }
+
     public function route()
     {
         return $this->belongsTo(Route::class, 'route_real_time_id', 'real_time_id');

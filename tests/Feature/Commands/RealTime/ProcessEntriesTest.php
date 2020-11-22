@@ -17,6 +17,9 @@ class ProcessEntriesTest extends TestCase
     function creates_missing_routes()
     {
         $entry = RealTimeEntry::factory()
+            ->forRealTimeFetch([
+                'created_at' => now()->subSecond()
+            ])
             ->create();
 
         $this->assertEquals(0, Route::count());
@@ -35,6 +38,9 @@ class ProcessEntriesTest extends TestCase
             ->create();
 
         $entry = RealTimeEntry::factory()
+            ->forRealTimeFetch([
+                'created_at' => now()->subSecond()
+            ])
             ->create([
                 'route_real_time_id' => $route->real_time_id,
             ]);
@@ -56,6 +62,9 @@ class ProcessEntriesTest extends TestCase
     function creates_missing_vehicles()
     {
         $entry = RealTimeEntry::factory()
+            ->forRealTimeFetch([
+                'created_at' => now()->subSecond()
+            ])
             ->create();
 
         $this->assertEquals(0, Vehicle::count());
@@ -74,6 +83,9 @@ class ProcessEntriesTest extends TestCase
             ->create();
 
         $entry = RealTimeEntry::factory()
+            ->forRealTimeFetch([
+                'created_at' => now()->subSecond()
+            ])
             ->create([
                 'vehicle_real_time_id' => $vehicle->real_time_id,
             ]);
@@ -95,6 +107,9 @@ class ProcessEntriesTest extends TestCase
     function marks_processed_entries_as_processed()
     {
         $entry = RealTimeEntry::factory()
+            ->forRealTimeFetch([
+                'created_at' => now()->subSecond()
+            ])
             ->create();
 
         $this->assertNull($entry->processed_at);
