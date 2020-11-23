@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Gtfs;
 
-use App\Models\CalendarDates;
+use App\Models\CalendarDate;
 use App\Models\GtfsFetch;
 use App\Models\Service;
 use Illuminate\Console\Command;
@@ -58,7 +58,7 @@ class ProcessCalendarDates extends Command
                     'gtfs_id' => $line[0],
                 ]);
 
-                CalendarDates::updateOrCreate([
+                CalendarDate::updateOrCreate([
                     'gtfs_fetch_id' => $gtfs->id,
                     'date' => $line[1],
                 ], [

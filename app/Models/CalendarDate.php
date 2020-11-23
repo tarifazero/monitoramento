@@ -6,7 +6,7 @@ use App\Scopes\LatestGtfsFetchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CalendarDates extends Model
+class CalendarDate extends Model
 {
     use HasFactory;
 
