@@ -14,7 +14,7 @@ class TripDelays extends Component
 
     public $endTime;
 
-    protected $route;
+    public $route;
 
     public function mount($startTime, $endTime, $route = null)
     {
@@ -25,35 +25,39 @@ class TripDelays extends Component
 
     public function getTripsProperty()
     {
-        return Cache::remember("route-{$this->route->id}-trips", now()->addMinutes(10), function () {
-            return Trip::forDate(today())
-                ->when($this->route, function ($query, $route) {
-                    $query->whereIn('route_id', $route->toFlatTree()->pluck('id'));
-                })
-                ->withArrivalTime()
-                ->get()
-                ->sortBy('arrival_time');
-        });
+        return Trip::forDate(today())
+            ->with('stopTimes.stop')
+            ->whereRoute($this->route)
+            ->get()
+            ->sortBy(function ($trip) {
+                return $trip->getArrivalStopTime()->arrival_time;
+            });
     }
 
     public function getClosestArrival($trip)
     {
-        $arrivalStop = $trip->getArrivalStop();
+        $arrivalStopTime = $trip->getArrivalStopTime();
+
         $arrivalUTCTime = today(new DateTimeZone(config('app.display_timezone')))
-                ->setTimeFromTimeString($trip->arrival_time)
+                ->setTimeFromTimeString($arrivalStopTime->arrival_time)
                 ->setTimeZone('UTC');
 
-        $entries = RealTimeEntry::whereBetween(
-            'created_at',
-            [$arrivalUTCTime->copy()->subHour(), $arrivalUTCTime->copy()->addHour()]
-        )->when($this->route, function ($query, $route) use ($arrivalStop) {
-            $query->whereIn('route_real_time_id', $this->route->toFlatTree()->pluck('real_time_id'));
-        })->whereRaw(
-            'ST_DWithin(geography(ST_Point(longitude, latitude)), geography(ST_Point(?, ?)), 10)',
-            [$arrivalStop->longitude, $arrivalStop->latitude]
-        )->count();
+        $entry = RealTimeEntry::fetchedBetween($arrivalUTCTime->copy()->subHour(), $arrivalUTCTime->copy()->addHour())
+            ->with('realTimeFetch')
+            ->whereRoute($this->route)
+            ->where('travel_direction', $trip->real_time_direction)
+            ->whereNear($arrivalStopTime->stop->latitude, $arrivalStopTime->stop->longitude)
+            ->get()
+            ->sortBy(function ($entry) use ($arrivalUTCTime) {
+                return abs($arrivalUTCTime->diffInSeconds($entry->realTimeFetch->created_at));
+            })
+            ->first();
 
-        return $entries;
+        if (! $entry) {
+            return;
+        }
+
+        return $entry->timestamp;
     }
 
     public function render()

@@ -2,8 +2,8 @@
 
 namespace App\Http\Livewire\RealTime\Data;
 
-use App\Models\GtfsFetch;
 use App\Models\Route;
+use App\Models\Trip;
 use Livewire\Component;
 
 class ForecastTrips extends Component
@@ -12,7 +12,7 @@ class ForecastTrips extends Component
 
     public $endTime;
 
-    protected $route;
+    public $route;
 
     public function mount($startTime, $endTime, $route = null)
     {
@@ -23,9 +23,7 @@ class ForecastTrips extends Component
 
     public function getForecastTripsCountProperty()
     {
-        return GtfsFetch::latest()
-            ->trips()
-            ->forDate(today())
+        return Trip::forDate(today())
             ->when($this->route, function ($query, $route) {
                 $query->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
             })

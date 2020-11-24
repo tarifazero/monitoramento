@@ -41,11 +41,20 @@ class Trip extends Model
 
     public function scopeForDate($query, $date)
     {
-        if (! $calendarDate = CalendarDate::where('date', $date)->first()) {
-            return null;
-        }
+        return $query->where('service_id', function ($query) use ($date) {
+            $query->select('service_id')
+                  ->from('calendar_dates')
+                  ->where('date', $date)
+                  ->limit(1);
+        });
+    }
 
-        return $query->where('calendar_date_id', $calendarDate->id);
+    public function scopeWhereRoute($query, $route)
+    {
+        return $query->whereIn(
+            'route_id',
+            $route->toFlatTree()->pluck('id')
+        );
     }
 
     public function scopeWithArrivalTime($query)
@@ -66,23 +75,27 @@ class Trip extends Model
         ]);
     }
 
-    public function getArrivalStop()
+    public function getRealTimeDirectionAttribute()
     {
-        return $this->getArrivalStopTime()
-                    ->stop;
+        $directionMap = collect([
+            collect([
+                'gtfs' => 0,
+                'real_time' => 2,
+            ]),
+            collect([
+                'gtfs' => 1,
+                'real_time' => 2,
+            ]),
+        ]);
+
+        return optional($directionMap->where('gtfs', $this->direction_id)->first())
+            ->get('real_time');
     }
 
     public function getArrivalStopTime()
     {
-        return $this->stopTimes()
-            ->orderBy('stop_sequence', 'desc')
-            ->first();
-    }
-
-    public function getDepartureStopTime()
-    {
-        return $this->stopTimes()
-            ->orderBy('stop_sequence', 'asc')
-            ->first();
+        return $this->stopTimes
+                    ->sortByDesc('stop_sequence')
+                    ->first();
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasUuid;
-use App\Models\RealTimeFetch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,19 +59,29 @@ class RealTimeEntry extends Model
         return $this->belongsTo(Vehicle::class, 'vehicle_real_time_id', 'real_time_id');
     }
 
-    public function scopeInvalid($query)
-    {
-        $query->whereNotIn('event', self::VALID_EVENTS)
-            ->orWhereNotIn('travel_direction', self::VALID_TRAVEL_DIRECTIONS);
-    }
-
     public function scopeFromLatestFetch($query)
     {
-        $latestRealTimeFetch = RealTimeFetch::latest();
+        return $query->where('real_time_fetch_id', function ($query) {
+            $query->select('id')
+                  ->from('real_time_fetches')
+                  ->orderByDesc('created_at')
+                  ->limit(1);
+        });
+    }
 
-        if ($latestRealTimeFetch) {
-            $builder->where('real_time_fetch_id', $latestRealTimeFetch->id);
-        }
+    public function scopeFetchedBetween($query, $startTime, $endTime)
+    {
+        return $query->whereIn('real_time_fetch_id', function ($query) use ($startTime, $endTime) {
+            $query->select('id')
+                  ->from('real_time_fetches')
+                  ->whereBetween('created_at', [$startTime, $endTime]);
+        });
+    }
+
+    public function scopeInvalid($query)
+    {
+        return $query->whereNotIn('event', self::VALID_EVENTS)
+            ->orWhereNotIn('travel_direction', self::VALID_TRAVEL_DIRECTIONS);
     }
 
     public function scopeProcessed($query)
@@ -83,5 +92,21 @@ class RealTimeEntry extends Model
     public function scopeUnprocessed($query)
     {
         return $query->whereNull('processed_at');
+    }
+
+    public function scopeWhereNear($query, $latitude, $longitude, $distance = 20)
+    {
+        return $query->whereRaw(
+            'ST_DWithin(geography(ST_Point(longitude, latitude)), geography(ST_Point(?, ?)), ?)',
+            [$longitude, $latitude, $distance]
+        );
+    }
+
+    public function scopeWhereRoute($query, $route)
+    {
+        return $query->whereIn(
+            'route_real_time_id',
+            $route->toFlatTree()->pluck('real_time_id')
+        );
     }
 }
