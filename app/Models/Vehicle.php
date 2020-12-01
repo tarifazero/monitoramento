@@ -17,4 +17,9 @@ class Vehicle extends Model
      * @var array
      */
     protected $guarded = ['id'];
+
+    public function realTimeEntries()
+    {
+        return $this->hasMany(RealTimeEntry::class);
+    }
 }

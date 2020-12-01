@@ -27,9 +27,6 @@ class Kernel extends ConsoleKernel
         $schedule->command('real-time:fetch:entries')
                  ->everyFiveMinutes();
 
-        $schedule->command('real-time:process:entries')
-                 ->hourly();
-
         $schedule->command('real-time:fetch:routes')
                  ->daily();
 

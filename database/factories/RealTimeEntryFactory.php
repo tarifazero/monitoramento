@@ -4,6 +4,8 @@ namespace Database\Factories;
 
 use App\Models\RealTimeEntry;
 use App\Models\RealTimeFetch;
+use App\Models\Route;
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -24,10 +26,8 @@ class RealTimeEntryFactory extends Factory
     public function definition()
     {
         return [
-            'real_time_fetch_id' => RealTimeFetch::factory(),
-            'route_real_time_id' => $this->faker->randomNumber,
-            'vehicle_real_time_id' => $this->faker->randomNumber,
-            'event' => 105,
+            'route_id' => Route::factory(),
+            'vehicle_id' => Vehicle::factory(),
             'timestamp' => $this->faker->dateTimeBetween(now()->subDay(), now()->subSecond()),
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,

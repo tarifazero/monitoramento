@@ -3,12 +3,13 @@
 namespace App\Console\Commands\RealTime;
 
 use App\Models\RealTimeEntry;
-use App\Models\RealTimeFetch;
+use App\Models\Route;
 use App\Models\Vehicle;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use League\Csv\Reader as CsvReader;
 
@@ -72,9 +73,20 @@ class FetchEntries extends Command
 
     protected function storeData(Collection $data)
     {
-        $fetch = RealTimeFetch::create();
+        $data->each(function ($item) {
+            if (! in_array($item['EV'], RealTimeEntry::VALID_EVENTS)) {
+                // TODO: log this
+                return;
+            }
 
-        $data->each(function ($item) use ($fetch) {
+            if (! in_array($item['SV'], RealTimeEntry::VALID_TRAVEL_DIRECTIONS)) {
+                // TODO: log this
+                return;
+            }
+            $vehicle = Vehicle::firstOrCreate([
+                'real_time_id' => $item['NV'],
+            ]);
+
             // The realtime data timestamp comes in a YYYYMMDDHHmmSS format
             $timestamp = Carbon::create(
                 Str::substr($item['HR'], 0, 4), // Year
@@ -86,14 +98,24 @@ class FetchEntries extends Command
             );
 
             // The realtime data uses commas as decimal separators
-            $latitude = str_replace(',', '.', $item['LT']);
-            $longitude = str_replace(',', '.', $item['LG']);
+            $latitude = (float) str_replace(',', '.', $item['LT']);
+            $longitude = (float) str_replace(',', '.', $item['LG']);
+
+            if ($this->hasOverlappingEntry($vehicle, $timestamp, $latitude, $longitude)) {
+                Log::debug('Overlapping entries for vehicle ' . $vehicle->id);
+
+                return;
+            }
+
+            $route = Route::firstOrCreate([
+                'real_time_id' => $item['NL'],
+            ], [
+                'type' => Route::TYPE_BUS,
+            ]);
 
             RealTimeEntry::create([
-                'real_time_fetch_id' => $fetch->id,
-                'route_real_time_id' => $item['NL'],
-                'vehicle_real_time_id' => $item['NV'],
-                'event' => $item['EV'],
+                'vehicle_id' => $vehicle->id,
+                'route_id' => $route->id,
                 'timestamp' => $timestamp,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
@@ -101,5 +123,26 @@ class FetchEntries extends Command
                 'travel_direction' => $item['SV'],
             ]);
         });
+    }
+
+    protected function hasOverlappingEntry($vehicle, $timestamp, $latitude, $longitude)
+    {
+        $latestEntry = $vehicle->realTimeEntries()
+                               ->orderByDesc('timestamp')
+                               ->first();
+
+        if (! $latestEntry) {
+            return false;
+        }
+
+        if ($latestEntry->timestamp->diffInMinutes($timestamp) < 2) {
+            return true;
+        }
+
+        if ($latestEntry->isNear($latitude, $longitude)) {
+            return true;
+        }
+
+        return false;
     }
 }

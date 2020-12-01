@@ -33,7 +33,7 @@ class Route extends Model
 
     public function realTimeEntries()
     {
-        return $this->hasMany(RealTimeEntry::class, 'route_real_time_id', 'real_time_id');
+        return $this->hasMany(RealTimeEntry::class);
     }
 
     public function scopeMain($query)

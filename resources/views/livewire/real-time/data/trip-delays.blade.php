@@ -1,5 +1,5 @@
 <div>
-    @foreach ($this->trips->groupBy('direction_id') as $direction)
+    @foreach ($this->trips as $direction)
         <table class="mx-auto mt-4">
 
             <thead>
