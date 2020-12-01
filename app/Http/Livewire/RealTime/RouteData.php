@@ -17,14 +17,14 @@ class RouteData extends Component
 
     public function getLocalizedStartTimeProperty()
     {
-        return today(new DateTimeZone(config('app.display_timezone')))
+        return today(new DateTimeZone(config('app.local_timezone')))
             ->startOfDay()
             ->setTimezone(config('app.timezone'));
     }
 
     public function getLocalizedEndTimeProperty()
     {
-        return today(new DateTimeZone(config('app.display_timezone')))
+        return today(new DateTimeZone(config('app.local_timezone')))
             ->endOfDay()
             ->setTimezone(config('app.timezone'));
     }

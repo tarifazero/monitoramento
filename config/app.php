@@ -68,7 +68,7 @@ return [
     */
 
     'timezone' => 'UTC',
-    'display_timezone' => env('DISPLAY_TIMEZONE', 'UTC'),
+    'local_timezone' => env('LOCAL_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------

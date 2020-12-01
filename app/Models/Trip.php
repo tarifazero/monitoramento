@@ -92,6 +92,13 @@ class Trip extends Model
             ->get('real_time');
     }
 
+    public function getDepartureStopTime()
+    {
+        return $this->stopTimes
+                    ->sortBy('stop_sequence')
+                    ->first();
+    }
+
     public function getArrivalStopTime()
     {
         return $this->stopTimes

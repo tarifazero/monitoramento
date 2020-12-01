@@ -5,6 +5,7 @@ namespace App\Http\Livewire\RealTime\Data;
 use App\Models\RealTimeEntry;
 use App\Models\Trip;
 use DateTimeZone;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 
@@ -30,34 +31,27 @@ class TripDelays extends Component
             ->whereRoute($this->route)
             ->get()
             ->sortBy(function ($trip) {
-                return $trip->getArrivalStopTime()->arrival_time;
-            });
+                return $trip->getDepartureStopTime()->departure_time;
+            })
+            ->groupBy('direction_id');
     }
 
-    public function getClosestArrival($trip)
+    public function getClosestDeparture($trip)
     {
-        $arrivalStopTime = $trip->getArrivalStopTime();
+        $departureStopTime = $trip->getDepartureStopTime();
 
-        $arrivalUTCTime = today(new DateTimeZone(config('app.display_timezone')))
-                ->setTimeFromTimeString($arrivalStopTime->arrival_time)
-                ->setTimeZone('UTC');
-
-        $entry = RealTimeEntry::fetchedBetween($arrivalUTCTime->copy()->subHour(), $arrivalUTCTime->copy()->addHour())
-            ->with('realTimeFetch')
-            ->whereRoute($this->route)
-            ->where('travel_direction', $trip->real_time_direction)
-            ->whereNear($arrivalStopTime->stop->latitude, $arrivalStopTime->stop->longitude)
+        return RealTimeEntry::whereRoute($this->route)
+            ->whereBetween('timestamp', [$this->startTime, $this->endTime])
+            ->whereNear($departureStopTime->stop->latitude, $departureStopTime->stop->longitude)
             ->get()
-            ->sortBy(function ($entry) use ($arrivalUTCTime) {
-                return abs($arrivalUTCTime->diffInSeconds($entry->realTimeFetch->created_at));
+            ->sortBy(function ($entry) use ($departureStopTime) {
+                return abs(Carbon::createFromFormat(
+                    'H:i:s',
+                    $departureStopTime->departure_time,
+                    config('app.local_timezone')
+                )->diffInMinutes($entry->timestamp));
             })
             ->first();
-
-        if (! $entry) {
-            return;
-        }
-
-        return $entry->timestamp;
     }
 
     public function render()

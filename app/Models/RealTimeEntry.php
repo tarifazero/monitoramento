@@ -62,8 +62,8 @@ class RealTimeEntry extends Model
     public function scopeWhereRoute($query, $route)
     {
         return $query->whereIn(
-            'route_real_time_id',
-            $route->toFlatTree()->pluck('real_time_id')
+            'route_id',
+            $route->toFlatTree()->pluck('id')
         );
     }
 

@@ -6,15 +6,11 @@
                 <tr>
 
                     <th class="text-center px-4 py-1">
-                        ID da viagem
+                        Saída prevista
                     </th>
 
                     <th class="text-center px-4 py-1">
                         Chegada prevista
-                    </th>
-
-                    <th class="text-center px-4 py-1">
-                        Chegada efetiva
                     </th>
 
                 </tr>
@@ -25,15 +21,11 @@
                     <tr>
 
                         <td class="text-center px-4 py-1">
-                            {{ $trip->id }}
+                            {{ $trip->getDepartureStopTime()->departure_time }}
                         </td>
 
                         <td class="text-center px-4 py-1">
                             {{ $trip->getArrivalStopTime()->arrival_time }}
-                        </td>
-
-                        <td class="text-center px-4 py-1">
-                            {{ $this->getClosestArrival($trip) }}
                         </td>
 
                     </tr>

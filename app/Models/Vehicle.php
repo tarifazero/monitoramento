@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicle extends Model
 {
-    use HasFactory, HasActivityStatus, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that aren't mass assignable.
