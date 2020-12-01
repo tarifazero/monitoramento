@@ -64,7 +64,7 @@ class FetchEntriesTest extends TestCase
     }
 
     /** @test */
-    function skips_location_overlapping_entries()
+    function skips_location_overlapping_entries_with_same_directions()
     {
         $header = 'EV; HR; LT; LG; NV; VL; NL; DG; SV; DT';
         $row1 = '105;20200924151103;-19,976116;-44,003806;40861;32;7419;38;1;4138';
@@ -83,7 +83,26 @@ class FetchEntriesTest extends TestCase
     }
 
     /** @test */
-    function skipts_invalid_events()
+    function keeps_location_overlapping_entries_with_different_directions()
+    {
+        $header = 'EV; HR; LT; LG; NV; VL; NL; DG; SV; DT';
+        $row1 = '105;20200924151103;-19,976116;-44,003806;40861;32;7419;38;1;4138';
+        $row2 = '105;20200924151608;-19,976115;-44,003805;40861;0;655;200;2;11425';
+
+        $csv = implode("\r\n", [$header, $row1, $row2]);
+
+        Http::fake([
+            'temporeal.pbh.gov.br/*' => Http::response($csv, 200),
+        ]);
+
+        $this->artisan('real-time:fetch:entries')
+            ->assertExitCode(0);
+
+        $this->assertCount(2, RealTimeEntry::all());
+    }
+
+    /** @test */
+    function skips_invalid_events()
     {
         $header = 'EV; HR; LT; LG; NV; VL; NL; DG; SV; DT';
         $row1 = '104;20200924151103;-19,976116;-44,003806;40861;32;7419;38;1;4138';
@@ -102,7 +121,7 @@ class FetchEntriesTest extends TestCase
     }
 
     /** @test */
-    function skipts_invalid_directions()
+    function skips_invalid_directions()
     {
         $header = 'EV; HR; LT; LG; NV; VL; NL; DG; SV; DT';
         $row1 = '105;20200924151103;-19,976116;-44,003806;40861;32;7419;38;3;4138';

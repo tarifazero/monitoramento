@@ -103,7 +103,8 @@ class FetchEntries extends Command
             $latitude = (float) str_replace(',', '.', $item['LT']);
             $longitude = (float) str_replace(',', '.', $item['LG']);
 
-            if ($this->hasOverlappingEntry($vehicle, $timestamp, $latitude, $longitude)) {
+
+            if ($this->hasOverlappingEntry($vehicle, $item['SV'], $timestamp, $latitude, $longitude)) {
                 Log::debug('Overlapping entries for vehicle ' . $vehicle->id);
 
                 return;
@@ -127,7 +128,7 @@ class FetchEntries extends Command
         });
     }
 
-    protected function hasOverlappingEntry($vehicle, $timestamp, $latitude, $longitude)
+    protected function hasOverlappingEntry($vehicle, $travel_direction, $timestamp, $latitude, $longitude)
     {
         $latestEntry = $vehicle->realTimeEntries()
                                ->orderByDesc('timestamp')
@@ -141,7 +142,7 @@ class FetchEntries extends Command
             return true;
         }
 
-        if ($latestEntry->isNear($latitude, $longitude)) {
+        if ($latestEntry->travel_direction == $travel_direction && $latestEntry->isNear($latitude, $longitude)) {
             return true;
         }
 
