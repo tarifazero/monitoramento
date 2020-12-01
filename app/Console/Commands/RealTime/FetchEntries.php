@@ -88,14 +88,16 @@ class FetchEntries extends Command
             ]);
 
             // The realtime data timestamp comes in a YYYYMMDDHHmmSS format
+            // and in local timezone
             $timestamp = Carbon::create(
                 Str::substr($item['HR'], 0, 4), // Year
                 Str::substr($item['HR'], 4, 2), // Month
                 Str::substr($item['HR'], 6, 2), // Day
                 Str::substr($item['HR'], 8, 2), // Hour
                 Str::substr($item['HR'], 10, 2), // Minute
-                Str::substr($item['HR'], 12, 2) // Second
-            );
+                Str::substr($item['HR'], 12, 2), // Second
+                config('app.local_timezone')
+            )->setTimezone(config('app.timezone'));
 
             // The realtime data uses commas as decimal separators
             $latitude = (float) str_replace(',', '.', $item['LT']);
