@@ -36,18 +36,19 @@ class TripDelays extends Component
             ->groupBy('direction_id');
     }
 
-    public function getClosestDeparture($trip)
+    public function getClosestArrival($trip)
     {
-        $departureStopTime = $trip->getDepartureStopTime();
+        $arrivalStopTime = $trip->getArrivalStopTime();
 
         return RealTimeEntry::whereRoute($this->route)
             ->whereBetween('timestamp', [$this->startTime, $this->endTime])
-            ->whereNear($departureStopTime->stop->latitude, $departureStopTime->stop->longitude)
+            ->where('travel_direction', $trip->real_time_direction)
+            ->whereNear($arrivalStopTime->stop->latitude, $arrivalStopTime->stop->longitude)
             ->get()
-            ->sortBy(function ($entry) use ($departureStopTime) {
+            ->sortBy(function ($entry) use ($arrivalStopTime) {
                 return abs(Carbon::createFromFormat(
                     'H:i:s',
-                    $departureStopTime->departure_time,
+                    $arrivalStopTime->arrival_time,
                     config('app.local_timezone')
                 )->diffInMinutes($entry->timestamp));
             })
