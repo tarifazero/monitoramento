@@ -43,7 +43,7 @@ class TripDelays extends Component
         return RealTimeEntry::whereRoute($this->route)
             ->whereBetween('timestamp', [$this->startTime, $this->endTime])
             ->where('travel_direction', $trip->real_time_direction)
-            ->whereNear($arrivalStopTime->stop->latitude, $arrivalStopTime->stop->longitude)
+            ->whereNear($arrivalStopTime->stop->latitude, $arrivalStopTime->stop->longitude, 100)
             ->get()
             ->sortBy(function ($entry) use ($arrivalStopTime) {
                 return abs(Carbon::createFromFormat(
