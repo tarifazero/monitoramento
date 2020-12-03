@@ -17,6 +17,10 @@
                         Chegada efetiva
                     </th>
 
+                    <th class="text-center px-4 py-1">
+                        ID Ponto final
+                    </th>
+
                 </tr>
             </thead>
 
@@ -38,12 +42,16 @@
                             @endphp
 
                             @if ($closestArrival)
-                                {{ $closestArrival->timestamp->format('H:i:s') }}
+                                {{ $closestArrival->timestamp->setTimezone(config('app.local_timezone'))->format('H:i:s') }}
                                 -
                                 {{ $closestArrival->vehicle_id }}
                             @else
                                 -
                             @endif
+                        </td>
+
+                        <td class="text-center px-4 py-1">
+                            {{ $trip->getArrivalStopTime()->stop_id }}
                         </td>
 
                     </tr>
