@@ -67,7 +67,7 @@ class RealTimeEntry extends Model
         );
     }
 
-    public function isNear($latitude, $longitude, $distance = 20)
+    public function isNear($latitude, $longitude, $distance = 40)
     {
         $geotools = new Geotools();
         $from = new Coordinate([$this->latitude, $this->longitude]);

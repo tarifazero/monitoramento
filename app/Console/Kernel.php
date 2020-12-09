@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('real-time:fetch:entries')
-                 ->everyTwoMinutes()
+                 ->everyMinute()
                  ->withoutOverlapping(5);
 
         $schedule->command('real-time:fetch:routes')
