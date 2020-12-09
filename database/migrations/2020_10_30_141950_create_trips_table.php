@@ -25,7 +25,7 @@ class CreateTripsTable extends Migration
                   ->constrained()
                   ->onDelete('cascade');
             $table->string('gtfs_id')
-                  ->unique();
+                  ->index();
             $table->string('headsign');
             $table->enum('direction_id', [0, 1]);
         });

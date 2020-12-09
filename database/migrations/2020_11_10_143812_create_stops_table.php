@@ -19,12 +19,12 @@ class CreateStopsTable extends Migration
                   ->constrained()
                   ->onDelete('cascade');
             $table->string('gtfs_id')
-                  ->unique();
+                  ->index();
             $table->string('name');
             $table->double('latitude');
             $table->double('longitude');
             $table->enum('location_type', [0, 1, 2, 3, 4])
-                ->default(0);
+                  ->default(0);
             $table->foreignId('parent_station')
                   ->nullable()
                   ->constrained('stops')
