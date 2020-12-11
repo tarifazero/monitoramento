@@ -6,13 +6,6 @@
                 <tr>
 
                     <th class="text-center px-4 py-1">
-                        ID viagem
-                    </th>
-                    <th class="text-center px-4 py-1">
-                        ID do serviço
-                    </th>
-
-                    <th class="text-center px-4 py-1">
                         Saída prevista
                     </th>
 
@@ -34,13 +27,6 @@
             <tbody>
                 @foreach ($direction as $trip)
                     <tr>
-                        <td class="text-center px-4 py-1">
-                            {{ $trip->id }}
-                        </td>
-
-                        <td class="text-center px-4 py-1">
-                            {{ $trip->service_id }}
-                        </td>
 
                         <td class="text-center px-4 py-1">
                             {{ $trip->getDepartureStopTime()->departure_time }}
