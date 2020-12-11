@@ -138,7 +138,7 @@ class FetchEntries extends Command
             return false;
         }
 
-        if ($latestEntry->timestamp->diffInMinutes($timestamp) < 2) {
+        if ($latestEntry->timestamp->diffInMinutes($timestamp) < 1) {
             return true;
         }
 
