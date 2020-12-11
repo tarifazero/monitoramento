@@ -105,8 +105,6 @@ class FetchEntries extends Command
 
 
             if ($this->hasOverlappingEntry($vehicle, $item['SV'], $timestamp, $latitude, $longitude)) {
-                Log::debug('Overlapping entries for vehicle ' . $vehicle->id);
-
                 return;
             }
 
