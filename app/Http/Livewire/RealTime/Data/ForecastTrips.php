@@ -23,7 +23,7 @@ class ForecastTrips extends Component
 
     public function getForecastTripsCountProperty()
     {
-        return Trip::forDate(today())
+        return Trip::forDate($this->startTime->toDateString())
             ->when($this->route, function ($query, $route) {
                 $query->whereIn('route_id', $this->route->toFlatTree()->pluck('id'));
             })

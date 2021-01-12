@@ -3,30 +3,32 @@
 namespace App\Http\Livewire\RealTime;
 
 use App\Models\Route;
-use DateTimeZone;
 use Livewire\Component;
 
 class RouteData extends Component
 {
-    protected $route;
+    public $route;
 
-    public function mount($route = null)
+    public $date;
+
+    public function mount($route = null, $date = null)
     {
         $this->route = $route;
+        $this->date = $date;
     }
 
     public function getLocalizedStartTimeProperty()
     {
-        return today(new DateTimeZone(config('app.local_timezone')))
-            ->startOfDay()
-            ->setTimezone(config('app.timezone'));
+        return $this->date
+                    ->startOfDay()
+                    ->setTimezone(config('app.timezone'));
     }
 
     public function getLocalizedEndTimeProperty()
     {
-        return today(new DateTimeZone(config('app.local_timezone')))
-            ->endOfDay()
-            ->setTimezone(config('app.timezone'));
+        return $this->date
+                    ->endOfDay()
+                    ->setTimezone(config('app.timezone'));
     }
 
     public function render()
