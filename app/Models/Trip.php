@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CalendarDate;
 use App\Scopes\LatestGtfsFetchScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,12 +42,11 @@ class Trip extends Model
 
     public function scopeForDate($query, $date)
     {
-        return $query->where('service_id', function ($query) use ($date) {
-            $query->select('service_id')
-                  ->from('calendar_dates')
-                  ->where('date', $date)
-                  ->limit(1);
-        });
+        $serviceId = optional(
+            CalendarDate::where('date', $date)->first()
+        )->service_id;
+
+        return $query->where('service_id', $serviceId);
     }
 
     public function scopeWhereRoute($query, $route)
