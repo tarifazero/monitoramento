@@ -20,6 +20,7 @@ class RouteData extends Component
     public function getLocalizedStartTimeProperty()
     {
         return $this->date
+                    ->copy()
                     ->startOfDay()
                     ->setTimezone(config('app.timezone'));
     }
@@ -27,6 +28,7 @@ class RouteData extends Component
     public function getLocalizedEndTimeProperty()
     {
         return $this->date
+                    ->copy()
                     ->endOfDay()
                     ->setTimezone(config('app.timezone'));
     }
