@@ -22,14 +22,6 @@
             :route="$route"
         />
 
-        @if ($route)
-            <livewire:real-time.data.trip-delays
-                :start-time="$this->localizedStartTime"
-                :end-time="$this->localizedEndTime"
-                :route="$route"
-            />
-        @endif
-
     </div>
 
 </div>
