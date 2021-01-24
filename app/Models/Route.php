@@ -75,4 +75,12 @@ class Route extends Model
             $route->update(['parent_id' => $parent->id]);
         });
     }
+
+    public function hasRealTimeId()
+    {
+        return $this->toFlatTree()
+                    ->pluck('real_time_id')
+                    ->filter()
+                    ->count() > 0;
+    }
 }

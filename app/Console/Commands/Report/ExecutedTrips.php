@@ -69,7 +69,7 @@ class ExecutedTrips extends Command
                 return null;
             }
 
-            if (! $route->real_time_id) {
+            if (! $route->hasRealTimeId()) {
                 return [
                     $route->short_name,
                     $trips->count(),
