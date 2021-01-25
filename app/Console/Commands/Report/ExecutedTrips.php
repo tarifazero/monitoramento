@@ -70,11 +70,7 @@ class ExecutedTrips extends Command
             }
 
             if (! $route->hasRealTimeId()) {
-                return [
-                    $route->short_name,
-                    $trips->count(),
-                    '-',
-                ];
+                return null;
             }
 
             $finalStops = $trips->map(function ($trip) {
@@ -108,6 +104,22 @@ class ExecutedTrips extends Command
 
                 $arrivals = $arrivals->merge($newArrivals);
             });
+
+            $arrivals = $arrivals ->groupBy('vehicle_id')
+                                  ->map(function ($arrivals) {
+                                      $previousArrival = null;
+
+                                      return $arrivals->sortBy('timestamp')
+                                                      ->filter(function ($arrival) use (&$previousArrival) {
+                                                          $duplicate = $previousArrival
+                                                              && $arrival->timestamp->diffInMinutes($previousArrival->timestamp) < 20;
+
+                                                          $previousArrival = $arrival;
+
+                                                          return ! $duplicate;
+                                                      });
+                                  })
+                                  ->flatten(1);
 
             return [
                 $route->short_name,
