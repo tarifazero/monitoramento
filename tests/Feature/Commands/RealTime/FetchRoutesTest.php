@@ -140,4 +140,22 @@ class FetchRoutesTest extends TestCase
 
         $this->artisan('real-time:fetch:routes');
     }
+
+    /** @test */
+    function fixes_route_names_with_dates()
+    {
+        $header = 'NumeroLinha;Linha;Nome';
+        $row1 = '1;31/mar;JATOBA / HOSPITAIS';
+
+        $csv = implode("\r\n", [$header, $row1]);
+
+        Http::fake([
+            'servicosbhtrans.pbh.gov.br/*' => Http::response($csv, 200),
+        ]);
+
+        $this->artisan('real-time:fetch:routes')
+            ->assertExitCode(0);
+
+        $this->assertTrue(Route::where('short_name', '31-03')->exists());
+    }
 }

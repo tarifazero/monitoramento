@@ -81,10 +81,40 @@ class FetchRoutes extends Command
                     'type' => Route::TYPE_BUS,
                 ],
                 [
-                    'short_name' => ltrim($route['Linha'], '0'),
+                    'short_name' => $this->fixRouteShortName($route['Linha']),
                     'long_name' => $route['Nome'],
                 ],
             );
         });
+    }
+
+    protected function fixRouteShortName($name)
+    {
+        $name = ltrim($name, '0');
+
+        $months = collect([
+            '/jan' => '-01',
+            '/fev' => '-02',
+            '/mar' => '-03',
+            '/abr' => '-04',
+            '/mai' => '-05',
+            '/jun' => '-06',
+            '/jul' => '-07',
+            '/ago' => '-08',
+            '/set' => '-09',
+            '/out' => '-10',
+            '/nov' => '-11',
+            '/dez' => '-12',
+        ]);
+
+        if (! Str::contains($name, $months->keys()->toArray())) {
+            return $name;
+        }
+
+        $months->each(function ($number, $month) use (&$name) {
+            $name = str_replace($month, $number, $name);
+        });
+
+        return $name;
     }
 }
