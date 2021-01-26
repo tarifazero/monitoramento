@@ -80,7 +80,7 @@ class Trip extends Model
         $directionMap = collect([
             collect([
                 'gtfs' => 0,
-                'real_time' => 2,
+                'real_time' => 1,
             ]),
             collect([
                 'gtfs' => 1,
