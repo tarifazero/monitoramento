@@ -122,6 +122,7 @@ class FetchEntries extends Command
                 'longitude' => $longitude,
                 'speed' => $item['VL'],
                 'travel_direction' => $item['SV'],
+                'distance' => $item['DT'],
             ]);
         });
     }
