@@ -22,7 +22,7 @@ class ExecutedTrips extends Command
      *
      * @var string
      */
-    protected $description = 'Generate a CSV report of the executed trips for a date';
+    protected $description = 'Generate a report of the executed trips for a date';
 
     /**
      * Create a new command instance.
@@ -105,21 +105,34 @@ class ExecutedTrips extends Command
                 $arrivals = $arrivals->merge($newArrivals);
             });
 
-            $arrivals = $arrivals ->groupBy('vehicle_id')
-                                  ->map(function ($arrivals) {
-                                      $previousArrival = null;
+            $arrivals = $arrivals->groupBy('vehicle_id')
+                                 ->map(function ($arrivals) {
+                                     $arrivals = $arrivals->sortBy('timestamp')
+                                                          ->values();
 
-                                      return $arrivals->sortBy('timestamp')
-                                                      ->filter(function ($arrival) use (&$previousArrival) {
-                                                          $duplicate = $previousArrival
-                                                              && $arrival->timestamp->diffInMinutes($previousArrival->timestamp) < 20;
+                                     return $arrivals->filter(function ($arrival, $index) use ($arrivals) {
+                                         if ($index === 0) {
+                                             return true;
+                                         }
 
-                                                          $previousArrival = $arrival;
+                                         $previousArrival = $arrivals->get($index - 1);
 
-                                                          return ! $duplicate;
-                                                      });
-                                  })
-                                  ->flatten(1);
+                                         if ($arrival->timestamp->diffInMinutes($previousArrival->timestamp) < 20) {
+                                             return false;
+                                         }
+
+                                         if (is_null($arrival->distance) || is_null($previousArrival->distance)) {
+                                             return true;
+                                         }
+
+                                         if (abs($arrival->distance - $previousArrival->distance) < 500) {
+                                             return false;
+                                         }
+
+                                         return true;
+                                     });
+                                 })
+                                 ->flatten(1);
 
             return [
                 $route->short_name,
