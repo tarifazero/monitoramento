@@ -121,14 +121,6 @@ class ExecutedTrips extends Command
                                              return false;
                                          }
 
-                                         if (is_null($arrival->distance) || is_null($previousArrival->distance)) {
-                                             return true;
-                                         }
-
-                                         if (abs($arrival->distance - $previousArrival->distance) < 500) {
-                                             return false;
-                                         }
-
                                          return true;
                                      });
                                  })
