@@ -34,6 +34,15 @@ services:
             - sail
         healthcheck:
           test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+    pgsql_tests:
+        image: postgres:13
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
