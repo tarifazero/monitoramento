@@ -49,8 +49,10 @@ class ExecutedTrips extends Command
             ->endOfDay()
             ->setTimezone(config('app.timezone'));
 
-        $routes = Route::main()
-            ->whereNotNull('short_name')
+        $routes = Route::whereNotNull('short_name')
+            ->whereNotNull('gtfs_id')
+            ->whereNotNull('real_time_id')
+            ->orderBy('short_name', 'ASC')
             ->get();
 
         $bar = $this->output->createProgressBar($routes->count());
@@ -62,14 +64,10 @@ class ExecutedTrips extends Command
 
             $trips = Trip::forDate($startOfDay)
                 ->with('stopTimes.stop')
-                ->whereRoute($route)
+                ->where('route_id', $route->id)
                 ->get();
 
             if (! $trips->count()) {
-                return null;
-            }
-
-            if (! $route->hasRealTimeId()) {
                 return null;
             }
 
@@ -96,7 +94,7 @@ class ExecutedTrips extends Command
             $arrivals = collect();
 
             $finalStops->each(function ($finalStop) use ($route, $startOfDay, $endOfDay, &$arrivals) {
-                $newArrivals = RealTimeEntry::whereRoute($route)
+                $newArrivals = RealTimeEntry::where('route_id', $route->id)
                     ->whereBetween('timestamp', [$startOfDay, $endOfDay])
                     ->where('travel_direction', $finalStop['travel_direction'])
                     ->whereNear($finalStop['latitude'], $finalStop['longitude'], 100)
@@ -128,15 +126,27 @@ class ExecutedTrips extends Command
 
             return [
                 $route->short_name,
+                $route->long_name,
                 $trips->count(),
                 $arrivals->count(),
+                $finalStops->count(),
+                $arrivals->unique('travel_direction')->count(),
+                $arrivals->unique('vehicle_id')->count(),
             ];
         })->filter();
 
         $bar->finish();
 
         $this->table(
-            ['Route', 'Forecast trips', 'Completed trips'],
+            [
+                'Route',
+                'Name',
+                'Forecast trips',
+                'Completed trips',
+                'Final stops',
+                'Directions',
+                'Vehicles',
+            ],
             $routes->toArray()
         );
 
