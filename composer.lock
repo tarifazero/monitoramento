@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc69720963f5c79ab1ed9623b3112081",
+    "content-hash": "44a3d6846dcfb5c189dd36a369a0e449",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -64,16 +64,16 @@
         },
         {
             "name": "blade-ui-kit/blade-icons",
-            "version": "0.4.5",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/blade-ui-kit/blade-icons.git",
-                "reference": "b93505c65a1fc095df517d5640bae295779411e6"
+                "reference": "d6bb74cdf0420900d14c6bc2304e28d0463dd0a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/blade-ui-kit/blade-icons/zipball/b93505c65a1fc095df517d5640bae295779411e6",
-                "reference": "b93505c65a1fc095df517d5640bae295779411e6",
+                "url": "https://api.github.com/repos/blade-ui-kit/blade-icons/zipball/d6bb74cdf0420900d14c6bc2304e28d0463dd0a9",
+                "reference": "d6bb74cdf0420900d14c6bc2304e28d0463dd0a9",
                 "shasum": ""
             },
             "require": {
@@ -81,10 +81,9 @@
                 "illuminate/filesystem": "^7.14|^8.0",
                 "illuminate/support": "^7.14|^8.0",
                 "illuminate/view": "^7.14|^8.0",
-                "php": "^7.2"
+                "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
                 "mockery/mockery": "^1.3",
                 "orchestra/testbench": "^5.0|^6.0",
                 "phpunit/phpunit": "^8.0|^9.0"
@@ -111,10 +110,6 @@
             ],
             "authors": [
                 {
-                    "name": "Adam Wathan",
-                    "email": "adam.wathan@gmail.com"
-                },
-                {
                     "name": "Dries Vints",
                     "email": "dries@vints.io",
                     "homepage": "https://driesvints.com",
@@ -139,7 +134,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-04T11:36:46+00:00"
+            "time": "2020-11-05T20:40:53+00:00"
         },
         {
             "name": "brick/math",
@@ -1538,25 +1533,24 @@
         },
         {
             "name": "khatabwedaa/blade-css-icons",
-            "version": "0.1.3",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/khatabwedaa/blade-css-icons.git",
-                "reference": "ebbce0bc0184aac83fed61559f135cc9134d1c99"
+                "reference": "9798a6e9604a47b48d50798e9a18ca70dd1c266c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/khatabwedaa/blade-css-icons/zipball/ebbce0bc0184aac83fed61559f135cc9134d1c99",
-                "reference": "ebbce0bc0184aac83fed61559f135cc9134d1c99",
+                "url": "https://api.github.com/repos/khatabwedaa/blade-css-icons/zipball/9798a6e9604a47b48d50798e9a18ca70dd1c266c",
+                "reference": "9798a6e9604a47b48d50798e9a18ca70dd1c266c",
                 "shasum": ""
             },
             "require": {
-                "blade-ui-kit/blade-icons": "^0.4.5",
+                "blade-ui-kit/blade-icons": "^0.5.0",
                 "illuminate/support": "^7.14|^8.0",
-                "php": "^7.2"
+                "php": "^7.3|^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.16",
                 "orchestra/testbench": "^5.0|^6.0",
                 "phpunit/phpunit": "^8.0|^9.0"
             },
@@ -1594,9 +1588,9 @@
             ],
             "support": {
                 "issues": "https://github.com/khatabwedaa/blade-css-icons/issues",
-                "source": "https://github.com/khatabwedaa/blade-css-icons/tree/1.3.0"
+                "source": "https://github.com/khatabwedaa/blade-css-icons/tree/0.2.0"
             },
-            "time": "2020-09-09T19:36:35+00:00"
+            "time": "2020-11-26T18:22:28+00:00"
         },
         {
             "name": "laravel/framework",
@@ -9119,7 +9113,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3"
+        "php": "^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
