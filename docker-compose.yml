@@ -20,7 +20,7 @@ services:
         depends_on:
             - pgsql
     pgsql:
-        image: postgres:13
+        image: timescale/timescaledb-postgis:latest-pg12
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -35,7 +35,7 @@ services:
         healthcheck:
           test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
     pgsql_tests:
-        image: postgres:13
+        image: timescale/timescaledb-postgis:latest-pg12
         environment:
             PGPASSWORD: '${DB_PASSWORD:-secret}'
             POSTGRES_DB: '${DB_DATABASE}'
