@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
+use App\Models\Concerns\HasHypertable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use League\Geotools\Geotools;
@@ -10,7 +10,7 @@ use League\Geotools\Coordinate\Coordinate;
 
 class RealTimeEntry extends Model
 {
-    use HasFactory, HasUuid;
+    use HasFactory, HasHypertable;
 
     const VALID_EVENTS = [105];
 
@@ -28,7 +28,7 @@ class RealTimeEntry extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
     /**
      * The attributes that should be cast.
