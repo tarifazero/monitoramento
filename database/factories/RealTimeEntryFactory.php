@@ -45,13 +45,4 @@ class RealTimeEntryFactory extends Factory
             ];
         });
     }
-
-    public function processed()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'processed_at' => now(),
-            ];
-        });
-    }
 }
