@@ -20,6 +20,8 @@ class CreateRealTimeEntriesHypertable extends Migration
         });
 
         DB::statement("SELECT create_hypertable('real_time_entries', 'timestamp', migrate_data=>TRUE);");
+        DB::statement("CREATE INDEX ON real_time_entries(vehicle_id, timestamp DESC)");
+        DB::statement("CREATE INDEX ON real_time_entries(route_id, timestamp DESC)");
     }
 
     /**
