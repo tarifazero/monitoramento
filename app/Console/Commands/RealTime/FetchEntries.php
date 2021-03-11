@@ -83,9 +83,6 @@ class FetchEntries extends Command
                 // TODO: log this
                 return;
             }
-            $vehicle = Vehicle::firstOrCreate([
-                'real_time_id' => $item['NV'],
-            ]);
 
             // The realtime data timestamp comes in a YYYYMMDDHHmmSS format
             // and in local timezone
@@ -99,10 +96,18 @@ class FetchEntries extends Command
                 config('app.local_timezone')
             )->setTimezone(config('app.timezone'));
 
+            if ($timestamp->greaterThan(now())) {
+                // TODO: log this
+                return;
+            }
+
+            $vehicle = Vehicle::firstOrCreate([
+                'real_time_id' => $item['NV'],
+            ]);
+
             // The realtime data uses commas as decimal separators
             $latitude = (float) str_replace(',', '.', $item['LT']);
             $longitude = (float) str_replace(',', '.', $item['LG']);
-
 
             if ($this->hasOverlappingEntry($vehicle, $item['SV'], $timestamp, $latitude, $longitude)) {
                 return;
