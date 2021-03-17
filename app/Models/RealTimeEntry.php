@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasHypertable;
+use App\Models\Concerns\IsTimeSeries;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use League\Geotools\Geotools;
@@ -10,7 +10,7 @@ use League\Geotools\Coordinate\Coordinate;
 
 class RealTimeEntry extends Model
 {
-    use HasFactory, HasHypertable;
+    use HasFactory, IsTimeSeries;
 
     const VALID_EVENTS = [105];
 

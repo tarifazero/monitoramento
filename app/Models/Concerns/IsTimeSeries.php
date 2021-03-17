@@ -2,9 +2,9 @@
 
 namespace App\Models\Concerns;
 
-trait HasHypertable
+trait IsTimeSeries
 {
-    protected static function bootHasUuid()
+    protected static function bootIsTimeSeries()
     {
         static::creating(function ($model) {
             $model->timestamp = $model->timestamp ?? now();
