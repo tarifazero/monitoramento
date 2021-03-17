@@ -14,10 +14,10 @@ class CreateRealTimeEntriesTable extends Migration
         Schema::create('real_time_entries', function (Blueprint $table) {
             $table->uuid('id')
                   ->primary();
-            $table->integer('vehicle_id')
+            $table->foreignId('vehicle_id')
                   ->constrained()
                   ->onDelete('cascade');
-            $table->integer('route_id')
+            $table->foreignId('route_id')
                   ->constrained()
                   ->onDelete('cascade');
             $table->dateTime('timestamp')
