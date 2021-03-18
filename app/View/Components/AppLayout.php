@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components\Layouts;
+namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class App extends Component
+class AppLayout extends Component
 {
     /**
      * Create a new component instance.

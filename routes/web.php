@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', RealTime::class);
+Route::view('/', 'home');
 Route::get('/linha/{routeShortName}', RealTime::class)->name('routes.show');
