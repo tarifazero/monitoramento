@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Livewire\RealTime;
+use App\Http\Livewire\Fleet;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'home');
-Route::get('/linha/{routeShortName}', RealTime::class)->name('routes.show');
+Route::get('/frota', Fleet::class)->name('fleet');

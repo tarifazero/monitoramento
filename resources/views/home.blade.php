@@ -34,7 +34,7 @@
 
             <li class="w-full md:w-1/2 h-full">
                 <a
-                    href="#"
+                    href="{{ route('fleet') }}"
                     class="relative block text-xl text-center text-pink font-work font-bold uppercase h-full group"
                 >
 
