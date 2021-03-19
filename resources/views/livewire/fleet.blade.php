@@ -24,7 +24,7 @@
                     </span>
 
                     <span class="block text-4xl font-work font-extrabold">
-                        XXXXXX
+                        {{ $this->activeFleet }}
                     </span>
 
                 </p>
@@ -44,7 +44,7 @@
                         </span>
 
                         <span class="block text-4xl font-work font-extrabold">
-                            XXXXXX
+                            {{ $this->activeVehicles }}
                         </span>
 
                         <span>
@@ -60,15 +60,15 @@
                     <p class="flex flex-col items-center justify-center h-full">
 
                         <span>
-                            Neste exato momento,
+                            Isto representa
                         </span>
 
                         <span class="block text-4xl font-work font-extrabold">
-                            XXXXXX
+                            {{ $this->activeVehiclesPercentage }}%
                         </span>
 
                         <span>
-                            ônibus estão circulando na cidade
+                            da frota total disponível
                         </span>
 
                     </p>
