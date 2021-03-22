@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Indicators\ActiveFleetMonthly;
 use App\Models\Vehicle;
 use Livewire\Component;
 
@@ -9,11 +10,7 @@ class Fleet extends Component
 {
     public function getActiveFleetProperty()
     {
-        $dateThreshold = now()->startOfMonth()->subMonth();
-
-        return Vehicle::whereHas('realTimeEntries', function ($query) use ($dateThreshold) {
-            $query->where('timestamp', '>=', $dateThreshold);
-        })->count();
+        return ActiveFleetMonthly::latest('timestamp')->first()->value;
     }
 
     public function getActiveVehiclesProperty()

@@ -32,5 +32,6 @@ class DropHypertables
         }
 
         DB::statement('drop table if exists real_time_entries');
+        DB::statement('drop table if exists indicator_active_fleet_monthly');
     }
 }
