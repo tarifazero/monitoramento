@@ -12,7 +12,7 @@ class Fleet extends Component
     {
         return ActiveFleetMonthly::latest()
             ->first()
-            ->value;
+            ?->value;
     }
 
     public function getActiveVehiclesProperty()
