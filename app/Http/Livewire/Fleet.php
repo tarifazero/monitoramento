@@ -10,7 +10,9 @@ class Fleet extends Component
 {
     public function getActiveFleetProperty()
     {
-        return ActiveFleetMonthly::latest('timestamp')->first()->value;
+        return ActiveFleetMonthly::latest()
+            ->first()
+            ->value;
     }
 
     public function getActiveVehiclesProperty()
@@ -24,6 +26,10 @@ class Fleet extends Component
 
     public function getActiveVehiclesPercentageProperty()
     {
+        if (! $this->activeFleet) {
+            return 0;
+        }
+
         return round($this->activeVehicles / $this->activeFleet);
     }
 

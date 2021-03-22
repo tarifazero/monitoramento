@@ -2,6 +2,8 @@
 
 namespace App\Models\Concerns;
 
+use App\Builders\TimeSeriesBuilder;
+
 trait IsTimeSeries
 {
     protected static function bootIsTimeSeries()
@@ -19,5 +21,10 @@ trait IsTimeSeries
     public function getIncrementing()
     {
         return false;
+    }
+
+    public function newEloquentBuilder($query)
+    {
+        return new TimeSeriesBuilder($query);
     }
 }
