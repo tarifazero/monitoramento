@@ -30,7 +30,7 @@ class Fleet extends Component
             return 0;
         }
 
-        return round($this->activeVehicles / $this->activeFleet);
+        return round(100 * $this->activeVehicles / $this->activeFleet);
     }
 
     public function render()
