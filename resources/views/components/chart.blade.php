@@ -10,7 +10,7 @@
                         data: JSON.parse('{{ json_encode($values) }}'),
                         borderColor: '#FFCA44',
                         borderWidth: 6,
-                        backgroundColor: 'rgba(255, 202, 68, 0.5)',
+                        backgroundColor: 'rgba(255, 235, 107, 0.5)',
                     }],
                 },
                 options: {
