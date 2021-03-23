@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Console\Indicator;
+namespace Tests\Feature\Commands\Indicator;
 
 use App\Models\Indicators\ActiveFleetMonthly;
 use App\Models\RealTimeEntry;
