@@ -24,7 +24,7 @@
                     </span>
 
                     <span class="block text-4xl font-work font-extrabold">
-                        {{ $this->activeFleet }}
+                        {{ $this->monthlyActiveFleet }}
                     </span>
 
                 </p>
@@ -44,7 +44,7 @@
                         </span>
 
                         <span class="block text-4xl font-work font-extrabold">
-                            {{ $this->activeVehicles }}
+                            {{ $this->currentActiveFleet }}
                         </span>
 
                         <span>
@@ -64,7 +64,7 @@
                         </span>
 
                         <span class="block text-4xl font-work font-extrabold">
-                            {{ $this->activeVehiclesPercentage }}%
+                            {{ $this->currentActiveFleetPercentage }}%
                         </span>
 
                         <span>

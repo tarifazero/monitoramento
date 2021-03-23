@@ -8,14 +8,14 @@ use Livewire\Component;
 
 class Fleet extends Component
 {
-    public function getActiveFleetProperty()
+    public function getMonthlyActiveFleetProperty()
     {
         return ActiveFleetMonthly::latest()
             ->first()
             ?->value;
     }
 
-    public function getActiveVehiclesProperty()
+    public function getCurrentActiveFleetProperty()
     {
         $dateThreshold = now()->subminutes(5);
 
@@ -24,13 +24,13 @@ class Fleet extends Component
         })->count();
     }
 
-    public function getActiveVehiclesPercentageProperty()
+    public function getCurrentActiveFleetPercentageProperty()
     {
-        if (! $this->activeFleet) {
+        if (! $this->monthlyActiveFleet) {
             return 0;
         }
 
-        return round(100 * $this->activeVehicles / $this->activeFleet);
+        return round(100 * $this->currentActiveFleet / $this->monthlyActiveFleet);
     }
 
     public function render()
