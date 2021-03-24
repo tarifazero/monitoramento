@@ -18,26 +18,16 @@ class Historical extends Component
 
     public function getDailyAverageActiveFleetProperty()
     {
-        $yesterday = now(config('app.local_timezone'))->subDay();
+        $timezone = config('app.local_timezone');
 
         return DB::table('indicator_active_fleet_hourly')
-            ->selectRaw('date_trunc(\'day\', "timestamp") as day, AVG(value) as value')
-            ->whereBetween('timestamp', [
-                $yesterday->copy()
-                          ->subDays(30)
-                          ->startOfDay()
-                          ->setTimezone(config('app.timezone')),
-                $yesterday->copy()
-                          ->endOfDay()
-                          ->setTimezone(config('app.timezone')),
-            ])
+            ->selectRaw("date_trunc('day', \"timestamp\" at time zone '{$timezone}') as day, AVG(value) as value")
             ->groupBy('day')
             ->orderBy('day', 'DESC')
+            ->limit(30)
             ->get()
             ->map(function ($item) {
-                $label = (new Carbon($item->day))
-                              ->setTimezone(config('app.local_timezone'))
-                              ->format('d M');
+                $label = (new Carbon($item->day))->format('d M');
 
                 $value = $this->monthlyActiveFleet
                     ? round(100 * $item->value / $this->monthlyActiveFleet)
