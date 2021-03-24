@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Fleet;
 
-use App\Models\Indicators\ActiveFleetHourly;
 use App\Models\Indicators\ActiveFleetMonthly;
-use App\Models\Vehicle;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-class Fleet extends Component
+class Historical extends Component
 {
+    public function getMonthlyActiveFleetProperty()
+    {
+        return ActiveFleetMonthly::latest()
+            ->first()
+            ?->value;
+    }
+
     public function getDailyAverageActiveFleetProperty()
     {
         $yesterday = now(config('app.local_timezone'))->subDay();
@@ -39,9 +44,8 @@ class Fleet extends Component
             })
             ->reverse();
     }
-
     public function render()
     {
-        return view('livewire.fleet');
+        return view('livewire.fleet.historical');
     }
 }
