@@ -40,6 +40,12 @@ class Kernel extends ConsoleKernel
                      Artisan::call('gtfs:process:stops');
                      Artisan::call('gtfs:process:stop-times');
                  });
+
+        $schedule->command('indicator:calculate:active-fleet-hourly')
+                 ->hourly();
+
+        $schedule->command('indicator:calculate:active-fleet-monthly')
+                 ->monthly();
     }
 
     /**
