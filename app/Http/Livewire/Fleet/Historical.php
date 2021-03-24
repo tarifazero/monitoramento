@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Fleet;
 
 use App\Models\Indicators\ActiveFleetMonthly;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -33,8 +34,10 @@ class Historical extends Component
             ->groupBy('day')
             ->orderBy('day', 'DESC')
             ->get()
-            ->map(function ($item, $index) {
-                $label = $index;
+            ->map(function ($item) {
+                $label = (new Carbon($item->day))
+                              ->setTimezone(config('app.local_timezone'))
+                              ->format('d M');
 
                 $value = $this->monthlyActiveFleet
                     ? round(100 * $item->value / $this->monthlyActiveFleet)
