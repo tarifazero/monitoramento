@@ -45,6 +45,11 @@ class Yesterday extends Component
         });
     }
 
+    public function getAverageActiveFleetProperty()
+    {
+        return  round($this->hourlyActiveFleet->average('value'));
+    }
+
     public function render()
     {
         return view('livewire.fleet.yesterday');

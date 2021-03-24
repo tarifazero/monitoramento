@@ -92,7 +92,7 @@
                 </span>
 
                 <span class="block text-4xl font-work font-extrabold">
-                    {{ $this->hourlyActiveFleet->average('value') }}%
+                    {{ $this->averageActiveFleet }}%
                 </span>
 
             </p>
