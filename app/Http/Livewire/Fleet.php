@@ -23,7 +23,6 @@ class Fleet extends Component
 
     public function getHourlyActiveFleetProperty()
     {
-
         return ActiveFleetHourly::whereBetween('timestamp', [
             $this->yesterday->copy()
                             ->startOfDay()
@@ -45,6 +44,12 @@ class Fleet extends Component
 
             return compact('label', 'value');
         });
+    }
+
+    public function getAverageActiveFleetProperty()
+    {
+        return $this->hourlyActiveFleet
+                    ->average('value');
     }
 
     public function getCurrentActiveFleetProperty()
