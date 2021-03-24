@@ -48,8 +48,7 @@ class Fleet extends Component
 
     public function getAverageActiveFleetProperty()
     {
-        return $this->hourlyActiveFleet
-                    ->average('value');
+        return round($this->hourlyActiveFleet->average('value'));
     }
 
     public function getCurrentActiveFleetProperty()
