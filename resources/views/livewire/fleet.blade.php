@@ -16,4 +16,8 @@
         <livewire:fleet.historical />
     </section>
 
+    <section class="mt-12">
+        <livewire:fleet.routes />
+    </section>
+
 </div>

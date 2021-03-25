@@ -17,7 +17,7 @@ class Snapshot extends Component
 
     public function getCurrentActiveFleetProperty()
     {
-        $dateThreshold = now()->subminutes(5);
+        $dateThreshold = now()->subMinutes(5);
 
         return Vehicle::whereHas('realTimeEntries', function ($query) use ($dateThreshold) {
             $query->where('timestamp', '>=', $dateThreshold);
