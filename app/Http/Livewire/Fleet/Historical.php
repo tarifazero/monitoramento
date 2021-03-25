@@ -9,6 +9,8 @@ use Livewire\Component;
 
 class Historical extends Component
 {
+    public $daysLimit = 30;
+
     public function getMonthlyActiveFleetProperty()
     {
         return ActiveFleetMonthly::latest()
@@ -25,11 +27,12 @@ class Historical extends Component
             ->selectRaw("date_trunc('day', \"timestamp\" at time zone '{$timezone}' at time zone '{$local_timezone}') as day, AVG(value) as value")
             ->groupBy('day')
             ->orderBy('day', 'DESC')
-            ->limit(30)
+            ->limit($this->daysLimit)
             ->offset(1)
             ->get()
             ->map(function ($item) {
-                $label = (new Carbon($item->day))->format('d M');
+                $label = (new Carbon($item->day))
+                    ->format('d M');
 
                 $value = $this->monthlyActiveFleet
                     ? round(100 * $item->value / $this->monthlyActiveFleet)
@@ -39,6 +42,24 @@ class Historical extends Component
             })
             ->reverse();
     }
+
+    public function getLabelsProperty()
+    {
+        return $this->dailyAverageActiveFleet->pluck('label');
+    }
+
+    public function getValuesProperty()
+    {
+        return $this->dailyAverageActiveFleet->pluck('value');
+    }
+
+    public function setDaysLimit($limit)
+    {
+        $this->daysLimit = $limit;
+
+        $this->emit('chartUpdated', $this->labels, $this->values);
+    }
+
     public function render()
     {
         return view('livewire.fleet.historical');
