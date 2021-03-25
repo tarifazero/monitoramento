@@ -21,11 +21,11 @@ class Routes extends Component
         ->limit(4)
         ->get()
         ->map(function ($route) {
-            $active_vehicles = RealTimeEntry::select('vehicle_id')
+            $active_vehicles = RealTimeEntry::selectRaw('count(distinct vehicle_id)')
                 ->whereRoute($route)
                 ->where('timestamp', '>=', now()->subMinutes(5))
-                ->distinct()
-                ->count();
+                ->first()
+                ->count;
 
             return collect([
                 'short_name' => $route->short_name,
