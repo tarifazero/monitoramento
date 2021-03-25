@@ -31,8 +31,7 @@ class Historical extends Component
             ->offset(1)
             ->get()
             ->map(function ($item) {
-                $label = (new Carbon($item->day))
-                    ->format('d M');
+                $label = (new Carbon($item->day))->translatedFormat('d M');
 
                 $value = $this->monthlyActiveFleet
                     ? round(100 * $item->value / $this->monthlyActiveFleet)
