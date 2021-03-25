@@ -26,7 +26,10 @@
 
     </div>
 
-    <div class="flex flex-col font-dm font-bold bg-white w-full lg:w-1/2 rounded-2xl">
+    <div
+        wire:poll.5s
+        class="flex flex-col font-dm font-bold bg-white w-full lg:w-1/2 rounded-2xl"
+    >
 
         <div class="flex bg-yellow-medium flex-grow rounded-2xl">
 
