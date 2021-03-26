@@ -36,6 +36,12 @@ module.exports = {
             'work': ['Work\\ Sans', 'sans-serif'],
             'dm': ['DM\\ Sans', 'sans-serif'],
         },
+        screens: {
+            'sm': '640px',
+            'md': '768px',
+            'lg': '1024px',
+            'xl': '1280px',
+        },
         extend: {
             padding: {
                 '9/16': '56.25%',

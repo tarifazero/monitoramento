@@ -1,7 +1,7 @@
 <div>
-    <div class="bg-beige-light p-6 rounded-2xl">
+    <div class="bg-beige-light px-2 sm:px-4 lg:px-6 py-6 rounded-2xl">
 
-        <h2 class="text-4xl text-center font-work font-extrabold">
+        <h2 class="text-3xl sm:text-4xl text-center font-work font-extrabold">
             {{ $this->yesterday->format('d/m/Y') }}
         </h2>
 
@@ -30,7 +30,7 @@
                                     ticks: {
                                         fontStyle: 700,
                                         fontColor: '#000000',
-                                        fontSize: 16,
+                                        fontSize: 12,
                                     },
                                 }],
                                 yAxes: [{
@@ -45,8 +45,8 @@
                                         stepSize: 25,
                                         fontStyle: 700,
                                         fontColor: '#000000',
-                                        fontSize: 20,
-                                        padding: 30,
+                                        fontSize: 12,
+                                        padding: 10,
                                         callback: (tick) => tick + '%',
                                     },
                                 }],
@@ -75,14 +75,31 @@
                             },
                         },
                     });
+
+                    enquire.register('screen and (min-width: 728px)', {
+                        match: () => {
+                            $el.style.height = '500px';
+                            this.chart.config.options.scales.yAxes[0].ticks.fontSize = 20;
+                            this.chart.config.options.scales.yAxes[0].ticks.padding = 30;
+                            this.chart.config.options.scales.xAxes[0].ticks.fontSize = 16;
+                            this.chart.update();
+                        },
+                        unmatch: () => {
+                            $el.style.height = '300px';
+                            this.chart.config.options.scales.yAxes[0].ticks.fontSize = 12;
+                            this.chart.config.options.scales.yAxes[0].ticks.padding = 10;
+                            this.chart.config.options.scales.xAxes[0].ticks.fontSize = 12;
+                            this.chart.update();
+                        },
+                    });
                 }"
-                height="500"
+                height="300"
             ></canvas>
         </div>
 
     </div>
 
-    <div class="flex text-xl font-dm font-bold bg-beige-light flex-grow rounded-2xl mt-12">
+    <div class="flex text-sm sm:text-base lg:text-xl font-dm font-bold bg-beige-light flex-grow rounded-2xl mt-12">
 
         <div class="relative text-center bg-yellow-dark p-4 lg:p-6 w-3/5 rounded-2xl">
             <p class="flex flex-col items-center justify-center h-full">
@@ -91,7 +108,7 @@
                     Ontem, a média diária da frota circulante foi de
                 </span>
 
-                <span class="block text-4xl font-work font-extrabold">
+                <span class="block text-3xl sm:text-4xl font-work font-extrabold">
                     {{ $this->averageActiveFleet }}%
                 </span>
 
