@@ -13,12 +13,13 @@ class Routes extends Component
     public function getRoutesProperty()
     {
         return Route::main()
-        ->with('children')
+        ->whereNotNull('short_name')
         ->when($this->search, function($query, $search) {
             $query->where('short_name', $search);
         }, function ($query) {
             $query->inRandomOrder();
         })
+        ->with('children')
         ->limit(4)
         ->get()
         ->map(function ($route) {
