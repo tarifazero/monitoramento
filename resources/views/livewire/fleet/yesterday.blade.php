@@ -7,9 +7,9 @@
 
         <div class="mt-6">
             <canvas
-                x-data="{ chart: null}"
+                x-data="{ chart: null }"
                 x-init="() => {
-                    this.chart = new Chart($el, {
+                    chart = new Chart($el, {
                         type: 'line',
                         data: {
                             labels: JSON.parse('{{ json_encode($this->hourlyActiveFleet->pluck('label')) }}'),
@@ -79,17 +79,17 @@
                     enquire.register('screen and (min-width: 728px)', {
                         match: () => {
                             $el.style.height = '500px';
-                            this.chart.config.options.scales.yAxes[0].ticks.fontSize = 20;
-                            this.chart.config.options.scales.yAxes[0].ticks.padding = 30;
-                            this.chart.config.options.scales.xAxes[0].ticks.fontSize = 16;
-                            this.chart.update();
+                            chart.config.options.scales.yAxes[0].ticks.fontSize = 20;
+                            chart.config.options.scales.yAxes[0].ticks.padding = 30;
+                            chart.config.options.scales.xAxes[0].ticks.fontSize = 16;
+                            chart.update();
                         },
                         unmatch: () => {
                             $el.style.height = '300px';
-                            this.chart.config.options.scales.yAxes[0].ticks.fontSize = 12;
-                            this.chart.config.options.scales.yAxes[0].ticks.padding = 10;
-                            this.chart.config.options.scales.xAxes[0].ticks.fontSize = 12;
-                            this.chart.update();
+                            chart.config.options.scales.yAxes[0].ticks.fontSize = 12;
+                            chart.config.options.scales.yAxes[0].ticks.padding = 10;
+                            chart.config.options.scales.xAxes[0].ticks.fontSize = 12;
+                            chart.update();
                         },
                     });
                 }"
