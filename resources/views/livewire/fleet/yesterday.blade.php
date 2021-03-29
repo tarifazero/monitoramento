@@ -97,6 +97,14 @@
             ></canvas>
         </div>
 
+        <div class="hidden md:flex space-x-1 lg:space-x-3 xl:space-x-4 ml-20 px-1">
+            @foreach ($this->hourlyActiveFleet->pluck('opacity') as $opacity)
+                <span class="flex-1" style="opacity: {{ $opacity }}">
+                    @svg('wheel', 'w-full h-auto')
+                </span>
+            @endforeach
+        </div>
+
     </div>
 
     <div class="flex text-sm sm:text-base lg:text-xl font-dm font-bold bg-beige-light flex-grow rounded-2xl mt-12">

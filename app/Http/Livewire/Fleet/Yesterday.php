@@ -41,7 +41,9 @@ class Yesterday extends Component
                 ? round(100 * $item->value / $this->monthlyActiveFleet)
                 : 0;
 
-            return compact('label', 'value');
+            $opacity = min($value / 100, 1);
+
+            return compact('label', 'value', 'opacity');
         });
     }
 
