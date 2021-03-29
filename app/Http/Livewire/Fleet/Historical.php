@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\Fleet;
 
 use App\Models\Indicators\ActiveFleetMonthly;
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -14,8 +14,15 @@ class Historical extends Component
     public function getMonthlyActiveFleetProperty()
     {
         return ActiveFleetMonthly::latest()
-            ->first()
-            ?->value;
+            ->limit(5)
+            ->get();
+    }
+
+    public function getActiveFleetForDate($day)
+    {
+        return $this->monthlyActiveFleet->first(function ($item) use ($day) {
+            return $item->timestamp->isSameMonth($day->subMonth());
+        });
     }
 
     public function getDailyAverageActiveFleetProperty()
@@ -31,10 +38,12 @@ class Historical extends Component
             ->offset(1)
             ->get()
             ->map(function ($item) {
-                $label = (new Carbon($item->day))->translatedFormat('d M');
+                $day = new CarbonImmutable($item->day);
+                $label = $day->translatedFormat('d M');
+                $activeFleet = $this->getActiveFleetForDate($day)?->value;
 
-                $value = $this->monthlyActiveFleet
-                    ? round(100 * $item->value / $this->monthlyActiveFleet)
+                $value = $activeFleet
+                    ? round(100 * $item->value / $activeFleet)
                     : 0;
 
                 return compact('label', 'value');
