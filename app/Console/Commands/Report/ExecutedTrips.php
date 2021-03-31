@@ -41,11 +41,14 @@ class ExecutedTrips extends Command
      */
     public function handle()
     {
-        $startOfDay = Carbon::create($this->argument('date'))
+
+        $day = Carbon::create($this->argument('date'), config('app.local_timezone'));
+
+        $startOfDay = Carbon::create($this->argument('date'), config('app.local_timezone'))
             ->startOfDay()
             ->setTimezone(config('app.timezone'));
 
-        $endOfDay = Carbon::create($this->argument('date'))
+        $endOfDay = Carbon::create($this->argument('date'), config('app.local_timezone'))
             ->endOfDay()
             ->setTimezone(config('app.timezone'));
 
@@ -59,10 +62,10 @@ class ExecutedTrips extends Command
 
         $bar->start();
 
-        $routes = $routes->map(function ($route) use ($startOfDay, $endOfDay, $bar) {
+        $routes = $routes->map(function ($route) use ($day, $startOfDay, $endOfDay, $bar) {
             $bar->advance();
 
-            $trips = Trip::forDate($startOfDay)
+            $trips = Trip::forDate($day)
                 ->with('stopTimes.stop')
                 ->where('route_id', $route->id)
                 ->get();
