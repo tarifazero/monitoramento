@@ -4,7 +4,7 @@
 
         <div class="relative flex flex-col items-center justify-center bg-white p-4 lg:p-6 flex-grow rounded-2xl">
             <p class="text-center">
-                Em 2008, início do atual contrato de concessão do transporte coletivo de Belo Horizonte, a frota total de ônibus era de XXXX ônibus. Em 2017, este número passou para XXXX.
+                Em 2008, início do atual contrato de concessão do transporte coletivo de Belo Horizonte, a frota total de ônibus era de XXXX ônibus. Em 2017, este número passou para XXXX.
             </p>
 
             <div class="absolute bottom-0 left-1/2 bg-white w-4 h-4 transform rotate-45 translate-y-1/2 -translate-x-1/2"></div>
