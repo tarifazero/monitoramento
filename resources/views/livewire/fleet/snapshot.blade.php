@@ -4,7 +4,7 @@
 
         <div class="relative flex flex-col items-center justify-center bg-white p-4 lg:p-6 flex-grow rounded-2xl">
             <p class="text-center">
-                Em 2008, início do atual contrato de concessão do transporte coletivo de Belo Horizonte, a frota total de ônibus era de 3048 ônibus. Em 2018, este número passou para 2857.
+                Em 2008, início do atual contrato de concessão do transporte coletivo de Belo Horizonte, a frota total de ônibus era de <strong>3048</strong> ônibus. Em <strong>2018</strong>, este número passou para 2857.
             </p>
 
             <div class="absolute bottom-0 left-1/2 bg-white w-4 h-4 transform rotate-45 translate-y-1/2 -translate-x-1/2"></div>
