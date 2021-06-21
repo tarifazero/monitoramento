@@ -1,4 +1,5 @@
 module.exports = {
+    mode: 'jit',
     purge: [
         './resources/views/**/*.blade.php',
         './resources/js/**/*.js',
