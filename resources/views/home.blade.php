@@ -49,9 +49,21 @@
             </li>
         </ul>
 
-        <div class="text-center font-dm font-bold bg-beige-light p-4 lg:p-6 rounded-2xl mt-12">
+        <div class="text-center font-dm font-bold bg-beige-light p-4 space-y-6 lg:p-6 rounded-2xl mt-12">
             <p>
-                Inserir aqui um texto sobre a ferramenta e a metodologia
+                Cadê Meu Busão é uma ferramenta que busca dar mais transparência aos dados relacionados à oferta do transporte coletivo por ônibus em Belo Horizonte. Todo o código é aberto, de livre uso e disponível no nosso Github. As informações consideradas são disponibilizadas pela Prefeitura de Belo Horizonte no portal de dados abertos da BHTRANS.
+            </p>
+
+            <p>
+                No painel de frota de ônibus é possível acompanhar diversas informações: o total da frota ativa do município; quantos ônibus de cada linha estão circulando em tempo real; a média diária de circulação dos veículos nos últimos 90 dias; e o percentual de utilização da frota total, por faixa de hora, no último dia.
+            </p>
+
+            <p>
+                As informações em tempo real são extraídas do Tempo Real Ônibus - Coordenada atualizada, que contém as localizações dos ônibus em circulação na cidade, atualizadas a cada 20 segundos. Já o total da frota ativa é calculado a partir da quantidade total de veículos identificada no mês anterior.
+            </p>
+
+            <p>
+                Esperamos que a ferramenta ajude passageiras e passageiros a ficarem de olho no busão e exigirem seus direitos. Em breve mais novidades!
             </p>
         </div>
 
