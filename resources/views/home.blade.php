@@ -3,9 +3,10 @@
     <section class="bg-pink">
         <div class="flex flex-wrap lg:flex-nowrap items-center justify-between text-center text-yellow font-helsinki uppercase py-6 container">
 
-            <h1 class="text-2xl lg:text-4xl w-full lg:w-1/5">
-                Cadê meu busão?
-            </h1>
+            <div class="w-full lg:w-1/5">
+                @svg('logo', 'max-w-xs w-full h-auto mx-auto')
+                <h1 class="sr-only">Cadê meu busão?</h1>
+            </div>
 
             <p class="lg:text-2xl w-full lg:w-3/5 mt-4 lg:mt-0">
                 Monitoramento da oferta de ônibus no transporte coletivo de Belo Horizonte
