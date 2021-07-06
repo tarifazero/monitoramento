@@ -19,18 +19,15 @@
 
         <ul class="flex flex-wrap md:flex-nowrap space-y-8 md:space-y-0 md:space-x-8">
             <li class="w-full md:w-1/2 h-full">
-                <a
-                    href="#"
-                    class="relative block text-xl text-center text-pink font-work font-bold uppercase h-full group"
+                <button
+                    class="relative block text-xl text-center text-pink font-work font-bold uppercase w-full h-full opacity-50 cursor-not-allowed"
+                    disabled
                 >
-
-                    <span class="block absolute inset-0 bg-pink rounded-2xl mt-2 ml-2 -mb-2 -mr-2 opacity-0 group-hover:opacity-100"></span>
-
-                    <span class="block relative bg-beige-light group-hover:bg-beige py-2 px-6 h-full border border-pink rounded-2xl">
+                    <span class="block relative bg-beige-light py-2 px-6 h-full border border-pink rounded-2xl">
                         Cumprimento de viagens
                     </span>
 
-                </a>
+                </button>
             </li>
 
             <li class="w-full md:w-1/2 h-full">
